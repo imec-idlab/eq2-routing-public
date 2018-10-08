@@ -1,0 +1,27 @@
+{
+  "NameDesc":test7 ICMP WITH learning phases was the idea but thats not ONOFFAPPL stuff so moving to trafficA - only one app for maxpackets,
+  "Number of nodes":4,
+  "trafficType":trafficA,
+  "totalTime":1800,
+  "eps":0.000001, --set so Qpkt complaints go away
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":3000,
+  "learning_phases":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}

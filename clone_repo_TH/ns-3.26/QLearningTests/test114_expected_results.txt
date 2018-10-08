@@ -1,0 +1,26 @@
+{
+  "node0":{
+    "t":456,
+    "t_lrn":7, - 24 pkts in trace b/c a wrong decision in 6th --why is this 97 and not 51 as the trace would suggest ? -- the trace is still 45, but one bad decision = 38, 7 retransmissions = 45, so thats where diff was
+    "t_rec":0, -- looping & bad decisions
+    "t_lrn_rec":1, --1 bad decision learning tx (or is it deferred? ) --- pkt 79 is learning going from 2 -> 1, alright!
+    "q":2,
+  },
+  "node1":{
+    "t_rec":456, -- looping & bad decisions!
+    "t_lrn_rec":7, -- receives learning traffic, more than what the further nodes receive
+    "q":8,
+  },
+  "node2":{
+    "t_rec":456,
+    "t_lrn_rec":7, -- receives learning traffic, more than what the further nodes receive
+    "q":8,
+  },
+  "node3":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":456,
+    "t_lrn_rec":7,
+    "q":8,
+  },
+}

@@ -1,0 +1,57 @@
+{
+  "NameDesc":with metrics that are too much for DELAY for trafficA but fine for trafficB on BOTH PATHS - MORE ON PATH UNEVEN SO PATH EVEN IS CHOSEN ,
+  "Number of nodes":8,
+  "trafficType":voip/trafficB,
+  "totalTime":800,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":1000,
+  "learning_phases":true,
+  "qos_qlearning":true,
+  "smaller_learning_traffic":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "slower":l3,
+    "delay_value":60,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "slower":l3,
+    "delay_value":40,
+  },
+  "node3":{
+    "x":300,
+    "y":120,
+    "slower":l3,
+    "delay_value":60,
+  },
+  "node4":{
+    "x":120,
+    "y":300,
+    "slower":l3,
+    "delay_value":40,
+  },
+  "node5":{
+    "x":390,
+    "y":220,
+    "slower":l3,
+    "delay_value":60,
+  },
+  "node6":{
+    "x":220,
+    "y":390,
+    "slower":l3,
+    "delay_value":40,
+  },
+  "node7":{
+    "x":300,
+    "y":300,
+  },
+}

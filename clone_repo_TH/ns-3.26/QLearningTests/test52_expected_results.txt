@@ -1,0 +1,21 @@
+{
+  "node0":{
+    "t":1764,
+  },
+  "node1":{
+  },
+  "node2":{
+  },
+  "node3":{
+    "t":1764,
+  },
+}
+
+this test was added because some interesting behaviour was observed in ./waf --run "thomasAODV --doTest=test35.txt --traffic="udp-echo" --pcap --totalTime=38s"
+:
+the sender would have a packet being sent back incorrectly and so would the receiver (since its echo - 2 way traffic)
+which meant that, if we were using the counting thing for this traffic in wifi-net-device we would get more packets than we actually expected
+while in the case where we count in RouteOutput of aodv-routing-protocol.cc there is no UDP header the 1st time we see the packet so the number of actual
+traffic packets that is sent there is correct , because it does not count the time the packet passes back around to the source
+
+Of course, the phenomenon is hidden in test because why not, #RNG

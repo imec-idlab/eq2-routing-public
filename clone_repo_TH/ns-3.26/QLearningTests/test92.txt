@@ -1,0 +1,23 @@
+{
+  "NameDesc":test3 ICMP WITH learning phases was the idea but thats not ONOFFAPPL stuff so moving to trafficA,
+  "Number of nodes":3,
+  "trafficType":trafficA,
+  "totalTime":1800,
+  "eps":0.0000001,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":3059,
+  "learning_phases":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  }
+}

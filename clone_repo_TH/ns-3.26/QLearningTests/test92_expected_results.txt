@@ -1,0 +1,24 @@
+{
+  "qroute":0-1-2,
+  "node0":{
+    "q":1,
+    "a":3, -- rreq, hello, rrep -ack
+    "t":3000, -- learning packets also count towards maxBytes
+    "t_rec":0,
+    "t_lrn":0,
+  },
+  "node1":{
+    "q":6,
+    "a":2, --rrep reply, hello
+    "t":0,
+    "t_rec":3000,
+    "t_lrn_rec":3,
+  },
+  "node2":{
+    "q":3,
+    "a":1, --rrep hello
+    "t":0,
+    "t_rec":3000,
+    "t_lrn_rec":2,
+  },
+}

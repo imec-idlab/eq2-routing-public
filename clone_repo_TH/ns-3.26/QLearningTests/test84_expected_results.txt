@@ -1,0 +1,23 @@
+{
+  "qroute":0-1-5-6,
+  "node0":{
+    "learning":n,
+  },
+  "node1":{
+    "learning":n,
+  },
+  "node2":{
+    "learning":y,
+  },
+  "node3":{
+    "learning":y,
+  },
+  "node4":{
+  },
+  "node5":{
+    "learning":n,
+  },
+  "node6":{
+    "learning":y,
+  },
+}

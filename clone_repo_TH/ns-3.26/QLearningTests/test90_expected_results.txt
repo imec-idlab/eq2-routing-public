@@ -1,0 +1,56 @@
+{
+  "node0":{
+    "t":3111,
+    "t_lrn":11,
+    "t_rec":0, --no bad decisions on traffic
+    "t_lrn_rec":10, --1 bad decision learning tx (or is it deferred? ) --- pkt 79 is learning going from 2 -> 1, alright!
+  },
+  "node1":{
+    "t_rec":3111,
+    "t_lrn_rec":11, -- receives learning traffic, more than what the further nodes receive
+  },
+  "node2":{
+  "t_lrn_rec":11,
+  },
+  "node3":{
+  "t_lrn_rec":11,
+  },
+  "node4":{
+  "t_lrn_rec":11,
+  },
+  "node5":{
+  "t_lrn_rec":11,
+  },
+  "node6":{
+    "t_rec":3111,
+    "t_lrn_rec":11,
+  },
+  "node7":{
+    "t_rec":3111,
+    "t_lrn_rec":11,
+  },
+  "node8":{
+  "t_lrn_rec":11,
+  },
+  "node9":{
+  "t_lrn_rec":12,
+  },
+  "node10":{
+  "t_lrn_rec":10,
+  },
+  "node11":{
+  "t_lrn_rec":6,
+  },
+  "node12":{
+  "t_lrn_rec":6,
+  },
+  "node13":{
+  "t_lrn_rec":4,
+  },
+  "node14":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":3111,
+    "t_lrn_rec":2,
+  },
+}

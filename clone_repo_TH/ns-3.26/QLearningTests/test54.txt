@@ -1,0 +1,39 @@
+{
+  "NameDesc":Long test - 4 nodes in a line - trafficA type traffic - eps = 0 - testing trafficA with breaking node1,
+  "Number of nodes":4,
+  "trafficType":trafficA,
+  "totalTime":1800,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":y,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+I guess put anything here, cant matter too much as long as its after the 4 nodes
+so 120 distance on the X-axis seems to be too far, and makes for a spotty connection (only some packets arrive)
+good to know...
+
+
+starts at 5, stops at 37 - 30 = 7, so 2 Seconds
+
+5
+5.5
+6
+6.5
+7

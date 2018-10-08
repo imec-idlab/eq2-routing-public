@@ -1,0 +1,123 @@
+{
+  "Number of nodes":24,
+  "node0":{
+    "x":20,
+    "y":320,
+  },
+  "node1":{
+    "x":20,
+    "y":20,
+  },
+  "node2":{
+    "x":20,
+    "y":120,
+  },
+  "node3":{
+    "x":20,
+    "y":220,
+  },
+  "node4":{
+    "x":20,
+    "y":420,
+  },
+  "node5":{
+    "x":20,
+    "y":520,
+  },
+  "node6":{
+    "x":20,
+    "y":620,
+  },
+  "node7":{
+    "x":120,
+    "y":20,
+  },
+  "node8":{
+    "x":220,
+    "y":20,
+  },
+  "node9":{
+    "x":320,
+    "y":20,
+  },
+  "node10":{
+    "x":420,
+    "y":20,
+  },
+  "node11":{
+    "x":120,
+    "y":320,
+  },
+  "node12":{
+    "x":220,
+    "y":360,
+  },
+  "node13":{
+    "x":220,
+    "y":280,
+  },
+  "node14":{
+    "x":320,
+    "y":320,
+  },
+  "node15":{
+    "x":120,
+    "y":620,
+  },
+  "node16":{
+    "x":220,
+    "y":620,
+  },
+  "node17":{
+    "x":320,
+    "y":620,
+  },
+  "node18":{
+    "x":420,
+    "y":620,
+  },
+  "node19":{
+    "x":420,
+    "y":520,
+  },
+  "node20":{
+    "x":420,
+    "y":420,
+  },
+  "node21":{
+    "x":420,
+    "y":220,
+  },
+  "node22":{
+    "x":420,
+    "y":120,
+  },
+  "node23":{
+    "x":420,
+    "y":320,
+  }
+}
+
+
+Artificially make node 2 slow, experiments seemed to show thats the one AODV picks
+MAYBE: code it s.t. whichever AODV chooses to prefer becomes slower automatically, whatever
+then have QLearner suggest the other one
+
+
+
+
+
+
+x    x    x    x    x
+
+x                   x
+
+x        x          x
+
+s   x         x     d
+
+x         x         x
+
+x                   x
+
+x    x    x    x    x

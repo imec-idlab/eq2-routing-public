@@ -1,0 +1,25 @@
+{
+  "qroute":0-*-3, --this was set empirically, can be both..
+  "node0":{
+    "q":0, //Two RREP -> both get Q'd also 2 ICMP reply
+    "t":1765,
+    "a":5,
+  },
+  "node1":{
+    "a":3, //RREP hello (1), rrep to 10.1.1.1 for route to 10.1.1.4, RREQ for route to 10.1.1.1 (why? TODO -- forwarding), and then another one, bc node3 sends 2x the RREQ due to TTL
+    "q":0,
+    "t":0,
+  },
+  "node2":{
+    "t":0,
+    "q":0,
+    "a":4, //RREP hello, rrep to 10.1.1.1 for route to 10.1.1.4, RREQ for route to 10.1.1.1 (why? TODO -- forwarding) -- RREQ 2x --- then RREP after that is sent back to 10.1.1.4 (node3) via node2
+  },
+  "node3":{
+    "t":1765,
+    "a":3, // Hello, then three RREQ's with increasing TTL
+    "q":0, // for traffic it's 2, then one reply to RREP from 10.1.1.3 to get to 10.1.1.1
+  },
+}
+
+In the script runs, node2 is chosen to route the 1763 next icmps, but in the tests it is node1 so we have to flip the values

@@ -1,0 +1,22 @@
+{
+  "node0":{
+    "learning":n,
+    "broken":n,
+    "t":100,
+  },
+  "node1":{
+    "broken":n,
+    "t":0,
+    "learning":n,
+  },
+  "node2":{
+    "broken":n,
+    "learning":n,
+    "t":0,
+  },
+  "node3":{
+    "broken":n,
+  },
+}
+
+In the script runs, node2 is chosen to route the 1763 next icmps, but in the tests it is node1 so we have to flip the values

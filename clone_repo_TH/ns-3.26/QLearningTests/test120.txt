@@ -1,0 +1,35 @@
+{
+  "NameDesc": copy of test112 - with max retry set to a high value (69) s.t. the old expectations f or 112 will work - yep they do ,
+  "Number of nodes":4,
+  "trafficType":voip/trafficC,
+  "totalTime":110,
+  "eps":0.01,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":128,
+  "learning_phases":true,
+  "smaller_learning_traffic":true,
+  "qconv":0.005, 0.001,
+  "max_retry":69,
+  "learn_more_threshold":0.050,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":y,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+-- setting qconv to 0.001 otherwise this means qconv is 0.025 and then it converges faster & we get less traffic bouncing than we expected
+----- but thats not the issue, so back to 0.025 ----------- and then back to 0.020 just so its matching with our expected results :-)

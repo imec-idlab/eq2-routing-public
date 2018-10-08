@@ -1,0 +1,33 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0,
+  "Number of nodes":4,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":100,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":n,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":n,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+-- created to help debug test60
+-- immediately has the interface >= 0 error <- this was due to easily returning true in LookupValidRoute, makes sense, can hardly expect it to be easy
+
+./waf --run "thomasAODV --doTest=test63.txt --unit_test_situation --pcap"

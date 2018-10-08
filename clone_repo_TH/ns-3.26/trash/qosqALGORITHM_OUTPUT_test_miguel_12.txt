@@ -1,0 +1,15 @@
+node0(src)/node1/node2/node3/node4/node5/node6/node7/node8/node9/node10/node11/node12/node13/node14/node15/node16/node17/node18(dst)/
+6956(6956)/3823(3823)/5436(5436)/6378(6378)/1809(1809)/1813(1813)/2776(2776)/2103(2103)/3510(3510)/6033(6033)/2214(2214)/4587(4587)/1863(1863)/4071(4071)/1442(1442)/3334(3334)/1252(1252)/2667(2667)/3543(3543)/
+QLRN TRAFFIC:   6956/3823/5436/6378/1809/1813/2776/2103/3510/6033/2214/4587/1863/4071/1442/3334/1252/2667/3543/
+AODV TRAFFIC:   5/3/4/4/4/2/2/4/4/4/4/4/4/4/4/6/3/4/1/
+DATA TRAFFIC:   5920/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/
+LRN TRAFFIC:    5476/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/
+DATA REC TRAFFIC:   152/105/2418/3710/105/38/245/105/2414/3582/2397/3501/2390/3475/2380/3467/2375/3445/5920/
+LRN REC TRAFFIC:    6859/3725/5410/6292/1711/1792/2753/2006/3476/5997/2189/4570/1845/4063/1434/3317/1249/2650/3431/
+Observed average delay at 10.1.1.19 was +46.50956399999999999996ms.
+Observed packet delivery ratio from source 10.1.1.1 toward destination 10.1.1.19 going via 10.1.1.2 was 1.
+Observed packet delivery ratio from source 10.1.1.1 toward destination 10.1.1.19 going via 10.1.1.3 was 1.
+Observed packet delivery ratio from source 10.1.1.1 toward destination 10.1.1.19 going via 10.1.1.4 was 1.
+    Observed (final) QRoute from 10.1.1.1 = 0-3-9-11-13-15-17-18-
+    Observed (final) QRoute from 10.1.1.2 = 1-0-3-9-11-13-15-17-18-
+    Observed (final) QRoute from 10.1.1.3 = 2-0-3-9-11-13-15-17-18-

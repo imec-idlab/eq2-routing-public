@@ -1,0 +1,45 @@
+{
+  "NameDesc":copy of test69 with delay values set such that all breaks should be noticed AFTER transmitting stops,
+  "Number of nodes":5,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":110,
+  "vary_break_times":true,
+  "node0":{
+    "x":20,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":80,
+    "y":20,
+    "break":y,
+  },
+  "node2":{
+    "x":100,
+    "y":20,
+    "break":y, --this test will no longer fail because of this (n -> y), thats intentional...! need to implement the QInfo timeout stuff I guess to mark neighb unavail ? TODO is that timeout necessary
+    "slower":l3,
+    "delay_value":5, --setting this to 5 instead of 0 means that the down happens 4s later? strange?
+  },
+  "node3":{
+    "x":120, // had 0 here, but that means node2 is too far from node3 so it automatically becomes U (spotty connection)
+    "y":20,
+    "break":y,
+    "slower":l3,
+    "delay_value":10,
+  },
+  "node4":{
+    "x":200,
+    "y":20,
+  },
+}
+
+had to mess with locations to not make ARP collide and not work (b/c theyre in sync)
+now having an issue where one packet too many is counted in deferred, which i guess happens everywhere?
+real nr of sent is 43 (one bad decision), and there are 47 counted:  43(real) + 3(notice down nodes) + 1(deferred)
+
+ITS NOT THE DEFERRED THING, ITS BECAUSE PACKET 16 IS BAD DECIDED AND WERE COUNTING ON L2 COUNTING HERE, IT GETS COUNTED TWICE

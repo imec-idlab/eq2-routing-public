@@ -1,0 +1,13 @@
+{
+  "node0":{
+    "t":14, // due to RERR being sent from node1 (that isnt broken)
+  },
+  "node1":{
+    "broken":n, //testing this in a no-q environment is pointless, making them break is good though
+  },
+  "node2":{
+    "broken":y,
+  },
+  "node3":{
+  },
+}

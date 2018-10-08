@@ -1,0 +1,29 @@
+{
+  "NameDesc":copy of test98 with eps back to 0 - LATEST ISSUE : EPS 0 meant no learning traffic after end of lrn / start of traffic,
+  "Number of nodes":3,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.0, 
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":677,
+  "learning_phases":true,
+  "smaller_learning_traffic":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "slower":l3,
+    "delay_value":0,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+}
+
+-- a lot of learning traffic because smaller learning traffic is true, and voip traffic is from itself a very large stream of data
+-- so thats why the big difference. test results were fine all along

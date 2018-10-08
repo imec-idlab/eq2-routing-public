@@ -1,0 +1,43 @@
+{
+  "NameDesc":copy of test62 now with clearly defined better paths when breakage occurs ,
+  "Number of nodes":5,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":100,
+  "vary_break_times":true,
+  "node0":{
+    "x":0,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":y,
+    "slower":l3,
+    "delay_value":5,
+  },
+  "node2":{
+    "x":110, // had 0 here, but that means node2 is too far from node3 so it automatically becomes U (spotty connection)
+    "y":40,
+    "break":y,
+    "slower":l3,
+    "delay_value":0,
+  },
+  "node3":{
+    "x":110, // had 0 here, but that means node2 is too far from node3 so it automatically becomes U (spotty connection)
+    "y":60,
+    "break":y,
+    "slower":l3,
+    "delay_value":0,
+  },
+  "node4":{
+    "x":220, //./waf --run "thomasAODV --doTest=test60.txt --unit_test_situation --pcap" and a value of 150 weird error
+    "y":20,
+  },
+}
+
+--due to RNG, now this test also breaks in the wrong order!

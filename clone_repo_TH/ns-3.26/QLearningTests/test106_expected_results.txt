@@ -1,0 +1,20 @@
+{
+  "node0":{
+    "t":46, --clearly this is 43 goodput + 3 fails
+    "t_rec":1,
+    "q":3,
+  },
+  "node1":{
+    "broken":y,
+  },
+  "node2":{
+    "broken":y,
+  },
+  "node3":{
+    "broken":y,
+  },
+  "node4":{
+    "broken":n,
+    "t_rec":43, 43 because all bad nodes are found at the end
+  },
+}

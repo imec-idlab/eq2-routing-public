@@ -1,0 +1,31 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0 - testing maxPackets parameter & broken,
+  "Number of nodes":4,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":2,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":y,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":y,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+expected result for both breaks is n because there are only 2 packets, when those run out, no more transmissions so there is nothing to notice breakage!
+to prove this, test61.txt

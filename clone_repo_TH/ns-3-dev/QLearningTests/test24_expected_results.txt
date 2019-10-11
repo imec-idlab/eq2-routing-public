@@ -1,0 +1,23 @@
+{
+  "qroute":0-1-2-3,
+  "node0":{
+    "q":0,
+    "a":3, // 2 RREQ, RREP-Hello
+    "t":1765,
+  },
+  "node1":{
+    "q":0, //4 voor de icmp (2x2), een voor de RREP die van (node3 -> ) node2 -> node1 -> node0
+    "a":4, // RREP-Hello, RREQ forward, RREP back, RREPACK
+    "t":0,
+  },
+  "node2":{
+    "q":0, //4 voor de icmp (2x2), een voor de RREP die van (node3 -> ) node2 -> node1 -> node0
+    "a":3, // RREP hello, RREP back to 10.1.1.2 for 10.1.1.4 asked by 10.1.1.1 and RREP for 10.1.1.4 when it asks for route to 10.1.1.1 (TODO impact grat reply ?)
+    "t":0,
+  },
+  "node3":{
+    "q":0,
+    "a":2, // RREP Hello, RREQ for 10.1.1.1
+    "t":1765,
+  },
+}

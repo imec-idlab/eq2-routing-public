@@ -1,0 +1,27 @@
+{
+  "node0":{
+    "q":4, //Two RREP -> both get Q'd also 2 ICMP reply
+    "a":5,
+    "t":2,
+  },
+  "node1":{
+    "q":4, //icmp req, rrep ack, icmp reply #1
+    "a":4, //RREP hello, rrep to 10.1.1.1 for route to 10.1.1.4, RREQ for route to 10.1.1.1 (why? TODO) -- possibly forwarded from node3 ?? --- then RREP after that is sent back to 10.1.1.4 (node3)
+    "t":0,
+  },
+  "node2":{
+    "q":3, //ICMP Request 1, RREPACK from node0 to node2 for the route via node2 to node3, RREP from 10.1.1.1 to 10.1.1.3 for 10.1.1.4, ICMP REQ 1, ICMP REPLY 1,
+    "a":3, //RREP hello, RREQ for route to 10.1.1.1 (why? TODO -> being forwarded, started in node3), rrep to 10.1.1.1 for route to 10.1.1.4,
+    "t":0,
+  },
+  "node3":{
+    "q":3, // for traffic it's 2, then one reply to RREP from 10.1.1.3 to get to 10.1.1.1
+    "a":3, // Hello, then two RREQ's with increasing TTL
+    "t":2,
+  },
+}
+
+// here also, tests chooses node1, script chooses node2
+//result is the same, so just swapped values...
+// here also, tests chooses node1, script chooses node2
+// in QLrnTests result is very much not the same, so changed values. Below is what I had before

@@ -1,0 +1,29 @@
+{
+  "node0":{
+    "q":3, //one for each icmp reply, one for the RREP received from node1
+    "a":3, // 2 RREQ, RREP-Hello
+    "t":2,
+  },
+  "node1":{
+    "q":6, //4 voor de icmp (2x2), een voor de RREP die van (node4 -> node3 -> ) node2 -> node1 -> node0 dus zou denken 5, maar er is een packet verkeerd gegaan dus 6
+    "a":3, // RREP-Hello, RREQ forward, RREP back ( geen rrep ack, problem ? )
+    "t":0,
+  },
+  "node2":{
+    "q":6, //4 voor de icmp (2x2), een voor de RREP die van (node4 -> node3 -> ) node2 -> node1 -> node0, dus zou denken 5, maar opnieuw packet verkeerd dus 6
+    "a":4, // RREP hello, RREQ FWD, RREP ACK back to 10.1.1.4 (for node 5 -> node 1), forward rrep
+    "t":0,
+  },
+  "node3":{
+    "q":5,
+    "a":3, // RREP Hello, RREP for 10.1.1.1 -> 10.1.1.5, RREP for 10.1.1.5 -> 10.1.1.1
+    "t":0,
+  },
+  "node4":{
+    "q":3,
+    "a":2, // RREP Hello, RREQ for 10.1.1.1
+    "t":2,
+  },
+}
+
+TODO possibly issue with chosen initial values

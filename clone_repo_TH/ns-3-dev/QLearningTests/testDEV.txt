@@ -1,0 +1,48 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0,
+  "Number of nodes":9,
+  "trafficType":ping,
+  "totalTime":40,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":0,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":300,
+  },
+  "node7":{
+    "x":275,
+    "y":50,
+  },
+  "node8":{
+    "x":300,
+    "y":210,
+  },
+}
+
+Strange test situation honestly, 1 can just reach 4 directly over the diagonal somehow

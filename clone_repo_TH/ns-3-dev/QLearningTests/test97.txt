@@ -1,0 +1,29 @@
+{
+  "NameDesc": not a lot of lrn traffic going to nodes after break but do we really care ,
+  "Number of nodes":4,
+  "trafficType":voip/trafficC,
+  "totalTime":100,
+  "eps":0.1,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":300, // somehow the sweet spot? anyway added test37 since its less unclear why the results vary...
+  "learning_phases":true,
+  "smaller_learning_traffic":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":y,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}

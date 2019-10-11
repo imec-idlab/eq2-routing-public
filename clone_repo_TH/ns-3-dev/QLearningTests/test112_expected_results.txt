@@ -1,0 +1,41 @@
+{
+  "qroute":0-1,
+  "node0":{
+    "t":125,
+    "t_lrn":50,
+    "t_rec":2500, --no bad decisions on traffic
+    "t_lrn_rec":1000, --1 bad decision learning tx (or is it deferred? ) --- pkt 79 is learning going from 2 -> 1, alright!
+  },
+  "node1":{
+    "t_rec":2500,
+    "t_lrn_rec":1000, -- receives learning traffic, more than what the further nodes receive
+  },
+  "node2":{
+    "t_rec":35,
+    "t_lrn_rec":2, -- receives learning traffic, more than what the further nodes receive
+    "broken":y,
+  },
+  "node3":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":35,
+    "t_lrn_rec":1,
+  },
+}
+========================================================================================================================================================================
+WITH SPECIAL TREAT PACKETS
+========================================================================================================================================================================
+Sent learning traffic (208) not equal to expected result (5)  at node0 but at least its higher and its learning phases so its fine
+actually this much difference (Upperbound expected=  5  * 15, real =  208 ) i cannot allow. Setting to FALSE
+Recv learning traffic (6272) not equal to expected result (0 at node0) but at least its higher and its learning phases so its fine
+actually this much difference (Upperbound expected=  0  * 15, real =  6272 ) i cannot allow. Setting to FALSE
+Recv learning traffic (6284) not equal to expected result (3 at node1) but at least its higher and its learning phases so its fine
+actually this much difference (Upperbound expected=  3  * 15, real =  6284 ) i cannot allow. Setting to FALSE
+========================================================================================================================================================================
+WITHOUT SPECIAL TREAT PACKETS (so traffic keeps bouncing, nothing we can do about that i guess?)
+========================================================================================================================================================================
+Sent learning traffic (12) not equal to expected result (5)  at node0 but at least its higher and its learning phases so its fine
+Recv learning traffic (0) not equal to expected result (999999) at node0 and instead its lower, we were expecting it to be higher (using lowerbounds). SETTING FALSE.
+Recv learning traffic (12) not equal to expected result (3 at node1) but at least its higher and its learning phases so its fine
+========================================================================================================================================================================
+========================================================================================================================================================================

@@ -1,0 +1,27 @@
+{
+  "NameDesc":Short test - 4 nodes in a square - src reaches dst directly (but why tho) - ICMP traffic - eps = 0.0,
+  "Number of nodes":4,
+  "trafficType":ping,
+  "totalTime":37,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "node0":{
+    "x":20,
+    "y":20,
+  },
+  "node1":{
+    "x":120,
+    "y":20,
+  },
+  "node2":{
+    "x":20,
+    "y":120,
+  },
+  "node3":{
+    "x":120,
+    "y":120,
+  },
+}
+
+Strange test situation honestly, 1 can just reach 4 directly over the diagonal somehow

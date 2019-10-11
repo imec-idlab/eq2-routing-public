@@ -1,0 +1,41 @@
+{
+  "NameDesc":200s test - some sort of star shape - trafficA traffic - testing expected route - node1 (below) is jitter, node2 (above) is slow,
+  "Number of nodes":7,
+  "trafficType":trafficA,
+  "totalTime":200,
+  "eps":0.1,
+  "learning_rate":0.5,
+  "ideal":false,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "jitter":Q,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "slower":Q,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}
+
+Strange test situation honestly, 1 can just reach 4 directly over the diagonal somehow

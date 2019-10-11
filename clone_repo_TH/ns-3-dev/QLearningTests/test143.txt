@@ -1,0 +1,46 @@
+{
+  "NameDesc":TODO fill in - three paths -both blacklisted, must be split traffic between them ,
+  "Number of nodes":8,
+  "trafficType":voip/trafficB,
+  "totalTime":300,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":400,
+  "learning_phases":true,
+  "qos_qlearning":true,
+  "smaller_learning_traffic":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+  },
+  "node3":{
+    "x":300,
+    "y":120,
+  },
+  "node4":{
+    "x":120,
+    "y":300,
+  },
+  "node5":{
+    "x":390,
+    "y":220,
+  },
+  "node6":{
+    "x":220,
+    "y":390,
+  },
+  "node7":{
+    "x":300,
+    "y":300,
+  },
+  "event":{100-4-TRAFFIC-4800-3-150-trafficC},
+}

@@ -1,0 +1,46 @@
+{
+  "NameDesc":testing learning phases going on / off / on without QoS - cant control learning path taken between unit_test_situation vs QLrnTests, so in QLrnTest result is 0-1-5-6 while in thomasAODV its 0-2-3-4-6 --- displayed an issue in checking converged True for stopping learning phase see below,
+  "Number of nodes":7,
+  "trafficType":trafficC,
+  "totalTime":400,
+  "eps":0.1,
+  "learning_rate":0.5,
+  "ideal":false,
+  "learning_phases":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "slower":l3,
+    "delay_value":9,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+    "slower":l3,
+    "delay_value":9,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}
+
+// so this issue came up in QlrnTests.cc runs only, was able to fix
+// At first, this if-else loop would react to qlrnHeader.GetPDst being converged, but this would cause issues when AODV traffic that was being used to learn was messing with convergences
+// thus, we had to replace the HasConverged(qlrnHeader.GetPDst() ) by HasConverged(m_traffic_destination)  -- TODO is there a better way here?

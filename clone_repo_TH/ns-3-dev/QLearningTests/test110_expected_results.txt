@@ -1,0 +1,31 @@
+{
+  "qroute":0,
+  "node0":{
+    "t":46, --why 45 and not 46 ? TODO -- at least
+    "t_lrn":0,
+    "t_rec":0, --bad decisions...
+    "t_lrn_rec":0,
+    "learning":n, --no , because m_use_learning_phases && m_learning_phase is what decides the value of this
+  },
+  "node1":{
+    "broken":y,
+    "t_lrn_rec":0,
+  },
+  "node2":{
+    "broken":y, // there is no downstream node to verify this breakage so whatever value is here is fine
+    "t_lrn_rec":0,
+  },
+  "node3":{
+    "broken":y,
+    "t_lrn_rec":0,
+  },
+  "node4":{
+    "t_rec":41, //see reasoning for 46 at node0 -- why only 14 ??? TODO
+    "t_lrn_rec":0,
+  },
+}
+
+
+node 0 result : "t":44, //real is 46 : 5 seconds to 90 seconds means 85 seconds of sending at 1 every 2 seconds -> 43 or so, then 1 to check node1 down, one for node2, one for node 3 = 46 -- suddently its 50 ?
+
+I think some traffic goes via node2 and node3 but im not sure

@@ -1,0 +1,25 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0 - ideal,
+  "Number of nodes":4,
+  "trafficType":ping,
+  "totalTime":1800,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":30,
+  },
+  "node2":{
+    "x":110,
+    "y":10,
+  },
+  "node3":{
+    "x":220,
+    "y":20,
+  },
+}

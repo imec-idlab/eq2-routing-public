@@ -1,0 +1,45 @@
+{
+  "NameDesc":copy of test85 with q delay & jitter - no maxpackets - no QoS - since there is a lot of jitter going on there will be no convergence TODO need improvements here so it settles for the slower route or converges to something at least,
+  "Number of nodes":7,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":599,
+  "learning_phases":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "jitter":l3,
+    "delay_value":1,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "slower":l3,
+    "delay_value":12,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}
+
+-- todo this test, its for learning/data traffic

@@ -215,6 +215,8 @@ void LogComponentDisableAll (enum LogLevel level);
  * NS_LOG (LOG_DEBUG, "a number="<<aNumber<<", anotherNumber="<<anotherNumber);
  * \endcode
  */
+
+/*
 #define NS_LOG(level, msg)                                      \
   do                                                            \
     {                                                           \
@@ -226,6 +228,21 @@ void LogComponentDisableAll (enum LogLevel level);
           NS_LOG_APPEND_FUNC_PREFIX;                            \
           NS_LOG_APPEND_LEVEL_PREFIX (level);                   \
           std::clog << msg << std::endl;                        \
+        }                                                       \
+    }                                                           \
+  while (false)
+*/
+
+#define NS_LOG(level, msg)                                      \
+  do                                                            \
+    {                                                           \
+      if (g_log.IsEnabled (level))                              \
+        {                                                       \
+          NS_LOG_APPEND_TIME_PREFIX;                            \
+          NS_LOG_APPEND_NODE_PREFIX;                            \
+          NS_LOG_APPEND_CONTEXT;                                \
+          NS_LOG_APPEND_FUNC_PREFIX;                            \
+          NS_LOG_APPEND_LEVEL_PREFIX (level);                   \
         }                                                       \
     }                                                           \
   while (false)
@@ -274,6 +291,8 @@ void LogComponentDisableAll (enum LogLevel level);
  * This should be used only in static functions; most member functions
  * should instead use NS_LOG_FUNCTION().
  */
+/*
+
 #define NS_LOG_FUNCTION_NOARGS()                                \
   do                                                            \
     {                                                           \
@@ -284,6 +303,19 @@ void LogComponentDisableAll (enum LogLevel level);
           NS_LOG_APPEND_CONTEXT;                                \
           std::clog << g_log.Name () << ":"                     \
                     << __FUNCTION__ << "()" << std::endl;       \
+        }                                                       \
+    }                                                           \
+  while (false)
+*/
+
+#define NS_LOG_FUNCTION_NOARGS()                                \
+  do                                                            \
+    {                                                           \
+      if (g_log.IsEnabled (ns3::LOG_FUNCTION))                  \
+        {                                                       \
+          NS_LOG_APPEND_TIME_PREFIX;                            \
+          NS_LOG_APPEND_NODE_PREFIX;                            \
+          NS_LOG_APPEND_CONTEXT;                                \
         }                                                       \
     }                                                           \
   while (false)
@@ -310,6 +342,8 @@ void LogComponentDisableAll (enum LogLevel level);
  * NS_LOG_FUNCTION_NOARGS() instead.
  *
  */
+/*
+
 #define NS_LOG_FUNCTION(parameters)                             \
   do                                                            \
     {                                                           \
@@ -322,6 +356,20 @@ void LogComponentDisableAll (enum LogLevel level);
                     << __FUNCTION__ << "(";                     \
           ns3::ParameterLogger (std::clog) << parameters;      \
           std::clog << ")" << std::endl;                        \
+        }                                                       \
+    }                                                           \
+  while (false)
+
+*/
+
+#define NS_LOG_FUNCTION(parameters)                             \
+  do                                                            \
+    {                                                           \
+      if (g_log.IsEnabled (ns3::LOG_FUNCTION))                  \
+        {                                                       \
+          NS_LOG_APPEND_TIME_PREFIX;                            \
+          NS_LOG_APPEND_NODE_PREFIX;                            \
+          NS_LOG_APPEND_CONTEXT;                                \
         }                                                       \
     }                                                           \
   while (false)

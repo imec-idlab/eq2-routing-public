@@ -1,0 +1,25 @@
+{
+  "NameDesc":Long test - 4 nodes in a square - src reaches dst directly ( i dont believe this : looks like test16 ) )- ICMP traffic - eps = 0.4 - 3/4 aodv switches sometimes,
+  "Number of nodes":4,
+  "trafficType":ping,
+  "totalTime":1800,
+  "eps":0.4, // just as a test, if you put 0.5 here test21 gets ICMP ttl exceeded so just take 0.4
+  "learning_rate":0.5,
+  "ideal":false,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":30,
+  },
+  "node2":{
+    "x":110,
+    "y":10,
+  },
+  "node3":{
+    "x":220,
+    "y":20,
+  },
+}

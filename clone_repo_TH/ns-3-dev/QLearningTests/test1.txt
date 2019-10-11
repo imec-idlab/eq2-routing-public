@@ -1,0 +1,25 @@
+{
+  "NameDesc":Short-medium length test - 3 nodes in a line - ICMP traffic,
+  "Number of nodes":3,
+  "trafficType":ping,
+  "totalTime":300,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  }
+}
+
+I guess put anything here, cant matter too much as long as its after the 4 nodes
+so 120 distance on the X-axis seems to be too far, and makes for a spotty connection (only some packets arrive)
+good to know...

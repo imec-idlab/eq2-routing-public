@@ -1,0 +1,27 @@
+{
+  "qroute":0-1,
+  "node0":{
+    "t":125,
+    "t_lrn":100,
+    "t_rec":2500, --no bad decisions on traffic
+    "t_lrn_rec":2000, --1 bad decision learning tx (or is it deferred? ) --- pkt 79 is learning going from 2 -> 1, alright!
+  },
+  "node1":{
+    "t_rec":2500,
+    "t_lrn_rec":2000, -- receives learning traffic, more than what the further nodes receive
+  },
+  "node2":{
+    "t_rec":35,
+    "t_lrn_rec":10, -- receives learning traffic, more than what the further nodes receive
+    "broken":y,
+  },
+  "node3":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":35,
+    "t_lrn_rec":10,
+  },
+}
+
+
+--why only 40 received in 3 -->  because its a breaking test!

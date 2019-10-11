@@ -1,0 +1,29 @@
+{
+  "NameDesc":testing maxPackets with learning phases legacy only one type of traffic gen,
+  "Number of nodes":4,
+  "trafficType":trafficC,
+  "totalTime":4100,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":2000, // somehow the sweet spot? anyway added test37 since its less unclear why the results vary...
+  "learning_phases":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+--TODO FINISH THIS TEST S;T; TRAFFIC TAKES OVER AND GETS BETTER RESULTS WHEN IT TAKES OVER AFTER LEARNING

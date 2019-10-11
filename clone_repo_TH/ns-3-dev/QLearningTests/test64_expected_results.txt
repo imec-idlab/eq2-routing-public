@@ -1,0 +1,15 @@
+{
+  "node0":{
+    "t":29, // 13 real packets sent becomes 14 for the failed attempt. Now in this case : failed attempt + succesful attempt after that = 15, then 13 sending as normal, then again a failed attempt so 29 ?
+  },
+  "node1":{
+    "broken":y,
+  },
+  "node2":{
+    "broken":y,
+  },
+  "node3":{
+    "broken":n,
+    "t_rec":27,
+  },
+}

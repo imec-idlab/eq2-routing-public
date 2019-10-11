@@ -1,0 +1,42 @@
+{
+  "NameDesc":copy of test 107 to test Qconv threshold - set qthresh vv high so that there is almost no learning traffic,
+  "Number of nodes":7,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":676,
+  "learning_phases":true,
+  "qconv":50,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "slower":l3,
+    "delay_value":10,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}

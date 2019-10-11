@@ -1,0 +1,37 @@
+{
+  "NameDesc":copy of some ICMP test with learning phases ENABLED - thus switched to voip/tB,
+  "Number of nodes":5,
+  "trafficType":voip/trafficB,
+  "totalTime":1800,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":3500,
+  "learning_phases":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{  TODO add epsilon versions of tehse tests after you fix the issue
+    "x":110,
+    "y":20,
+    "slower":l3,
+    "delay_value":0,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "slower":l3,
+    "delay_value":0,
+  }
+  "node3":{
+    "x":330,
+    "y":20,
+    "slower":l3,
+    "delay_value":0,
+  }
+  "node4":{
+    "x":440,
+    "y":20,
+  }
+}

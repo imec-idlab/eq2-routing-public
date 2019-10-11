@@ -154,7 +154,7 @@ bool QLrnTest::FromFile(std::string filename) {
     while (std::getline(infile,line)){
       file.push_back(line);
     }
-  } catch (std::exception e) {
+  } catch (std::exception e &) {
     std::cout << "Got an exception while trying to read the file." << e.what() << std::endl;
   }
 
@@ -283,7 +283,7 @@ bool QLrnTestResult::FromFile(std::string filename) {
 
   try {
     infile.open(filename);
-  } catch (std::exception e) {
+  } catch (std::exception e &) {
     std::cout << e.what() << std::endl;
     NS_ASSERT(false);
   }

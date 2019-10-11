@@ -1,0 +1,12 @@
+{
+  "node0":{
+    "t":3529, --and i guess the received is one less bcause of a wrong decision 3529 //well i would have liked 3530 but whatever ill settle for this
+  },
+  "node1":{
+  },
+  "node2":{
+  },
+  "node3":{
+    "t_rec":3529,
+  },
+}

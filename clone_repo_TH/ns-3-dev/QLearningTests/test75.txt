@@ -1,0 +1,53 @@
+{
+  "NameDesc":QoS with L3 Slow (too slow) on path 156 & some jitter  (but below thresh) on path 23456 - ,
+  "Number of nodes":7,
+  "trafficType":voip/trafficA,
+  "totalTime":450,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":289,
+  "learning_phases":true,
+  "qos_qlearning":true,
+  "smaller_learning_traffic":true,
+  "rho":0.7, -- set this a little lower so that the node5 also gets explored a little bit, no other reason tbh
+  "qconv":0.01,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "slower":l3,
+    "delay_value":70  ,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "jitter":l3,
+    "delay_value":0,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+    "jitter":l3,
+    "delay_value":10,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+    "jitter":l3,
+    "delay_value":15,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+    "slower":l3,
+    "delay_value":70,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}

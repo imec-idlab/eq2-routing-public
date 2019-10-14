@@ -198,6 +198,8 @@ V4Ping::Send ()
 {
   NS_LOG_FUNCTION (this);
 
+  NS_LOG_DEBUG ("sent at time t = " << Simulator::Now().As(Time::MS));
+
   NS_LOG_INFO ("m_seq=" << m_seq);
   Ptr<Packet> p = Create<Packet> ();
   Icmpv4Echo echo;

@@ -3,3 +3,6 @@
 def build(bld):
     obj = bld.create_ns3_program('udp-echo', ['csma', 'internet', 'applications'])
     obj.source = 'udp-echo.cc'
+
+    obj = bld.create_ns3_program('request-response', ['csma', 'internet', 'applications'])
+    obj.source = 'request-response.cc'

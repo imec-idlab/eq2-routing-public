@@ -195,6 +195,9 @@ public:
    */
   virtual void Send (Ptr<NetDevice> device, Ptr<QueueDiscItem> item);
 
+  /// Callback invoked to determine the tx queue selected for a given packet
+  typedef Callback< uint8_t, Ptr<QueueItem> > SelectQueueCallback;
+
 protected:
 
   virtual void DoDispose (void);

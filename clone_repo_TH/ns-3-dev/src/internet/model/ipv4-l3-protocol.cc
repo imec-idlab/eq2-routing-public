@@ -136,6 +136,11 @@ Ipv4L3Protocol::GetTypeId (void)
 Ipv4L3Protocol::Ipv4L3Protocol()
 {
   NS_LOG_FUNCTION (this);
+  m_delay_ms = 0;
+  m_jitter = false;
+  m_jitter_toggle=false;
+  m_packet_loss_param = 0;
+  Ptr<UniformRandomVariable> uv = 0;
 }
 
 Ipv4L3Protocol::~Ipv4L3Protocol ()
@@ -414,6 +419,8 @@ Ipv4L3Protocol::AddInterface (Ptr<NetDevice> device)
   interface->SetDevice (device);
   interface->SetTrafficControl (tc);
   interface->SetForwarding (m_ipForward);
+  //tc->SetupDevice (device);
+  tc->ScanDevices(); // TODO HANS - is this a valid substitute?
   return AddIpv4Interface (interface);
 }
 
@@ -880,6 +887,7 @@ Ipv4L3Protocol::Send (Ptr<Packet> packet,
       NS_LOG_WARN ("No route to host.  Drop.");
       m_dropTrace (ipHeader, packet, DROP_NO_ROUTE, m_node->GetObject<Ipv4> (), 0);
     }
+
 }
 
 // \todo when should we set ip_id?   check whether we are incrementing
@@ -1005,7 +1013,9 @@ Ipv4L3Protocol::SendRealOut (Ptr<Ipv4Route> route,
           m_dropTrace (ipHeader, packet, DROP_INTERFACE_DOWN, m_node->GetObject<Ipv4> (), interface);
         }
     }
+
 }
+
 
 // This function analogous to Linux ip_mr_forward()
 void
@@ -1450,6 +1460,11 @@ Ipv4L3Protocol::DoFragmentation (Ptr<Packet> packet, const Ipv4Header & ipv4Head
   uint16_t originalOffset = ipv4Header.GetFragmentOffset();
   bool isLastFragment = ipv4Header.IsLastFragment();
   uint32_t currentFragmentablePartSize = 0;
+
+  if (!ipv4Header.IsLastFragment())
+    {
+      originalOffset = ipv4Header.GetFragmentOffset();
+    }
 
   // IPv4 fragments are all 8 bytes aligned but the last.
   // The IP payload size is:

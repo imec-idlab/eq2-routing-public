@@ -166,6 +166,16 @@ public:
    */
   void Send (Ptr<Packet> packet, Ipv4Address source, 
              Ipv4Address destination, uint8_t protocol, Ptr<Ipv4Route> route);
+  //Helper fct to go with above, to simulate delay
+  void SendInternal (Ptr<Packet> packet, Ipv4Address source,
+   Ipv4Address destination, uint8_t protocol, Ptr<Ipv4Route> route);
+
+  int JitterDelayMs(int m_delay_ms);
+
+  void SetDelay(int new_delay);
+  void SetLoss(float new_loss);
+  void SetJitter(bool b) { m_jitter = b; m_jitter_toggle=false;}
+
   /**
    * \param packet packet to send
    * \param ipHeader IP Header
@@ -176,11 +186,6 @@ public:
    */
   void SendWithHeader (Ptr<Packet> packet, Ipv4Header ipHeader, Ptr<Ipv4Route> route);
 
-  int JitterDelayMs(int m_delay_ms);
-
-  void SetDelay(int new_delay);
-  void SetLoss(float new_loss);
-  void SetJitter(bool b) { m_jitter = b; m_jitter_toggle=false;}
 
   uint32_t AddInterface (Ptr<NetDevice> device);
   /**

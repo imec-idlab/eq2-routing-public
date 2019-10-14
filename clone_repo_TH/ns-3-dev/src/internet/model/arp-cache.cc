@@ -80,6 +80,10 @@ ArpCache::GetTypeId (void)
                      "in WaitReply expiring.",
                      MakeTraceSourceAccessor (&ArpCache::m_dropTrace),
                      "ns3::Packet::TracedCallback")
+    .AddTraceSource ("MarkDead",
+                     "Node marked dead due to no ARP Replies",
+                     MakeTraceSourceAccessor (&ArpCache::m_deadTrace),
+                     "ns3::Ipv4Address::TracedCallback")
   ;
   return tid;
 }
@@ -397,6 +401,7 @@ ArpCache::Entry::MarkDead (void)
   NS_LOG_FUNCTION (this);
   NS_ASSERT (m_state == ALIVE || m_state == WAIT_REPLY || m_state == DEAD);
   m_state = DEAD;
+  m_arp->m_deadTrace(m_ipv4Address);
   ClearRetries ();
   UpdateSeen ();
 }

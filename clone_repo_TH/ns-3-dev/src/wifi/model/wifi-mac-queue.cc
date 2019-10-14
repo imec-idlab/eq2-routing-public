@@ -22,6 +22,9 @@
  */
 
 #include "ns3/simulator.h"
+#include "ns3/packet.h"
+#include "ns3/uinteger.h"
+#include "ns3/enum.h"
 #include "wifi-mac-queue.h"
 #include "qos-blocked-destinations.h"
 
@@ -53,6 +56,16 @@ WifiMacQueue::GetTypeId (void)
                    MakeEnumAccessor (&WifiMacQueue::m_dropPolicy),
                    MakeEnumChecker (WifiMacQueue::DROP_OLDEST, "DropOldest",
                                     WifiMacQueue::DROP_NEWEST, "DropNewest"))
+    .AddTraceSource( "EnqueuePacket",
+                     "Upon enqueue, send a msg to the QLrn PacketInfo queue so it can track the queue time of the packet.",
+                     MakeTraceSourceAccessor (&WifiMacQueue::m_enqueueTrace),
+                     "ns3::IntegerValue::TracedCallback")
+    .AddTraceSource( "DequeuePacket",
+                     "Upon dequeue, send a msg to the QLrn PacketInfo queue so it can track the queue time of the packet.",
+                     MakeTraceSourceAccessor (&WifiMacQueue::m_dequeueTrace),
+                     "ns3::IntegerValue::TracedCallback")
+
+
   ;
   return tid;
 }
@@ -128,6 +141,10 @@ WifiMacQueue::Enqueue (Ptr<WifiMacQueueItem> item)
           it++;
         }
     }
+  // TODO HANS --> FIGURE OUT IF THIS IS NECESSARY FOR QLEARNING
+  // Time now = Simulator::Now ();
+  // m_queue.push_back (Item (packet, hdr, now));
+  // m_size++;
 
   if (QueueBase::GetNPackets () == GetMaxSize ().GetValue () && m_dropPolicy == DROP_OLDEST)
     {

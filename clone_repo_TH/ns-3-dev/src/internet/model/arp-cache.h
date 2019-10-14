@@ -339,6 +339,7 @@ private:
   uint32_t m_pendingQueueSize; //!< number of packets waiting for a resolution
   Cache m_arpCache; //!< the ARP cache
   TracedCallback<Ptr<const Packet> > m_dropTrace; //!< trace for packets dropped by the ARP cache queue
+  TracedCallback<Ipv4Address> m_deadTrace; //!< trace for packets dropped by the ARP cache queue
 };
 
 

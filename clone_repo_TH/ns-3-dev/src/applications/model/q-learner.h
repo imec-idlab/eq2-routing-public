@@ -54,6 +54,7 @@
 #include "ns3/qos-qlrn-header.h"
 #include "ns3/thomas-packet-tags.h"
 #include "ns3/traffic-types.h"
+//#include "ns3/qdecision.h"
 #include "ns3/qtable.h"
 #include "ns3/packettable.h"
 #include "ns3/mobility-module.h" /* makes STA mobile but we dont want any of that <-- needed for placement in grid */
@@ -112,7 +113,7 @@ public:
   */
   bool Route ( Ptr<Ipv4Route>, Ptr<Packet>, const Ipv4Header&) ;
   bool Route ( Ptr<Ipv4Route>, Ptr<Packet>, const Ipv4Address&, const Ipv4Address&) ;
-  void RouteDiffBasedOnType (QTableEntry&, Ipv4Address, Ipv4Address, TrafficType);
+  void RouteDiffBasedOnType (QDecisionEntry*, Ipv4Address, Ipv4Address, TrafficType);
   /**
    * TODO
    */
@@ -158,7 +159,7 @@ public:
   /**
    * TODO
    */
-  QTable& GetQTable(TrafficType t);
+  QDecision* GetQTable(TrafficType t);
 
   void InitializeLearningPhases(std::vector<Ipv4Address>);
   void SetLearningPhase(bool b, Ipv4Address i) { m_learning_phase[i] = b; }
@@ -184,7 +185,7 @@ public:
   void SetMyTrafficDst(Ipv4Address i) { m_my_sent_traffic_destination = i;}
   std::vector<std::pair< std::pair<Ipv4Address,Ipv4Address>, float > > GetPacketLossPerNeighb() ;
 
-  bool AllNeighboursBlacklisted(Ipv4Address i, TrafficType t) { return GetQTable(t).AllNeighboursBlacklisted(i); }
+  bool AllNeighboursBlacklisted(Ipv4Address i, TrafficType t) { return GetQTable(t)->AllNeighboursBlacklisted(i); }
 protected:
   void StopLearningStartTraffic(Ipv4Address);
   void StopTrafficStartLearning(Ipv4Address);
@@ -239,10 +240,10 @@ protected:
   /// std::list of ipv4 addresses of neighbours
   std::vector<Ipv4Address> neighbours;
 
-  /// QTable
-  QTable m_qtable;
-  QTable m_qtable_video;
-  QTable m_qtable_voip;
+  /// QDecision
+  QDecision *m_qtable;
+  QDecision *m_qtable_video;
+  QDecision *m_qtable_voip;
 
   ///
   PacketTable m_packet_info;

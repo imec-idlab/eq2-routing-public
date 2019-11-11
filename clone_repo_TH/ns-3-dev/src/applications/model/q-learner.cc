@@ -229,9 +229,12 @@ QLearner::QLearner (float eps_param = DEFAULT_EPSILON_VALUE, float learning_rate
 
   tmp = std::set<unsigned int>();
 
-  m_qtable = QTable();
-  m_qtable_voip = QTable();
-  m_qtable_video = QTable();
+  m_qtable = new QTable();
+  m_qtable_voip = new QTable();
+  m_qtable_video = new QTable();
+//  m_qtable = QTable();
+//  m_qtable_voip = QTable();
+//  m_qtable_video = QTable();
 
   neighbours = std::vector<Ipv4Address>();
   aodvProto = 0;
@@ -350,12 +353,12 @@ void QLearner::RouteHelper(Ptr<Ipv4Route> route, Ipv4Address dst, TrafficType t,
   // p->AddPacketTag(RandomDecisionTag(true)); // needed ?
 
   // 2 options here : either learn the optimal (converged, hopefully) route, or just take any random one , which may again be a converged one
-  QTableEntry random_estimate;
-  if (optimum_route_check_up) { random_estimate = GetQTable(t).GetNextEstim(dst); }
-  else { random_estimate = GetQTable(t).GetRandomEstim(dst, unconverged_entries_only); }
+  QDecisionEntry *random_estimate;
+  if (optimum_route_check_up) { random_estimate = GetQTable(t)->GetNextEstim(dst); }
+  else { random_estimate = GetQTable(t)->GetRandomEstim(dst, unconverged_entries_only); }
 
-  initial_estim = random_estimate.GetQValue().GetInteger();
-  route->SetGateway(random_estimate.GetNextHop()  );
+  initial_estim = random_estimate->GetQValue().GetInteger();
+  route->SetGateway(random_estimate->GetNextHop()  );
 
   NS_LOG_DEBUG(m_name << "Exploration " << (unconverged_entries_only? "(non converged entries only)":"(any entries)") <<" replaces " << next_hop << " by  "
       << route->GetGateway() << " on packet id " << p->GetUid() << " destined for " << dst );
@@ -408,9 +411,9 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
 
       Ipv4Address next_hop = route->GetGateway(); //for log purposes
       p->AddPacketTag(RandomDecisionTag(true));
-      auto random_estimate = GetQTable(t).GetRandomEstim(dst);
-      initial_estim = random_estimate.GetQValue().GetInteger();
-      route->SetGateway(random_estimate.GetNextHop()  );
+      auto random_estimate = GetQTable(t)->GetRandomEstim(dst);
+      initial_estim = random_estimate->GetQValue().GetInteger();
+      route->SetGateway(random_estimate->GetNextHop()  );
       NS_LOG_DEBUG(m_name << "I have to randomly replace " << next_hop << " by  "
           << route->GetGateway() << " on packet id " << p->GetUid() << " destined for " << dst );
       // QLrnInfoTag new_tag(Simulator::Now().GetInteger(), m_this_node_ip, tag.GetMaint(),true);
@@ -433,7 +436,7 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
         if (random_value < m_eps_thresh /*(m_eps_thresh == 0 ? 0.5: m_eps_thresh ) */) {// Pick any neighbour : do EXPLORATION ---
           RouteHelper(route,dst,t,initial_estim,0,p); // mode 0 means the next hop will be random
         } else {          // Pick only a non-converged value : do TARGETTED EXPLORATION
-          if (GetQTable(t).HasConverged(dst) || AllNeighboursBlacklisted(dst,t)) {
+          if (GetQTable(t)->HasConverged(dst) || AllNeighboursBlacklisted(dst,t)) {
             // seems like this not having the all neighb blacklisted check was the part that was missing for the testmiguel8 issue with vv many learning pkts
             return false; /* drop the packet if there is nothing to learn and pkt wasnt lucky OR all are blacklisted  */
           }
@@ -469,7 +472,7 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
        * Its REAL traffic or we are in learning phase and the traffic got a good RNG roll so it was above eps threshold ,
        * and is intended to explore the currently-optimal solution. In any case, we should make the (perceived) optimal routing decision
        **/
-      auto next_estimate = GetQTable(t).GetNextEstim(dst);
+      auto next_estimate = GetQTable(t)->GetNextEstim(dst);
       // so this is for the TO-DO show that A/B/C  are taking different paths so they each have a QoS set
       // it will only return the a_estim for b if there is no non-blacklisted alternative, same with b_estim for c
       // p->Print(std::cout<<std::endl);std::cout << p->GetUid() << "  " << t << std::endl;
@@ -479,9 +482,9 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
       }
 
       NS_LOG_DEBUG(m_name << "(Traffictype = " << t << ")  I want to replace " << route->GetGateway() << " by  "
-                     << next_estimate.GetNextHop() << " on packet id " << p->GetUid() << " destined for " << dst << " because "
-                     << next_estimate.GetQValue() << " is the lowest value I found in my qtable (for dst = " << dst << ")." << "\n"
-                     << /*GetQTable(t).PrettyPrint()*/"" << " PS BE CAREFUL IF ALL BLACKLISTED THIS WILL BE A RANDOM RESULT TOO.");
+                     << next_estimate->GetNextHop() << " on packet id " << p->GetUid() << " destined for " << dst << " because "
+                     << next_estimate->GetQValue() << " is the lowest value I found in my qtable (for dst = " << dst << ")." << "\n"
+                     << /*GetQTable(t)->PrettyPrint()*/"" << " PS BE CAREFUL IF ALL BLACKLISTED THIS WILL BE A RANDOM RESULT TOO.");
 
       if (!pnt.GetLearningPkt() && !p->PeekPacketTag(tag) && GetPacketTable()->GetNumberOfTimesSeen(p->GetUid()) > m_max_retry ) {
         // for this max retry parameter, if we set it to 0, it will work on the 1st time we see the pkt again (i think)
@@ -495,20 +498,20 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
         p->AddPacketTag(tag);
         // p->Print(std::cout<<std::endl);std::cout << p->GetUid() << std::endl;
         // NS_LOG_UNCOND(  m_name << " is adding a lrn header to " << p->GetUid() << " because it has been seen more than max_retry times. \n"
-        //              << GetQTable(t).PrettyPrint() << "\n");
+        //              << GetQTable(t)->PrettyPrint() << "\n");
 
       } else if (!p->PeekPacketTag(tag) && !pnt.GetLearningPkt() && GetAODV()->CheckIcmpTTLExceeded(p,ii)) { // because of adding this call to icmp ttl exceeded we observed issue
         return false; // -- this isnt going to benefit anyyone, drop the icmp ttl packet instead of waterproofing the adding of a QLrnInfoTag to it, as it goes wrong SOMEWHERE
       }
 
-      initial_estim = next_estimate.GetQValue().GetInteger();
-      route->SetGateway( next_estimate.GetNextHop() );
+      initial_estim = next_estimate->GetQValue().GetInteger();
+      route->SetGateway( next_estimate->GetNextHop() );
     }
 
     if (!p->PeekPacketTag(ptab) && !p->PeekPacketTag(ptct) && !p->PeekPacketTag(ptst_tag) ) {
-      ptab.SetEstimTypeA(GetQTable(TRAFFIC_A).GetNextEstim(dst).GetQValue().GetInteger());
-      ptab.SetEstimTypeB(GetQTable(TRAFFIC_B).GetNextEstim(dst).GetQValue().GetInteger());
-      ptct.SetEstimTypeC(GetQTable(TRAFFIC_C).GetNextEstim(dst).GetQValue().GetInteger());
+      ptab.SetEstimTypeA(GetQTable(TRAFFIC_A)->GetNextEstim(dst)->GetQValue().GetInteger());
+      ptab.SetEstimTypeB(GetQTable(TRAFFIC_B)->GetNextEstim(dst)->GetQValue().GetInteger());
+      ptct.SetEstimTypeC(GetQTable(TRAFFIC_C)->GetNextEstim(dst)->GetQValue().GetInteger());
       ptct.SetSentTime(Simulator::Now().GetInteger());
 
       p->AddPacketTag(ptab);
@@ -530,16 +533,16 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
   return true;
 }
 
-void QLearner::RouteDiffBasedOnType(QTableEntry& next_estimate, Ipv4Address dst, Ipv4Address src, TrafficType t) {
+void QLearner::RouteDiffBasedOnType(QDecisionEntry* next_estimate, Ipv4Address dst, Ipv4Address src, TrafficType t) {
   return; // OFF-switch for this thing if you want it, no point causing extra weird behaviour right
   if (src != m_this_node_ip && src != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE) ) { return; }
   // if (src != Ipv4Address("10.1.1.1") && src != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE) ) { return; }
-  QTableEntry a_estim;
-  QTableEntry b_estim;
-  // auto old_adr = next_estimate.GetNextHop();
-  QTableEntry next_estimate_by_ref = next_estimate;
-  if (next_estimate.GetNextHop() != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE) ) {
-    next_estimate_by_ref = GetQTable(t).GetEntryByRef(dst, next_estimate.GetNextHop());
+  QDecisionEntry *a_estim;
+  QDecisionEntry *b_estim;
+  // auto old_adr = next_estimate->GetNextHop();
+  QDecisionEntry* next_estimate_by_ref = next_estimate;
+  if (next_estimate->GetNextHop() != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE) ) {
+    next_estimate_by_ref = GetQTable(t)->GetEntryByRef(dst, next_estimate->GetNextHop());
   }
 
 
@@ -548,28 +551,28 @@ void QLearner::RouteDiffBasedOnType(QTableEntry& next_estimate, Ipv4Address dst,
     else if (t == TRAFFIC_B) {
       // find the best estim NOT EQUAL to the optimal estimate
       // std::cout << next_estimate_by_ref.GetRealLoss()<< "  "<< 1-(next_estimate_by_ref.GetRealLoss()/10000.0) << "  "
-      //   << TrafficTypeReqsMap[TRAFFIC_A].GetRandomLossMax() << "  " << next_estimate_by_ref.GetNextHop()<< std::endl;
+      //   << TrafficTypeReqsMap[TRAFFIC_A].GetRandomLossMax() << "  " << next_estimate_by_ref->GetNextHop()<< std::endl;
 
-      if (1-(next_estimate_by_ref.GetRealLoss()/10000.0) > TrafficTypeReqsMap[TRAFFIC_A].GetRandomLossMax() &&
-             next_estimate.GetNextHop() != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE) &&
-             next_estimate_by_ref.GetRealLoss() != 0) {
+      if (1-(next_estimate_by_ref->GetRealLoss()/10000.0) > TrafficTypeReqsMap[TRAFFIC_A].GetRandomLossMax() &&
+             next_estimate->GetNextHop() != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE) &&
+             next_estimate_by_ref->GetRealLoss() != 0) {
         // could fill in here to get the 2nd best estimate, but thats not very interesting. We're mainly interested in seeing B take the faster option!
-        std::cout << "-" << next_estimate_by_ref.GetRealLoss()<< "  "<< 1-(next_estimate_by_ref.GetRealLoss()/10000.0) << "  "
-          << TrafficTypeReqsMap[TRAFFIC_A].GetRandomLossMax() << "  " <<  next_estimate_by_ref.GetNextHop() << std::endl;
+        std::cout << "-" << next_estimate_by_ref->GetRealLoss()<< "  "<< 1-(next_estimate_by_ref->GetRealLoss()/10000.0) << "  "
+          << TrafficTypeReqsMap[TRAFFIC_A].GetRandomLossMax() << "  " <<  next_estimate_by_ref->GetNextHop() << std::endl;
       } else {
         a_estim = next_estimate;
       }
-      // NS_LOG_UNCOND("trying to get next hop for b that avoids " << a_estim.GetNextHop()
-        // << GetQTable(t).PrettyPrint("try"));
-      next_estimate = GetQTable(t).GetNextEstim(dst,a_estim.GetNextHop(),Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE));
-      // NS_LOG_UNCOND("got " << next_estimate.GetNextHop());
+      // NS_LOG_UNCOND("trying to get next hop for b that avoids " << a_estim->GetNextHop()
+        // << GetQTable(t)->PrettyPrint("try"));
+      next_estimate = GetQTable(t)->GetNextEstim(dst,a_estim->GetNextHop(),Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE));
+      // NS_LOG_UNCOND("got " << next_estimate->GetNextHop());
     } else if (t == TRAFFIC_C) {
       // find the best estim that is not equal to the estim for A
       a_estim = next_estimate;
-      // NS_LOG_UNCOND("trying to get next hop for b that avoids " << a_estim.GetNextHop());
-      b_estim = GetQTable(t).GetNextEstim(dst,a_estim.GetNextHop(),UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE); //duh, using wrong version of teh fct
-      // NS_LOG_UNCOND("got " << b_estim.GetNextHop());
-      next_estimate = GetQTable(t).GetNextEstim(dst,a_estim.GetNextHop(),b_estim.GetNextHop());
+      // NS_LOG_UNCOND("trying to get next hop for b that avoids " << a_estim->GetNextHop());
+      b_estim = GetQTable(t)->GetNextEstim(dst,a_estim->GetNextHop(),UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE); //duh, using wrong version of teh fct
+      // NS_LOG_UNCOND("got " << b_estim->GetNextHop());
+      next_estimate = GetQTable(t)->GetNextEstim(dst,a_estim->GetNextHop(),b_estim->GetNextHop());
     } else {
       // leave it I suppose
       // ttl exceeded comes here unfortunately
@@ -577,8 +580,8 @@ void QLearner::RouteDiffBasedOnType(QTableEntry& next_estimate, Ipv4Address dst,
     }
   }
   // NS_LOG_UNCOND("Traffic type is " << traffic_type_to_traffic_string(t) << ". Changed next hop from "
-  //   << old_adr << " to " << next_estimate.GetNextHop() << " at " << m_name << "\nI have to avoid "
-  //   << a_estim.GetNextHop() << " and " << b_estim.GetNextHop() << "\n" << GetQTable(t).PrettyPrint());
+  //   << old_adr << " to " << next_estimate->GetNextHop() << " at " << m_name << "\nI have to avoid "
+  //   << a_estim->GetNextHop() << " and " << b_estim->GetNextHop() << "\n" << GetQTable(t)->PrettyPrint());
 }
 
 void QLearner::RoutingPacketViaNeighbToDst(Ipv4Address via,Ipv4Address dst) {
@@ -804,7 +807,7 @@ void QLearner::HandleRouteInput(Ptr<Packet> p, const Ipv4Header &header, bool de
         /* Take care of sending back a packet to the previous hop (found in tag->GetPrevHop() ) */
         // p->Print(std::cout);std::cout<<std::endl;
         // if (true) {std::stringstream ss; p->Print(ss<<std::endl<<"(D)Node"<<GetNode()->GetId()<< "Sending info back because of this packet:");ss<<std::endl;std::cout<<ss.str();}
-        bool sender_convergence = !CheckAODVHeader(p) && GetQTable(t).HasConverged(header.GetDestination() , true);
+        bool sender_convergence = !CheckAODVHeader(p) && GetQTable(t)->HasConverged(header.GetDestination() , true);
 
         // std::cout << p->GetUid() << " at (B)" << m_name << std::endl;
         Send(tag.GetPrevHop(), p->GetUid(), TravelTimeHelper(tag), header.GetDestination(), header.GetSource(), t, sender_convergence ) ;
@@ -817,7 +820,7 @@ void QLearner::HandleRouteInput(Ptr<Packet> p, const Ipv4Header &header, bool de
         /* Take care of sending back a packet to the previous hop (found in tag->GetPrevHop() ) */
         // p->Print(std::cout);std::cout<<std::endl;
         // if (true) {std::stringstream ss; p->Print(ss<<std::endl<<"(A)Node"<<GetNode()->GetId()<< "Sending info back because of this packet:");ss<<std::endl;std::cout<<ss.str();}
-        bool sender_convergence = !CheckAODVHeader(p) && GetQTable(t).HasConverged(header.GetDestination() , true);
+        bool sender_convergence = !CheckAODVHeader(p) && GetQTable(t)->HasConverged(header.GetDestination() , true);
         // std::cout << p->GetUid() << " at (C)" << m_name << std::endl;
         Send(tag.GetPrevHop(), p->GetUid(), TravelTimeHelper(tag), header.GetDestination(), header.GetSource(), t, sender_convergence ) ;
         if (GetPacketTable()->GetNumberOfTimesSeen(p->GetUid()) > 1) {       new_tag.SetUsableDelay(false);     }
@@ -856,7 +859,7 @@ void QLearner::HandleRouteInput(Ptr<Packet> p, const Ipv4Header &header, bool de
       aodvProto->SendRequest(header.GetDestination());
     }
 
-    bool sender_convergence = !CheckAODVHeader(p) && GetQTable(t).HasConverged(header.GetDestination() , true);
+    bool sender_convergence = !CheckAODVHeader(p) && GetQTable(t)->HasConverged(header.GetDestination() , true);
     // if (GetNode()->GetId() >= 1 && m_travel_time > MilliSeconds(20)) {
     //   std::stringstream ss; p->Print(ss<<std::endl<<"(B)Node"<<GetNode()->GetId()<< "Sending info back because of this packet:");ss<<std::endl;std::cout<<ss.str()
     //   << (p->PeekPacketTag(tag)?"Does have a qlrn tag": "does not have a qlrn tag") << "     " << m_travel_time << "\n";
@@ -866,7 +869,7 @@ void QLearner::HandleRouteInput(Ptr<Packet> p, const Ipv4Header &header, bool de
     // p->Print(std::cout << p->GetUid() << " at " << m_name << "      ");std::cout << std::endl;
     Send(tag.GetPrevHop(), p->GetUid(), TravelTimeHelper(tag), header.GetDestination(), header.GetSource(), t, sender_convergence ) ;
 
-    if (GetQTable(t).HasConverged(header.GetDestination(),true) && m_use_learning_phases/* for legacy reasons */ && !tag.GetMaint() ) {
+    if (GetQTable(t)->HasConverged(header.GetDestination(),true) && m_use_learning_phases/* for legacy reasons */ && !tag.GetMaint() ) {
       /* !tag.GetMaint() is for if its a maintenance packet (to keep learning while traffic) dont drop*/
 
       // Its already determined here that the tag is there from the else if from before, now we just drop if we're converged
@@ -891,7 +894,7 @@ void QLearner::HandleRouteInput(Ptr<Packet> p, const Ipv4Header &header, bool de
     // std::stringstream ss; p->Print(ss<<std::endl);
     // NS_LOG_UNCOND(ss.str());
 
-    /*GetQTable(t).HasConverged(header.GetDestination() ) we are dst, so this automatically true*/
+    /*GetQTable(t)->HasConverged(header.GetDestination() ) we are dst, so this automatically true*/
     bool sender_convergence = !CheckAODVHeader(p) && true;
     // dont cause other nodes to converge as a result of aodv traffic please
 
@@ -1214,15 +1217,15 @@ QLearner::StartApplication (void)
     neighbours = FindNeighboursManual ();
   }
 
-  m_qtable = QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
+  m_qtable =       new QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
                   m_qconvergence_threshold, m_learning_threshold, std::vector<Ipv4Address>(), "_web", m_in_test, m_print_qtables, m_gamma);
-  m_qtable_video = QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
+  m_qtable_video = new QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
                   m_qconvergence_threshold, m_learning_threshold, std::vector<Ipv4Address>(), "_video", m_in_test, m_print_qtables, m_gamma);
-  m_qtable_voip = QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
+  m_qtable_voip =  new QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
                   m_qconvergence_threshold, m_learning_threshold, std::vector<Ipv4Address>(), "_voip", m_in_test, m_print_qtables, m_gamma);
 
   if (GetNode()->GetId() == 27) {
-    std::cout << m_qtable.PrettyPrint() << std::endl;
+    std::cout <<m_qtable->PrettyPrint() << std::endl;
     std::cout << "\n======================BEGIN========================\n\n";
   }
 
@@ -1290,7 +1293,7 @@ QLearner::Receive(Ptr<Socket> socket) {
   NS_LOG_DEBUG( m_name << "learning info about " << qlrnHeader.GetPDst() <<" from packet ID " << qlrnHeader.GetPktId()
             << " : travel time was " << Time::FromInteger(qlrnHeader.GetTime(), Time::NS).As(Time::MS) << " and next estim : " << Time::FromInteger(qlrnHeader.GetNextEstim(), Time::NS)
             << ". This info was contained in pkt " << packet->GetUid() << " sent by " <<  sourceIPAddress);
-  GetQTable(t).Update(sourceIPAddress, //get the neighbour that we chose as next hop
+  GetQTable(t)->Update(sourceIPAddress, //get the neighbour that we chose as next hop
                 qlrnHeader.GetPDst(),   //the actual destination of the packet ( to know which entry in the QTable to update)
                 m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()) /*- Time::FromInteger(qlrnHeader.GetTime(), Time::NS)*/, //the time the packet spent in the queue
                 Time::FromInteger(qlrnHeader.GetTime(), Time::NS), // //the time the packet spent in the air (so time between sent and arrival)
@@ -1301,7 +1304,7 @@ QLearner::Receive(Ptr<Socket> socket) {
               << " : travel time was " << Time::FromInteger(qlrnHeader.GetTime(), Time::NS).As(Time::MS)
               << " GetPacketQueueTime time was " << m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId())
               << ". Contained in pkt " << packet->GetUid() << " sent by " <<  sourceIPAddress);
-  GetQTable(t).Update(sourceIPAddress, //get the neighbour that we chose as next hop
+  GetQTable(t)->Update(sourceIPAddress, //get the neighbour that we chose as next hop
                     sourceIPAddress,
           /*EXPERIMENTAL*/          m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()), //the time the packet spent in the queue for nexthop neighbours, this should be 0 --
                     Time::FromInteger(qlrnHeader.GetTime(), Time::NS), // //the time the packet spent in the air (so time between sent and arrival)
@@ -1310,9 +1313,9 @@ QLearner::Receive(Ptr<Socket> socket) {
 
   }
 
-  GetQTable(TRAFFIC_A).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetSenderConverged(qlrnHeader.GetSenderConverged());
-  GetQTable(TRAFFIC_B).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetSenderConverged(qlrnHeader.GetSenderConverged());
-  GetQTable(TRAFFIC_C).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetSenderConverged(qlrnHeader.GetSenderConverged());
+  GetQTable(TRAFFIC_A)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetSenderConverged(qlrnHeader.GetSenderConverged());
+  GetQTable(TRAFFIC_B)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetSenderConverged(qlrnHeader.GetSenderConverged());
+  GetQTable(TRAFFIC_C)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetSenderConverged(qlrnHeader.GetSenderConverged());
 
   Ipv4Address destination = qlrnHeader.GetPDst() ;
   if (qlrnHeader.GetSenderConverged()) {
@@ -1323,38 +1326,38 @@ QLearner::Receive(Ptr<Socket> socket) {
                               << "traffictype = " << traffic_type_to_traffic_string(t) << " and the destination ip was " << destination);
   }
   // if (GetNode()->GetId()  == 1){
-  //   NS_LOG_UNCOND("dst is " << destination << " and converged (best choice) for that is " << GetQTable(t).HasConverged(destination, true ) << "\n"
+  //   NS_LOG_UNCOND("dst is " << destination << " and converged (best choice) for that is " << GetQTable(t)->HasConverged(destination, true ) << "\n"
   //                   << m_num_applications << "  " << m_use_learning_phases << " " << m_learning_phase[destination] << "  " << m_my_sent_traffic_destination << "\n"
   //   );
   // }
-  if (GetQTable(t).HasConverged(destination) && m_num_applications >= 1 && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
+  if (GetQTable(t)->HasConverged(destination) && m_num_applications >= 1 && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
     // NS_LOG_UNCOND(m_name << "(no qos) Im in learning phase, all choices have converged, time ( " << Simulator::Now().As(Time::S) << " ) to stop learning & start traffic. pkt id:" << packet->GetUid());
     StopLearningStartTraffic(destination);
     NS_ASSERT(GetNode()->GetId() == 0); // old assert for when node0 only has 1 next_hop
     // NS_FATAL_ERROR("i dont want this to happen?"); //-- but it happens anyway ?? the fk --- only happens in 0, because it only has 1 choice
-  } else if (GetQTable(t).HasConverged(destination, true ) &&  m_num_applications >= 1  && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
+  } else if (GetQTable(t)->HasConverged(destination, true ) &&  m_num_applications >= 1  && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
     // NS_LOG_UNCOND(m_name << "(no qos) Im in learning phase, best choice has converged, time ( " << Simulator::Now().As(Time::S) << " ) to stop learning & start traffic. pkt id:" << packet->GetUid());
     StopLearningStartTraffic(destination);
-  } else if (GetQTable(t).HasConverged(destination, true ) && m_use_learning_phases && m_learning_phase[destination]) {
+  } else if (GetQTable(t)->HasConverged(destination, true ) && m_use_learning_phases && m_learning_phase[destination]) {
     SetLearningPhase(false,destination); //-- so the issue lies here, "best estim" is not necessarily really the best estim, and that ruins the simulation for 15 straight line nodes!
-  } else if (GetQTable(t).HasConverged(destination) && m_use_learning_phases && m_learning_phase[destination]) {
+  } else if (GetQTable(t)->HasConverged(destination) && m_use_learning_phases && m_learning_phase[destination]) {
     SetLearningPhase(false,destination); //Decide on this part still... best (i think) is to have only one  converge since thats all we need
   }
 
 
   // Because for one entyr it might be told to learn more, then another will send QInfo and the
   // decision may be to learn less. As these have different variables, they might cancel eachother out!
-  // bool to_dst_learn_less = GetQTable(t).GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnLess();
-  // bool to_dst_learn_more = GetQTable(t).GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnMore();
-  bool to_dst_learn_less = GetQTable(t).LearnLess(qlrnHeader.GetPDst() );
-  bool to_dst_learn_more = GetQTable(t).LearnMore(qlrnHeader.GetPDst() );
+  // bool to_dst_learn_less = GetQTable(t)->GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnLess();
+  // bool to_dst_learn_more = GetQTable(t)->GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnMore();
+  bool to_dst_learn_less = GetQTable(t)->LearnLess(qlrnHeader.GetPDst() );
+  bool to_dst_learn_more = GetQTable(t)->LearnMore(qlrnHeader.GetPDst() );
   NS_ASSERT_MSG(!(to_dst_learn_more && to_dst_learn_less) , "Cant have both at the same time, that would be conflicing ideas.");
   /*
    * dont increase or decrease learning for the neighbour, we care only about the dst!
    * values for neighb are much smaller so are %change more
    */
-  bool to_neigh_learn_less = false; // GetQTable(t).GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
-  bool to_neigh_learn_more = false; // GetQTable(t).GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
+  bool to_neigh_learn_less = false; // GetQTable(t)->GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
+  bool to_neigh_learn_more = false; // GetQTable(t)->GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
 
   if ( (to_dst_learn_more || to_neigh_learn_more ) && m_small_learning_stream && m_my_sent_traffic_destination == destination /* dont mess with traffic if its not our dst*/ &&
         m_use_learning_phases && !m_learning_phase[destination] && m_num_applications == 2 && learning_traffic_applications/*->GetN() == 1*/!=0 && real_traffic/*->GetN() == 1*/!=0) {
@@ -1398,9 +1401,9 @@ QLearner::StopTrafficStartLearning(Ipv4Address i) {
   }
   SetLearningPhase(true, i);
 
-  GetQTable(TRAFFIC_C).Unconverge();
-  GetQTable(TRAFFIC_B).Unconverge();
-  GetQTable(TRAFFIC_A).Unconverge();
+  GetQTable(TRAFFIC_C)->Unconverge();
+  GetQTable(TRAFFIC_B)->Unconverge();
+  GetQTable(TRAFFIC_A)->Unconverge();
 }
 
 void
@@ -1452,11 +1455,11 @@ QLearner::Send (Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_tim
     delay = m_delay * 1000000;
   }
 
-  QLrnHeader qLrnHeader ( packet_Uid, travel_time.GetInteger(), GetQTable(t).GetNextEstim(packet_dst).GetQValue().GetInteger()+delay, sender_converged, packet_dst, t);
+  QLrnHeader qLrnHeader ( packet_Uid, travel_time.GetInteger(), GetQTable(t)->GetNextEstim(packet_dst)->GetQValue().GetInteger()+delay, sender_converged, packet_dst, t);
   Ptr<Packet> packet = Create<Packet> ();
   // if (GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal() == Ipv4Address("10.1.1.8") ||
   //     GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal() == Ipv4Address("10.1.1.2")) {
-  //   qLrnHeader = QLrnHeader( packet_Uid, travel_time.GetInteger(), GetQTable(t).GetNextEstim(packet_dst).second.GetInteger() * 100, packet_dst, t );
+  //   qLrnHeader = QLrnHeader( packet_Uid, travel_time.GetInteger(), GetQTable(t)->GetNextEstim(packet_dst).second.GetInteger() * 100, packet_dst, t );
   // }
   packet->AddHeader (qLrnHeader);
 
@@ -1471,7 +1474,7 @@ QLearner::Send (Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_tim
     // std::cout << Simulator::Now() << "  " << node_to_notify << std::endl;
     // std::cout << "Node" << GetNode()->GetId() << " " << packet_Uid << std::endl;
 
-    m_other_qlearners[node_to_notify]->GetQTable(t).Update(GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), //We are the actual next hop
+    m_other_qlearners[node_to_notify]->GetQTable(t)->Update(GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), //We are the actual next hop
                     qLrnHeader.GetPDst(), //the actual destination of the packet ( to know which entry in the QTable to update)
                     m_packet_info.GetPacketQueueTime(qLrnHeader.GetPktId()), //the time the packet spent in the queue at me
                     Time::FromInteger(qLrnHeader.GetTime(), Time::NS) /*- m_packet_info.GetPacketQueueTime(qLrnHeader.GetPktId()) also old code */, //the time the packet spent in the air (so time between sent and arrival)
@@ -1483,7 +1486,7 @@ QLearner::Send (Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_tim
       //           << " : travel time was " << Time::FromInteger(qlrnHeader.GetTime(), Time::NS).As(Time::MS)
       //           << " GetPacketQueueTime time was " << m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId())
       //           << ". Contained in pkt " << packet->GetUid() << " sent by " <<  InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ());
-      m_other_qlearners[node_to_notify]->GetQTable(t).Update(GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), //We are the actual next hop
+      m_other_qlearners[node_to_notify]->GetQTable(t)->Update(GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), //We are the actual next hop
                         GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(),
                         m_packet_info.GetPacketQueueTime(qLrnHeader.GetPktId()), //the time the packet spent in the queue for nexthop neighbours, this should be 0 -- [ if the queue is actually full .. but it should never be queued anyway]
                         Time::FromInteger(qLrnHeader.GetTime(), Time::NS) /*- m_packet_info.GetPacketQueueTime(qLrnHeader.GetPktId()) also old code */, // //the time the packet spent in the air (so time between sent and arrival)
@@ -1507,25 +1510,25 @@ QLearner::FixRoute (Ptr<Ipv4Route> route, Ptr<NetDevice> net, Ipv4Address src) {
 
 void
 QLearner::NotifyLinkDown(Ipv4Address neighb) {
-  m_qtable.MarkNeighbDown(neighb);
-  m_qtable_voip.MarkNeighbDown(neighb);
-  m_qtable_video.MarkNeighbDown(neighb);
+ m_qtable->MarkNeighbDown(neighb);
+  m_qtable_voip->MarkNeighbDown(neighb);
+  m_qtable_video->MarkNeighbDown(neighb);
 
-  m_qtable.Unconverge();
-  m_qtable_voip.Unconverge();
-  m_qtable_video.Unconverge();
+ m_qtable->Unconverge();
+  m_qtable_voip->Unconverge();
+  m_qtable_video->Unconverge();
 
   for (const auto& dst : m_traffic_destinations ) {
-    if (!m_learning_phase[dst] && !m_qtable.HasConverged(dst,true) ) {
+    if (!m_learning_phase[dst] && !m_qtable->HasConverged(dst,true) ) {
       SetLearningPhase(true,dst);
     }
   }
 }
 
 void QLearner::AddNeighbour(Ipv4Address neighb) {
-  m_qtable.AddNeighbour(neighb);
-  m_qtable_voip.AddNeighbour(neighb);
-  m_qtable_video.AddNeighbour(neighb);
+ m_qtable->AddNeighbour(neighb);
+  m_qtable_voip->AddNeighbour(neighb);
+  m_qtable_video->AddNeighbour(neighb);
 }
 
 void
@@ -1553,7 +1556,7 @@ QLearner::GetStatistics() {
   return ss.str();
 }
 
-QTable& QLearner::GetQTable(TrafficType t) {
+QDecision* QLearner::GetQTable(TrafficType t) {
   if (t == ICMP || t == WEB || t == OTHER || t == UDP_ECHO || t == TRAFFIC_C) {
     return m_qtable;
   } else if (t == VIDEO|| t == TRAFFIC_B) {
@@ -1566,9 +1569,9 @@ QTable& QLearner::GetQTable(TrafficType t) {
 }
 
 bool QLearner::AddDestination (Ipv4Address via, Ipv4Address dst, Time t) {
-  bool regular_table = m_qtable.AddDestination(via,dst,t);
-  bool voip_table = m_qtable_voip.AddDestination(via,dst,t);
-  bool video_table = m_qtable_video.AddDestination(via,dst,t);
+  bool regular_table =m_qtable->AddDestination(via,dst,t);
+  bool voip_table = m_qtable_voip->AddDestination(via,dst,t);
+  bool video_table = m_qtable_video->AddDestination(via,dst,t);
 
   NS_ASSERT( regular_table == voip_table);
   NS_ASSERT( regular_table == video_table);
@@ -1576,27 +1579,27 @@ bool QLearner::AddDestination (Ipv4Address via, Ipv4Address dst, Time t) {
 }
 
 bool QLearner::CheckDestinationKnown(const Ipv4Address& i) {
-  NS_ASSERT(m_qtable.CheckDestinationKnown(i) == m_qtable_voip.CheckDestinationKnown(i));
-  NS_ASSERT(m_qtable_voip.CheckDestinationKnown(i) == m_qtable_video.CheckDestinationKnown(i));
-  return m_qtable.CheckDestinationKnown(i) && m_qtable_voip.CheckDestinationKnown(i) && m_qtable_video.CheckDestinationKnown(i);
+  NS_ASSERT(m_qtable->CheckDestinationKnown(i) == m_qtable_voip->CheckDestinationKnown(i));
+  NS_ASSERT(m_qtable_voip->CheckDestinationKnown(i) == m_qtable_video->CheckDestinationKnown(i));
+  return m_qtable->CheckDestinationKnown(i) && m_qtable_voip->CheckDestinationKnown(i) && m_qtable_video->CheckDestinationKnown(i);
 }
 
 Ipv4Address QLearner::GetNextHop(Ipv4Address dst, TrafficType t) {
-  return GetQTable(t).GetNextEstim(dst).GetNextHop();
+  return GetQTable(t)->GetNextEstim(dst)->GetNextHop();
 }
 
 void QLearner::ChangeQValuesFromZero(Ipv4Address dst, Ipv4Address aodv_next_hop) {
-  m_qtable.ChangeQValuesFromZero(dst, aodv_next_hop);
-  m_qtable_voip.ChangeQValuesFromZero(dst, aodv_next_hop);
-  m_qtable_video.ChangeQValuesFromZero(dst, aodv_next_hop);
+ m_qtable->ChangeQValuesFromZero(dst, aodv_next_hop);
+  m_qtable_voip->ChangeQValuesFromZero(dst, aodv_next_hop);
+  m_qtable_video->ChangeQValuesFromZero(dst, aodv_next_hop);
 }
 
 std::string QLearner::PrintQTable(TrafficType t) {
-  return GetQTable(t).PrettyPrint(traffic_type_to_traffic_string(t));
+  return GetQTable(t)->PrettyPrint(traffic_type_to_traffic_string(t));
 }
 
 void QLearner::FinaliseQTables(TrafficType t) {
-  GetQTable(t).FinalFile();
+  GetQTable(t)->FinalFile();
 }
 
 bool QLearner::SetOtherQLearners(NodeContainer nodes) {

@@ -217,7 +217,7 @@ QLearningBase::Configure (int argc, char **argv)
 
   if (in_test) {
     NS_ASSERT(test_case_filename != "");
-    return ConfigureTest (    pcap /* pcap */, false /*printRoutes*/,
+    return ConfigureTest (    true /* pcap */, true /*printRoutes*/,
                               false /*linkBreak*/, false /* linkUnBreak*/,
                               false /*ideal*/, 0 /* numHops */,
                               test_case_filename/* test_case_filename */, test_case_filename.substr(0,test_case_filename.size()-4) + "_expected_results.txt");
@@ -501,10 +501,10 @@ QLearningBase::Run ()
       auto qq = dynamic_cast<QLearner*> (   PeekPointer( QLearners.Get(i) ) );
       // auto qq = dynamic_cast<QLearner&> (*(nodes.Get(i)->GetApplication (j)));
       if (i < 7  && !in_test) {
-        // std::cout << qq.PrintQTable(traffic_string_to_traffic_type(traffic)) << std::endl; // printing of q table info to stdout
+        // std::cout << qq->PrintQTable(traffic_string_to_traffic_type(traffic)) << std::endl; // printing of q table info to stdout
 
         // CHecking aodv's neighbours . . .
-        // for (auto const& x : qq.GetAODV()->GetNeighbors()->GetVector()) {
+        // for (auto const& x : qq->GetAODV()->GetNeighbors()->GetVector()) {
           // std::cout << x.m_neighborAddress << std::endl;
           // neighbours_fromGetVector.push_back(x.m_neighborAddress);
         // }
@@ -750,8 +750,8 @@ QLearningBase::VerifyBrokenResults(std::string& err) {
     if (std::find(expected_broken_nodes.begin(), expected_broken_nodes.end(), j) == expected_broken_nodes.end()) {
       for (const auto& k : {VOIP, WEB, VIDEO} ) {
         auto qq = dynamic_cast<QLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
-        auto q_neighbours = qq.GetNeighbours();
-        auto q_unavails = qq.GetUnavails();
+        auto q_neighbours = qq->GetNeighbours();
+        auto q_unavails = qq->GetUnavails();
         for (const auto& v : q_unavails) {
           for (auto g = 0; g < int(interfaces.GetN()); g++) {
           // for (auto i = interfaces.Begin(); i != interfaces.End(); i++) {
@@ -774,8 +774,8 @@ QLearningBase::VerifyBrokenResults(std::string& err) {
       if (std::find(expected_broken_nodes.begin(), expected_broken_nodes.end(), j) == expected_broken_nodes.end()) {
         for (const auto& k : {VOIP, WEB, VIDEO} ) {
           auto qq = dynamic_cast<QLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
-          auto q_neighbours = qq.GetNeighbours();
-          auto q_unavails = qq.GetUnavails();
+          auto q_neighbours = qq->GetNeighbours();
+          auto q_unavails = qq->GetUnavails();
           if (std::find(q_neighbours.begin(), q_neighbours.end(), interfaces.GetAddress(i)) != q_neighbours.end() && j < i ) { // if it is a neighbour // & j < i -- do UPSTREAM ONLY!
             if (std::find(q_unavails.begin(), q_unavails.end(), interfaces.GetAddress(i)) == q_unavails.end() ) { // and if it is not marked unavail
               // error, unexpected not broken
@@ -1246,15 +1246,15 @@ bool QLearningBase::RunTest(std::string& err) {
         //   try {
         //     auto qq = dynamic_cast<QLearner&> (*(nodes.Get(i)->GetApplication (j)));
         //     if (std::find(traffic_destinations.begin(), traffic_destinations.end(), interfaces.GetAddress(i)) != traffic_destinations.end()) {
-        //       avg_delay[interfaces.GetAddress(i)] = Time::FromInteger(int(qq.AvgDelayAsFloat()), Time::NS);
+        //       avg_delay[interfaces.GetAddress(i)] = Time::FromInteger(int(qq->AvgDelayAsFloat()), Time::NS);
         //     }
         //     if (std::find(traffic_sources.begin(), traffic_sources.end(), interfaces.GetAddress(i)) != traffic_sources.end()) {
-        //       packet_loss_per_neighb_from_src[interfaces.GetAddress(i)] = qq.GetPacketLossPerNeighb();
+        //       packet_loss_per_neighb_from_src[interfaces.GetAddress(i)] = qq->GetPacketLossPerNeighb();
         //     }
-        //     qq.FinaliseQTables(traffic_string_to_traffic_type("trafficA"));
-        //     qq.FinaliseQTables(traffic_string_to_traffic_type("trafficB"));
-        //     qq.FinaliseQTables(traffic_string_to_traffic_type("trafficC"));
-        //     Qstats << qq.GetStatistics() << '/';
+        //     qq->FinaliseQTables(traffic_string_to_traffic_type("trafficA"));
+        //     qq->FinaliseQTables(traffic_string_to_traffic_type("trafficB"));
+        //     qq->FinaliseQTables(traffic_string_to_traffic_type("trafficC"));
+        //     Qstats << qq->GetStatistics() << '/';
         //   } catch (const std::bad_cast &) {
         //     // do nothing, keep searching
         //   }

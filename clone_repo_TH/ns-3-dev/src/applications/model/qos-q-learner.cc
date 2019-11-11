@@ -132,7 +132,7 @@ QoSQLearner::Send(Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_t
 
   //TODO ensure next hop is always higher than what is alreadly known about the nieghbour
   // ensure that qte_next_hop is the same for both times it goes into the Send function
-  QTableEntry qte_next_hop = GetQTable(t).GetNextEstim(packet_dst);
+  QDecisionEntry* qte_next_hop = GetQTable(t)->GetNextEstim(packet_dst);
   if (GetNode()->GetId() == 0) {
     // NS_LOG_UNCOND("before " << qte_next_hop.GetNextHop());
   }
@@ -150,11 +150,11 @@ QoSQLearner::Send(Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_t
   //   std::cout << "hi" << std::endl;
   //   std::cout << qte_next_hop.GetNextHop() << " and loss value " << (
   //   (packet_dst != m_this_node_ip && qte_next_hop.GetNextHop() != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE) ) ?
-  //       GetQTable(t).GetEntryByRef(packet_dst,qte_next_hop.GetNextHop() /*dst,via*/).GetRealLoss() :
+  //       GetQTable(t)->GetEntryByRef(packet_dst,qte_next_hop.GetNextHop() /*dst,via*/).GetRealLoss() :
   //       0
   // ) << std::endl; }
-  // NS_ASSERT( GetQTable(t).GetEntryByRef(packet_dst,qte_next_hop.GetNextHop() /*dst,via*/).GetRealLoss() != 0);
-  uint64_t next_estim = qte_next_hop.GetQValue().GetInteger();
+  // NS_ASSERT( GetQTable(t)->GetEntryByRef(packet_dst,qte_next_hop.GetNextHop() /*dst,via*/).GetRealLoss() != 0);
+  uint64_t next_estim = qte_next_hop->GetQValue().GetInteger();
   // then maybe also try this ?
   // if (AllNeighboursBlacklisted(packet_dst,t) && GetNode()->GetId() == 0) { next_estim = Seconds(101).GetInteger(); }
   if (AllNeighboursBlacklisted(packet_dst,t) /*&& GetNode()->GetId() == 0*/) { next_estim = m_q_value_when_all_blacklisted; }
@@ -163,11 +163,11 @@ QoSQLearner::Send(Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_t
 
   // std::cout << "going to be doing the find by ref thing here now;.." << std::endl;
   QoSQLrnHeader qLrnHeader (  packet_Uid, travel_time.GetInteger(), next_estim,
-                              qte_next_hop.GetRealDelay(), sender_converged, packet_dst,
+                              qte_next_hop->GetRealDelay(), sender_converged, packet_dst,
                               (
                                   (packet_dst != m_this_node_ip
-                                    && qte_next_hop.GetNextHop() != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE) ) ?
-                                    GetQTable(t).GetEntryByRef(packet_dst,qte_next_hop.GetNextHop() /*dst,via*/).GetRealLoss() :
+                                    && qte_next_hop->GetNextHop() != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE_QTABLE) ) ?
+                                    GetQTable(t)->GetEntryByRef(packet_dst,qte_next_hop->GetNextHop() /*dst,via*/)->GetRealLoss() :
                                     0
                               ),
                               GetNumRecvPktFromPrevHopToDst(node_to_notify, packet_dst), t);
@@ -216,23 +216,25 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
   // packet->Print(ss);
   // NS_LOG_UNCOND(ss.str());
 
-  QTableEntry old_value = GetQTable(t).GetNextEstim(qlrnHeader.GetPDst());
+  // HANS - put this in comments because according to the compiler this was not used
+  // HANS - this one is not used because the line 322 is commented out
+  //QDecisionEntry* old_value = GetQTable(t)->GetNextEstim(qlrnHeader.GetPDst());
 
   uint64_t jitter_val = 0;
   // this one just calculates the jitter value : look at which value (previous delay or this) is biggest, return the biggest - smallest
-  if (GetQTable(qlrnHeader.GetTrafficType()).GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress).GetRealDelay() != 0 && (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) != 0) {
-    jitter_val = ( GetQTable(qlrnHeader.GetTrafficType()).GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress).GetRealDelay() < (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) ?
-                      (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) - GetQTable(qlrnHeader.GetTrafficType()).GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress).GetRealDelay() :
-                      GetQTable(qlrnHeader.GetTrafficType()).GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress).GetRealDelay() - (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) );
+  if (GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() != 0 && (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) != 0) {
+    jitter_val = ( GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() < (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) ?
+                      (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) - GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() :
+                      GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() - (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) );
   }
 
   // Have found the jitter value for this particular packet
   // have also found the currently most recently observed delay value
   //So we effectively set the real delay equal to the previous node's real delay + the time it took for the QInfoTagged packet (not the qlrn header) to travel
 
-  GetQTable(TRAFFIC_A).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetRealDelay( qlrnHeader.GetRealDelay() + qlrnHeader.GetTime() );
-  GetQTable(TRAFFIC_B).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetRealDelay( qlrnHeader.GetRealDelay() + qlrnHeader.GetTime() );
-  GetQTable(TRAFFIC_C).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetRealDelay( qlrnHeader.GetRealDelay() + qlrnHeader.GetTime() );
+  GetQTable(TRAFFIC_A)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetRealDelay( qlrnHeader.GetRealDelay() + qlrnHeader.GetTime() );
+  GetQTable(TRAFFIC_B)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetRealDelay( qlrnHeader.GetRealDelay() + qlrnHeader.GetTime() );
+  GetQTable(TRAFFIC_C)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetRealDelay( qlrnHeader.GetRealDelay() + qlrnHeader.GetTime() );
 
   PacketLossTrackingSentTimeQInfo loss_time_sent;
   NS_ASSERT_MSG(packet->PeekPacketTag(loss_time_sent), "We expect this now, so must have this tag present.");
@@ -270,15 +272,15 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
 
     SetRealLossForOutput(sourceIPAddress,qlrnHeader.GetPDst(),new_loss_value); //stored as a real float
 
-    GetQTable(TRAFFIC_A).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetRealLoss( new_loss_value * 10000); //stored as uint16 so *10000 to get ab,cd as value
-    GetQTable(TRAFFIC_B).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetRealLoss( new_loss_value * 10000);
-    GetQTable(TRAFFIC_C).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).SetRealLoss( new_loss_value * 10000);
+    GetQTable(TRAFFIC_A)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetRealLoss( new_loss_value * 10000); //stored as uint16 so *10000 to get ab,cd as value
+    GetQTable(TRAFFIC_B)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetRealLoss( new_loss_value * 10000);
+    GetQTable(TRAFFIC_C)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->SetRealLoss( new_loss_value * 10000);
   }
 
   NS_LOG_DEBUG( m_name << "learning info about " << qlrnHeader.GetPDst() <<" from packet ID " << qlrnHeader.GetPktId()
             << " : travel time was " << Time::FromInteger(qlrnHeader.GetTime(), Time::NS).As(Time::MS) << " and next estim : " << Time::FromInteger(qlrnHeader.GetNextEstim(), Time::NS)
             << ". This info was contained in pkt " << packet->GetUid() << " sent by " <<  InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ());
-  uint64_t unpunished_new_q_value = GetQTable(t).CalculateNewQValue(sourceIPAddress, //get the neighbour that we chose as next hop
+  uint64_t unpunished_new_q_value = GetQTable(t)->CalculateNewQValue(sourceIPAddress, //get the neighbour that we chose as next hop
                                       qlrnHeader.GetPDst(),   //the actual destination of the packet ( to know which entry in the QTable to update)
                                       m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()), //the time the packet spent in the queue
                                       Time::FromInteger(qlrnHeader.GetTime(), Time::NS) /*- m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()) old code (also in qlearner.cc)*/, // //the time the packet spent in the air (so time between sent and arrival)
@@ -287,7 +289,7 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
 
   if (qlrnHeader.GetNextEstim() >= uint64_t(Seconds(30).GetInteger()) &&
       m_q_value_when_all_blacklisted == 0 &&
-      GetQTable(t).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).IsBlackListed() ) {
+      GetQTable(t)->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->IsBlackListed() ) {
     m_q_value_when_all_blacklisted = qlrnHeader.GetNextEstim()-Seconds(10).GetInteger();
   }
 
@@ -300,8 +302,8 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
   }
 
   ApplyMetricsToQValue(qlrnHeader.GetPDst(), sourceIPAddress, unpunished_new_q_value, t,
-              GetQTable(qlrnHeader.GetTrafficType()).GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress).GetRealDelay(),
-               jitter_val, GetQTable(qlrnHeader.GetTrafficType()).GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress).GetRealLoss() );
+              GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay(),
+               jitter_val, GetQTable(qlrnHeader.GetTrafficType())->GetEntryByRef(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealLoss() );
 
   if (qlrnHeader.GetPDst() != sourceIPAddress) {
     NS_LOG_DEBUG( m_name << "[N] ALSO LEARNING abt " << sourceIPAddress <<" from packet ID " << qlrnHeader.GetPktId()
@@ -309,19 +311,20 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
               << " GetPacketQueueTime time was " << m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId())
               << ". Contained in pkt " << packet->GetUid() << " sent by " <<  sourceIPAddress);
 
-  GetQTable(t).Update(sourceIPAddress, //get the neighbour that we chose as next hop
+  GetQTable(t)->Update(sourceIPAddress, //get the neighbour that we chose as next hop
                     sourceIPAddress,
     /*experimental*/m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()), //the time the packet spent in the queue for nexthop neighbours, this should be 0
                     Time::FromInteger(qlrnHeader.GetTime(), Time::NS) /*- m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()) old code (also in qlearner.cc)*/, // //the time the packet spent in the air (so time between sent and arrival)
                     Time::FromInteger(0, Time::NS) //and also the next hop's estimate, as we need that
                   );
   }
-  QTableEntry new_value = GetQTable(t).GetNextEstim(qlrnHeader.GetPDst(),old_value.GetNextHop());
+  // HANS - put this in comments because according to the compiler this was not used
+  //QDecisionEntry* new_value = GetQTable(t)->GetNextEstim(qlrnHeader.GetPDst(),old_value->GetNextHop());
 
 
-  GetQTable(TRAFFIC_A).GetEntryByRef(qlrnHeader.GetPDst(), InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ()).SetSenderConverged(qlrnHeader.GetSenderConverged());
-  GetQTable(TRAFFIC_B).GetEntryByRef(qlrnHeader.GetPDst(), InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ()).SetSenderConverged(qlrnHeader.GetSenderConverged());
-  GetQTable(TRAFFIC_C).GetEntryByRef(qlrnHeader.GetPDst(), InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ()).SetSenderConverged(qlrnHeader.GetSenderConverged());
+  GetQTable(TRAFFIC_A)->GetEntryByRef(qlrnHeader.GetPDst(), InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ())->SetSenderConverged(qlrnHeader.GetSenderConverged());
+  GetQTable(TRAFFIC_B)->GetEntryByRef(qlrnHeader.GetPDst(), InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ())->SetSenderConverged(qlrnHeader.GetSenderConverged());
+  GetQTable(TRAFFIC_C)->GetEntryByRef(qlrnHeader.GetPDst(), InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 ())->SetSenderConverged(qlrnHeader.GetSenderConverged());
 
   Ipv4Address destination = qlrnHeader.GetPDst() ;
   if (qlrnHeader.GetSenderConverged()) {
@@ -329,37 +332,37 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
     NS_ASSERT_MSG(std::find(m_traffic_destinations.begin(), m_traffic_destinations.end(), destination) != m_traffic_destinations.end()
       ,"it shouldnt have been true but it is/was ... \n" << qlrnHeader << "\n"<<destination);
   }
-  if (GetQTable(t).HasConverged(destination) && m_num_applications >= 1 && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
+  if (GetQTable(t)->HasConverged(destination) && m_num_applications >= 1 && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
     NS_LOG_UNCOND(m_name << "(qos) Im in learning phase, all choices have converged, time ( " << Simulator::Now().As(Time::S) << " ) to stop learning & start traffic. pkt id:" << packet->GetUid());
     StopLearningStartTraffic(destination);
     NS_ASSERT(GetNode()->GetId() == 0); // old assert for when node0 only has 1 next_hop
     // NS_FATAL_ERROR("i dont want this to happen?"); //-- but it happens anyway ?? the fk --- only happens in 0, because it only has 1 choice
-  } else if (GetQTable(t).HasConverged(destination, true ) &&  m_num_applications >= 1  && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
+  } else if (GetQTable(t)->HasConverged(destination, true ) &&  m_num_applications >= 1  && m_use_learning_phases && m_learning_phase[destination] && m_my_sent_traffic_destination == destination) {
     NS_LOG_UNCOND(m_name << "(qos) Im in learning phase, best choice has converged, time ( " << Simulator::Now().As(Time::S)
-    << " ) to stop learning & start traffic. pkt id:" << packet->GetUid() << "\n" << GetQTable(t).PrettyPrint() << "\n");
+    << " ) to stop learning & start traffic. pkt id:" << packet->GetUid() << "\n" << GetQTable(t)->PrettyPrint() << "\n");
     // NS_FATAL_ERROR("stop");
     StopLearningStartTraffic(destination);
-  } else if (GetQTable(t).HasConverged(destination, true ) && m_use_learning_phases && m_learning_phase[destination]) {
+  } else if (GetQTable(t)->HasConverged(destination, true ) && m_use_learning_phases && m_learning_phase[destination]) {
     SetLearningPhase(false, destination); //-- so the issue lies here, "best estim" is not necessarily really the best estim, and that ruins the simulation for 15 straight line nodes!
-  } else if (GetQTable(t).HasConverged(destination) && m_use_learning_phases && m_learning_phase[destination]) {
+  } else if (GetQTable(t)->HasConverged(destination) && m_use_learning_phases && m_learning_phase[destination]) {
     SetLearningPhase(false, destination); //Decide on this part still... best (i think) is to have only one  converge since thats all we need
   }
 
 
   // Because for one entyr it might be told to learn more, then another will send QInfo and the
   // decision may be to learn less. As these have different variables, they might cancel eachother out!
-  // bool to_dst_learn_less = GetQTable(t).GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnLess();
-  // bool to_dst_learn_more = GetQTable(t).GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnMore();
-  bool to_dst_learn_less = GetQTable(t).LearnLess(qlrnHeader.GetPDst() );
-  bool to_dst_learn_more = GetQTable(t).LearnMore(qlrnHeader.GetPDst() );
+  // bool to_dst_learn_less = GetQTable(t)->GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnLess();
+  // bool to_dst_learn_more = GetQTable(t)->GetEntryByRef(qlrnHeader.GetPDst(),sourceIPAddress).LearnMore();
+  bool to_dst_learn_less = GetQTable(t)->LearnLess(qlrnHeader.GetPDst() );
+  bool to_dst_learn_more = GetQTable(t)->LearnMore(qlrnHeader.GetPDst() );
   NS_ASSERT_MSG(!(to_dst_learn_more && to_dst_learn_less) , "Cant have both at the same time, that would be conflicing ideas.");
 
   /*
    * dont increase or decrease learning for the neighbour, we care only about the dst!
    * values for neighb are much smaller so are %change more
    */
-  bool to_neigh_learn_less = false; // GetQTable(t).GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
-  bool to_neigh_learn_more = false; // GetQTable(t).GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
+  bool to_neigh_learn_less = false; // GetQTable(t)->GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
+  bool to_neigh_learn_more = false; // GetQTable(t)->GetEntryByRef(sourceIPAddress,sourceIPAddress).LearnMore();
 
   if ( (to_dst_learn_more || to_neigh_learn_more ) && m_small_learning_stream && m_my_sent_traffic_destination == destination /* dont mess with traffic if its not our dst*/ &&
         m_use_learning_phases && !m_learning_phase[destination] && m_num_applications == 2 && learning_traffic_applications/*->GetN()==1*/ != 0 && real_traffic/*->GetN()==1*/ != 0) {
@@ -397,7 +400,7 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
 
   for (auto i : TrafficTypes ) {
 
-    QTableEntry* entry =  &GetQTable(i).GetEntryByRef(dst, next_hop) ;
+    QDecisionEntry* entry =  GetQTable(i)->GetEntryByRef(dst, next_hop) ;
     uint64_t old_value = entry->GetQValue().GetInteger();
     if (t == i) {
       if (unpunished_value > old_value) {
@@ -423,7 +426,7 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
       } else {
         packet_loss_coefficient = 1.0;
         // if (GetNode()->GetId() == 0) { std::cout << dst << " " << next_hop << " " << actual_percent_loss << " " << TrafficTypeReqsMap[i].GetRandomLossMax() <<
-        // GetQTable(t).PrettyPrint("yeah this is the table") << std::endl;;}
+        // GetQTable(t)->PrettyPrint("yeah this is the table") << std::endl;;}
       }
     }
 
@@ -461,7 +464,7 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
         // }
 
         uint64_t new_value = (old_value * (curr_tally + new_tally) / 2 < Seconds(100).GetInteger() ? old_value * (curr_tally + new_tally) / 2 :Seconds(100).GetInteger());
-        GetQTable(i).SetQValueWrapper(dst,next_hop,Time::FromInteger(new_value, Time::NS));
+        GetQTable(i)->SetQValueWrapper(dst,next_hop,Time::FromInteger(new_value, Time::NS));
         entry->SetCoefficientTally((curr_tally + new_tally) / 2.0);
 
         // For some reason, enabling this wrecks it again
@@ -476,7 +479,7 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
         if (GetNode()->GetId() == 0 && old_value != 0) {
           NS_LOG_DEBUG ( "(keep punish) old value was = " << old_value << "  and new value is " << new_value );
         }
-        GetQTable(i).SetQValueWrapper(dst,next_hop,Time::FromInteger(new_value, Time::NS));
+        GetQTable(i)->SetQValueWrapper(dst,next_hop,Time::FromInteger(new_value, Time::NS));
         entry->SetCoefficientTally(delay_coefficient * jitter_coefficient * packet_loss_coefficient);
       }
     }
@@ -495,11 +498,11 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
 
       /* careful here, dont want to inadvertendly cause it to converge if all coeffs are equal to 1! */
       // --- this should be resolved, this is now the onyl call to set QValue in the QoSQ case for dst
-      GetQTable(i).SetQValueWrapper(dst,next_hop,Time::FromInteger(new_value, Time::NS));
+      GetQTable(i)->SetQValueWrapper(dst,next_hop,Time::FromInteger(new_value, Time::NS));
       entry->SetCoefficientTally(delay_coefficient * jitter_coefficient * packet_loss_coefficient);
     }
     // if (packet_loss_coefficient * delay_coefficient * jitter_coefficient != 1 && GetNode()->GetId() == 0) {
-    //   NS_LOG_UNCOND( traffic_type_to_traffic_string(i) << "  " << "old value was = " << old_value << "  and new value is " << GetQTable(i).GetEntryByRef(dst, next_hop).GetQValue().GetInteger() );
+    //   NS_LOG_UNCOND( traffic_type_to_traffic_string(i) << "  " << "old value was = " << old_value << "  and new value is " << GetQTable(i)->GetEntryByRef(dst, next_hop).GetQValue().GetInteger() );
     // }
 
   }

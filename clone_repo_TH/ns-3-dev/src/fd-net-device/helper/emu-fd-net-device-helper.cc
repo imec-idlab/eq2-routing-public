@@ -17,7 +17,6 @@
  */
 
 #include "emu-fd-net-device-helper.h"
-#include "encode-decode.h"
 
 #include "ns3/abort.h"
 #include "ns3/config.h"
@@ -52,6 +51,8 @@
 #include <unistd.h>
 
 #include <string>
+
+#include "encode-decode.h"
 
 namespace ns3 {
 

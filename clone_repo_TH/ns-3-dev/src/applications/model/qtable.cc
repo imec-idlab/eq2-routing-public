@@ -81,7 +81,7 @@ void QTableEntry::Unconverge() {
 
 QTableEntry::~QTableEntry() { }
 
-void QTableEntry::SetQValue(Time t, bool _verbose) {
+void QTableEntry::SetQValue(Time t, bool _verbose) { // HANS - Why is Time t the new q value?
   std::stringstream ss;
   bool verbose = _verbose && false;
   Time old_q_value = m_my_estim;
@@ -137,7 +137,7 @@ NS_LOG_COMPONENT_DEFINE ("QTable");
 
 QTable::QTable(std::vector<Ipv4Address> _neighbours, Ipv4Address nodeip, float learning_rate, float convergence_threshold,
 		float learn_more_threshold, std::vector<Ipv4Address> _unavail, std::string addition, bool _in_test, bool print_qtables, float gamma) :
-		QDecision(_neighbours, nodeip, learning_rate, convergence_threshold, learn_more_threshold, _unavail, _in_test,print_qtables, gamma){
+		QDecision(_neighbours, nodeip, learning_rate, convergence_threshold, learn_more_threshold, _unavail, addition, _in_test,print_qtables, gamma){
 
 
   m_qtable = std::map<Ipv4Address, std::vector<QDecisionEntry *> >();
@@ -179,6 +179,7 @@ QTable::MarkNeighbDown(Ipv4Address neighb) {
       }
       NS_LOG_DEBUG(neighb << " is down. Marked at node" << m_nodeip << "." );
     }
+    // if the neighbour is already unavailable, than do nothing
   } else {
     NS_LOG_DEBUG("Trying to mark a neighbour unavailable but it's not a neighbour");
   }
@@ -186,6 +187,7 @@ QTable::MarkNeighbDown(Ipv4Address neighb) {
 
 bool QTable::IsNeighbourAvailable(Ipv4Address neighb) {
   return std::find(m_unavail.begin(), m_unavail.end(), neighb) == m_unavail.end();
+  // loop through all unavailable nodes and if neighbour is not in it, it is available
 }
 
 bool QTable::HasConverged(Ipv4Address dst, bool best_estim_only) {
@@ -193,9 +195,10 @@ bool QTable::HasConverged(Ipv4Address dst, bool best_estim_only) {
   QDecisionEntry *q = new QTableEntry();
   for (const auto& i : m_qtable[dst]){
     if (!IsNeighbourAvailable(i->GetNextHop())) {
-      //skip
+      //skip if the current neighbour is not available
     } else if (!best_estim_only)  {
       ret = ret && i->HasConverged();
+      // as soon as a neighbour has not converged, we know the qtable is not fully converged
       if (!ret) {
     	  return ret;
       }
@@ -211,18 +214,23 @@ bool QTable::HasConverged(Ipv4Address dst, bool best_estim_only) {
   //   }
   // }
 
+  // First half:  if best_estim_only is false & ret is false, it was already returned
+  //			  so if best_estim_only = false, this always returns true
+  // Second half: otherwise, return whether the node with the smallest q value is converged
   return (ret && !best_estim_only) || (q->HasConverged() && best_estim_only);
 }
 
 void QTable::AddNeighbour( Ipv4Address neighb) {
+	// if neighbour IS unavailable ...
   if (std::find(m_unavail.begin(), m_unavail.end(), neighb) != m_unavail.end()) {
     NS_LOG_ERROR("I (" << m_nodeip << ") received a SendHello message from an AODV neighbour and it was marked unavail. neighb= " << neighb << ". Unmarking it. (3x bc traffic types.)");
     auto unavail_index = std::find(m_unavail.begin(), m_unavail.end(), neighb);
+    // the remove the neighbour from unavailable ...
     m_unavail.erase(unavail_index);
-    // HANS - I removed the & sign here
     for (const auto dst : m_destinations) {
       for (unsigned int i = 0; i < m_qtable[dst].size(); i++) {
         if (m_qtable[dst].at(i)->GetNextHop() == neighb) {
+        // and for this destination, let it know that the neighbour is now available
           m_qtable[dst].at(i)->SetUnavailable(false);
         }
       }
@@ -230,16 +238,15 @@ void QTable::AddNeighbour( Ipv4Address neighb) {
   } else {
     NS_LOG_ERROR("I (" << m_nodeip << ") received a SendHello message from an AODV neighbour and it was not marked unavail. neighb= " << neighb << ". (3x bc traffic types.)");
   }
+  // If the new neighbour IS NOT already a neighbour
   if (std::find(m_neighbours.begin(), m_neighbours.end(), neighb) == m_neighbours.end()) {
     NS_LOG_ERROR("I (" << m_nodeip << ") received a SendHello message from an AODV neighbour and it was not already a neighbour. neighb= " << neighb << ". Adding the neighbour. (3x bc traffic types.)");
     for (auto i : m_destinations) {
       if (i == neighb) {
         m_qtable[i].push_back(new QTableEntry(neighb, MilliSeconds(0), m_convergence_threshold, m_learn_more_threshold, m_nodeip));
       } else { // some initial estimates i guess
-        // TODO HANS - if line 242 keeps giving an error, than I probably broke it in this line
     	  auto min_it = *std::min_element(m_qtable[i].begin(), m_qtable[i].end(), [] (QDecisionEntry* a, QDecisionEntry* b) { return a->GetQValue() < b->GetQValue(); } );
         if (m_neighbours.size() > 0) {
-        	std::cout << "------ type = " << typeid(min_it).name() << std::endl;
           m_qtable[i].push_back(new QTableEntry(neighb, min_it->GetQValue() + MilliSeconds(NEW_NEIGHBOUR_INITIAL_INCREMENT), m_convergence_threshold, m_learn_more_threshold, m_nodeip));
         } else {
           m_qtable[i].push_back(new QTableEntry(neighb, MilliSeconds(NEW_NEIGHBOUR_INITIAL_INCREMENT), m_convergence_threshold, m_learn_more_threshold, m_nodeip));
@@ -355,9 +362,11 @@ QTable::AddDestination(Ipv4Address via, Ipv4Address dst, Time t) {
     m_qtable[dst] = std::vector<QDecisionEntry* >();
 
     for (auto i : m_neighbours) {
+    	// you do not know via which neighbour to reach the new destination ...
       if (via == Ipv4Address(IP_WHEN_NO_NEXT_HOP_NEIGHBOUR_KNOWN_YET)) {
         m_qtable[dst].push_back(new QTableEntry(i, MilliSeconds(INITIAL_QVALUE_QTABLEENTRY_VIA), m_convergence_threshold, m_learn_more_threshold, m_nodeip)); //this is dodgy too ...
       } else {
+    	  // the new destination should be reached through the current node
         if (i == via) {
           m_qtable[dst].push_back(new QTableEntry(i, t,m_convergence_threshold, m_learn_more_threshold, m_nodeip));
         } else { // some initial estimates i guess
@@ -473,6 +482,7 @@ QTable::GetNextEstimToLearn(Ipv4Address dst) {
 
   // HANS - I removed the & sign here
   for (const auto elt : m_qtable[dst]) {
+	  // when elt has converged or when the next hop of elt IS available, do nothing
     if (  (elt->HasConverged() ) ||
           (std::find(m_unavail.begin(),m_unavail.end(),elt->GetNextHop()) != m_unavail.end())
        ) {
@@ -485,10 +495,12 @@ QTable::GetNextEstimToLearn(Ipv4Address dst) {
   bool any_neighb_reachable = false;
   // HANS - I removed the & sign here
   for (const auto j : m_neighbours) {
+	  // if the current neighbour j is unavailable, so far, there is no available neighbour yet
     if ( std::find(m_unavail.begin(), m_unavail.end(), j) != m_unavail.end() ) {
       any_neighb_reachable = false || any_neighb_reachable;
       // NS_ASSERT_MSG(false, "ALL NEIGHBOURS ARE UNREACHABLE");
     } else {
+    	// one neighbour that is available is enough
       any_neighb_reachable = true;
     }
   }
@@ -616,12 +628,15 @@ QTable::AllNeighboursBlacklisted(Ipv4Address dst) {
   bool all_neighb_blacklisted = true;
   // HANS - I removed the & sign here
   for (const auto j : m_neighbours) {
+	  // if a neighbour of mine is the destination, than not all neighbours are blacklisted
     if (dst == m_nodeip) {
       return false;
     } else{
+    	// if my neighbour is unavailable AND the entry for dst & j IS NOT blacklisted && the entry is available
       if ( std::find(m_unavail.begin(), m_unavail.end(), j) == m_unavail.end() && !GetEntryByRef(dst,j)->IsBlackListed() && GetEntryByRef(dst,j)->IsAvailable() ) {
         all_neighb_blacklisted = false;
       } else {
+    	  // the value of 'all neighbours blacklisted' stays the same
         all_neighb_blacklisted = true && all_neighb_blacklisted;
       }
     }
@@ -679,6 +694,7 @@ QTable::GetNextEstim(Ipv4Address dst) {
   return q;
 }
 
+// HANS - a node is only 'unblacklisted' when the number of strikes is ZERO...
 void QTableEntry::DeductStrike() {
   m_number_of_strikes -= 1;
   if (m_number_of_strikes == 0 && IsBlackListed()) {
@@ -686,6 +702,8 @@ void QTableEntry::DeductStrike() {
   }
 }
 
+// HANS - ... but a node is blacklisted when the number of strikes is MAX_NR_STRIKES...
+// 			  does that make sense?
 void QTableEntry::AddStrike() {
   if (IsBlackListed()) {
     return;
@@ -703,8 +721,8 @@ bool QTable::LearnLess(Ipv4Address dst) {
   bool ret = false;
   QDecisionEntry *best_estim = GetNextEstim(dst);
   if (GetEntryByRef(dst,best_estim->GetNextHop())->LearnLess()) {
-	  // HANS - I removed the & sign here
     for (const auto neighb : m_neighbours) {
+    	// if a single entry says to learn less, there will be less learning traffic
       if (GetEntryByRef(dst,neighb)->LearnLess()) {
         ret = true;
       }
@@ -714,12 +732,14 @@ bool QTable::LearnLess(Ipv4Address dst) {
   // NS_LOG_UNCOND(PrettyPrint());
   return ret || AllNeighboursBlacklisted(dst); //if all are blacklisted, its pointless to have a lot of learning traffic so lower it
 }
+
 bool QTable::LearnMore(Ipv4Address dst) {
   /* find best estimate, if that one says to learn more then learn more */
   bool ret = false;
   QDecisionEntry *best_estim = GetNextEstim(dst);
   if (!AllNeighboursBlacklisted(dst)) { // if all neighbs are false, its not gonna happen!
     ret = GetEntryByRef(dst,best_estim->GetNextHop())->LearnMore();
+    // what does the node with the best q value think? return this value
   }
   // NS_LOG_UNCOND("Returning " << (ret ? "true":"false") << " in LearnMore for dst " << dst << " and best estim " << best_estim.GetNextHop());
   // NS_LOG_UNCOND(PrettyPrint());
@@ -740,6 +760,7 @@ QTable::GetRandomEstim(Ipv4Address dst, bool _unconverged_entries_only) {
   Ipv4Address next_hop;
 
   if (dst == m_nodeip) {
+	  // HANS - unused assert message? So this is acceptable behaviour?
     NS_ASSERT_MSG(false, "Ive been asked about the best route to myself, that shouldn't happen actually.");
     return new QTableEntry( next_hop, Seconds(0), m_convergence_threshold, m_learn_more_threshold, m_nodeip);
   }
@@ -752,6 +773,8 @@ QTable::GetRandomEstim(Ipv4Address dst, bool _unconverged_entries_only) {
         ( (unconverged_entries_only && !m_qtable[ dst ].at(random_index)->HasConverged()) || !unconverged_entries_only)  ){ // if were only looking for non-converged values, skip this value
      break;
     }
+    // HANS - isn't it possible that this way of randomly trying all indices can potentially
+    // 		  take a long time. If multiple indices are tried multiple times before the last one
     tried_indices.insert(random_index);
     if (tried_indices.size() == m_neighbours.size()) {
       return new QTableEntry(Ipv4Address(NO_NEIGHBOURS_REACHABLE_ROUTE_IP), MilliSeconds(NO_NEIGHBOURS_REACHABLE_ROUTE_MS), m_convergence_threshold, m_learn_more_threshold, m_nodeip);
@@ -786,6 +809,7 @@ QTable::Update(Ipv4Address via, Ipv4Address dst, Time _queue_time_, Time travel_
         queue_time = NanoSeconds(0);
       }
 
+      // HANS - remaining debug information of thomas?
       if (m_nodeip == showme){
         NS_LOG_DEBUG  ( "{" );
         NS_LOG_DEBUG  ( "  [node = " << m_nodeip << "] Received more information about a route from " << m_nodeip << " to " << dst << " via " << via << "." );
@@ -870,6 +894,8 @@ QTable::Update(Ipv4Address via, Ipv4Address dst, Time _queue_time_, Time travel_
   ToFile(m_output_file_name);
 }
 
+// HANS - what is the difference between this function and the last one?
+// 		  Probably only one of them is used?
 uint64_t
 QTable::CalculateNewQValue(Ipv4Address via, Ipv4Address dst, Time _queue_time_, Time travel_time, Time next_hop_estimate) {
 
@@ -945,16 +971,19 @@ QTable::ChangeQValuesFromZero(Ipv4Address dst, Ipv4Address aodv_next_hop) {
   bool all_q_equal_to_zero = true;
   // HANS - I removed the & sign here
   for (const auto q : m_qtable[dst]) {
+	  // if one q value differs from 0, than not all q values are equal to 0
     if (!(q->GetQValue() == NanoSeconds(0))) {
       all_q_equal_to_zero = false;
     }
   }
+  // IF all q values are equal to zero, then let's first initialize!
   if (all_q_equal_to_zero) {
-	  // HANS - I removed the & sign here
     for (auto q : m_qtable[dst]) {
       if (q->GetNextHop() == aodv_next_hop) {
+    	  // if next hop found, set to 1
         q->SetQValue(MilliSeconds(INITIAL_QVALUE_QTABLEENTRY_NOT_VIA));
       } else {
+    	  // otherwise set to O
         q->SetQValue(MilliSeconds(INITIAL_QVALUE_QTABLEENTRY_VIA));
       }
     }

@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "creator-utils.h"
+
 #include <unistd.h>
 #include <string>
 #include <cstring>
@@ -33,7 +35,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "creator-utils.h"
 #include "encode-decode.h"
 
 namespace ns3 {

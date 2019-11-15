@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "q-learner.h"
+#include "qdecisionfactory.h"
 
 /*
   (RFC 3561)
@@ -229,12 +230,9 @@ QLearner::QLearner (float eps_param = DEFAULT_EPSILON_VALUE, float learning_rate
 
   tmp = std::set<unsigned int>();
 
-  m_qtable = new QTable();
-  m_qtable_voip = new QTable();
-  m_qtable_video = new QTable();
-//  m_qtable = QTable();
-//  m_qtable_voip = QTable();
-//  m_qtable_video = QTable();
+  m_qtable = QFactory::makeQDecision(); //new QTable();
+  m_qtable_voip = QFactory::makeQDecision();
+  m_qtable_video = QFactory::makeQDecision();
 
   neighbours = std::vector<Ipv4Address>();
   aodvProto = 0;
@@ -1217,11 +1215,11 @@ QLearner::StartApplication (void)
     neighbours = FindNeighboursManual ();
   }
 
-  m_qtable =       new QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
+  m_qtable =       QFactory::makeQDecision(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
                   m_qconvergence_threshold, m_learning_threshold, std::vector<Ipv4Address>(), "_web", m_in_test, m_print_qtables, m_gamma);
-  m_qtable_video = new QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
+  m_qtable_video = QFactory::makeQDecision(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
                   m_qconvergence_threshold, m_learning_threshold, std::vector<Ipv4Address>(), "_video", m_in_test, m_print_qtables, m_gamma);
-  m_qtable_voip =  new QTable(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
+  m_qtable_voip =  QFactory::makeQDecision(neighbours, GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), m_learningrate,
                   m_qconvergence_threshold, m_learning_threshold, std::vector<Ipv4Address>(), "_voip", m_in_test, m_print_qtables, m_gamma);
 
   if (GetNode()->GetId() == 27) {

@@ -137,7 +137,7 @@ public:
 protected:
 	QDecision(){};
 	QDecision(std::vector<Ipv4Address> _neighbours, Ipv4Address nodeip, float learning_rate, float convergence_threshold,
-    float learn_more_threshold, std::vector<Ipv4Address> _unavail, bool _in_test, bool print_qtables, float gamma) :
+    float learn_more_threshold, std::vector<Ipv4Address> _unavail, std::string addition,bool _in_test, bool print_qtables, float gamma) :
 		m_nodeip(nodeip),m_learningrate(learning_rate), m_convergence_threshold(convergence_threshold), m_gamma(gamma), m_learn_more_threshold(learn_more_threshold),
 		m_neighbours(_neighbours), m_destinations( _neighbours), m_unavail(_unavail), m_in_test(_in_test), m_print_qtables(print_qtables)
 	{};

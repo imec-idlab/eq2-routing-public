@@ -24,6 +24,7 @@
 
 #include <string>
 
+#include "emu-fd-net-device-helper.h"
 #include "ns3/attribute.h"
 #include "ns3/fd-net-device.h"
 #include "ns3/object-factory.h"
@@ -31,7 +32,6 @@
 #include "ns3/net-device-container.h"
 #include "ns3/node-container.h"
 
-#include "emu-fd-net-device-helper.h"
 
 namespace ns3 {
 

@@ -70,6 +70,7 @@ def build(bld):
         'model/qos-qlrn-header.h',
         'model/qos-q-learner.h',
         'model/thomas-packet-tags.h',
+        'model/qdecisionfactory.h',
         'model/qdecision.h',
         'model/qtable.h',
         'model/packettable.h',

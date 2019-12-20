@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "q-learner.h"
+
 #include "qdecisionfactory.h"
 
 /*
@@ -532,6 +533,7 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
 }
 
 void QLearner::RouteDiffBasedOnType(QDecisionEntry* next_estimate, Ipv4Address dst, Ipv4Address src, TrafficType t) {
+	// TODO HANS - Currently this is not used it seems??
   return; // OFF-switch for this thing if you want it, no point causing extra weird behaviour right
   if (src != m_this_node_ip && src != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE) ) { return; }
   // if (src != Ipv4Address("10.1.1.1") && src != Ipv4Address(UNINITIALIZED_IP_ADDRESS_VALUE) ) { return; }
@@ -1232,7 +1234,6 @@ QLearner::StartApplication (void)
     m_output_filestream = Create<OutputStreamWrapper> (ss.str(), std::ios::out);
     *(m_output_filestream->GetStream ()) << "pktID,currTime,delay,initial_estim,learning,metric_delay,metric_jitter,metric_loss,second_to_last_hop,trafficType\n";
   }
-
   if (m_num_applications == 1 && real_traffic != 0 && m_use_learning_phases) {
     if (real_traffic/*->GetN() == 1*/ != 0) {
       try {
@@ -1472,6 +1473,8 @@ QLearner::Send (Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_tim
     // std::cout << Simulator::Now() << "  " << node_to_notify << std::endl;
     // std::cout << "Node" << GetNode()->GetId() << " " << packet_Uid << std::endl;
 
+
+	  // HANS - Update the Q value for the DST via ME
     m_other_qlearners[node_to_notify]->GetQTable(t)->Update(GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), //We are the actual next hop
                     qLrnHeader.GetPDst(), //the actual destination of the packet ( to know which entry in the QTable to update)
                     m_packet_info.GetPacketQueueTime(qLrnHeader.GetPktId()), //the time the packet spent in the queue at me
@@ -1479,6 +1482,7 @@ QLearner::Send (Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_tim
                     Time::FromInteger(qLrnHeader.GetNextEstim(), Time::NS) //and also the next hop's estimate, as we need that to update the value
                   );
 
+    // HANS - IF the destination is not equal to ME --> calculate a new Q value for ME via ME
     if (qLrnHeader.GetPDst() != GetNode()->GetObject<Ipv4>()->GetAddress(1,0).GetLocal()) {
       // NS_LOG_DEBUG( m_name << "[N] ALSO LEARNING abt " << InetSocketAddress::ConvertFrom (sourceAddress).GetIpv4 () <<" from packet ID " << qlrnHeader.GetPktId()
       //           << " : travel time was " << Time::FromInteger(qlrnHeader.GetTime(), Time::NS).As(Time::MS)

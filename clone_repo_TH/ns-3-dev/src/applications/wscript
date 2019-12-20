@@ -29,11 +29,15 @@ def build(bld):
         'model/qos-qlrn-header.cc',
         'model/packettable.cc',
         'model/qtable.cc',
+        'model/qdeep.cc',
         'model/qlrn-test.cc',
         'model/ppbp-application.cc',
         'helper/ppbp-helper.cc',
         'model/qlrn-test-base.cc',
         'model/traffic-types.cc',
+        'model/tinn.cc',
+        'model/test.cc',
+        'model/genann.cc'
         ]
 
     applications_test = bld.create_ns3_module_test_library('applications')
@@ -70,9 +74,10 @@ def build(bld):
         'model/qos-qlrn-header.h',
         'model/qos-q-learner.h',
         'model/thomas-packet-tags.h',
-        'model/qdecisionfactory.h',
         'model/qdecision.h',
         'model/qtable.h',
+        'model/qdeep.h',
+        'model/qdecisionfactory.h',
         'model/packettable.h',
         'model/qlrn-test.h',
         'model/ppbp-application.h',
@@ -81,6 +86,8 @@ def build(bld):
         'model/make-functional-event.h',
         'model/thomas-configuration.h',
         'model/traffic-types.h',
+        'model/tinn.h',
+        'model/genann.h'
         ]
 
     bld.ns3_python_bindings()

@@ -1,16 +1,18 @@
-#ifndef QTABLE_H_
-#define QTABLE_H_
+#ifndef QDEEP_H_
+#define QDEEP_H_
 
 #include "qdecision.h"
+#include "tinn.h"
+#include "genann.h"
 
 
 namespace ns3 {
 
-class QTableEntry : public QDecisionEntry {
+class QDeepEntry : public QDecisionEntry {
 public:
-  QTableEntry();
-  QTableEntry(Ipv4Address, Time, float c_threshold, float lm_threshold, Ipv4Address myip);
-  ~QTableEntry();
+  QDeepEntry();
+  QDeepEntry(Ipv4Address, Time, float c_threshold, float lm_threshold, Ipv4Address myip);
+  ~QDeepEntry();
 
   void SetQValue(Time t, bool verbose = false);
   void SetSenderConverged(bool b);
@@ -21,11 +23,11 @@ public:
   void DeductStrike();
 };
 
-class QTable : public QDecision {
+class QDeep : public QDecision {
 public:
-  QTable();
-  QTable(std::vector<Ipv4Address>, Ipv4Address, float, float, float, std::vector<Ipv4Address>, std::string, bool, bool, float);
-  ~QTable();
+  QDeep();
+  QDeep(std::vector<Ipv4Address>, Ipv4Address, float, float, float, std::vector<Ipv4Address>, std::string, bool, bool, float);
+  ~QDeep();
 
   // true if destination is already in our list of destinations
   bool CheckDestinationKnown(const Ipv4Address& i);
@@ -45,7 +47,6 @@ public:
 
   bool AllNeighboursBlacklisted(Ipv4Address);
   std::string PrettyPrint(std::string="");
-//  void PrettyPrintToCout() { std::cout << PrettyPrint(); }
   void ToFile(std::string filename);
   void FinalFile();
   void ChangeQValuesFromZero(Ipv4Address dst, Ipv4Address aodv_next_hop) ;
@@ -63,15 +64,19 @@ public:
 
   void SetQValueWrapper(Ipv4Address,Ipv4Address,Time);
 
+
 //  std::vector<QDecisionEntry*> GetEstims(Ipv4Address dst) {
-//	return m_qtable[dst];
+//	return new std::vector<QDecisionEntry*>();
 //  }
 
 private:
   void RemoveNeighbour(Ipv4Address);
-  	std::map<Ipv4Address, std::vector<QDecisionEntry*> > m_qtable;
+//  TODO HANS - P1 - Comment out the q table and see what breaks!
+//  std::map<Ipv4Address, std::vector<QDecisionEntry*> > m_qtable;
+//  TinyNN qtnn;
+  	genann gnn;
 };
 
 } //namespace ns3
 
-#endif /* QTABLE_H */
+#endif /* QDEEP_H */

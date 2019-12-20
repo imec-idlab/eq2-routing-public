@@ -26,8 +26,10 @@ namespace ns3 {
 class QDecisionEntry {
 public:
   virtual ~QDecisionEntry(){};
+  // TODO HANS - move implementation to qtable, so qdeep has its own implementation without this attribute
   Ipv4Address GetNextHop() const { return m_next_hop; }
 
+  // TODO HANS - move implementation to qtable, so qdeep has its own implementation without this attribute
   Time GetQValue() const { return m_my_estim; }
   virtual void SetQValue(Time t, bool verbose = false) = 0;
   uint64_t GetRealDelay() const { return m_real_observed_delay; }
@@ -76,18 +78,11 @@ protected:
   int m_number_of_strikes;
 };
 
-
 class QDecision {
 public:
 	virtual ~QDecision(){};
 // true if destination is already in our list of destinations
-	virtual bool CheckDestinationKnown(const Ipv4Address& i)
-
-	{
-		std::cout << "THIS FUNCTION SHOULD NOT BE CALLED";
-		// TODO - if this works it MUST be fixed - HANS
-		return false;
-	};
+	virtual bool CheckDestinationKnown(const Ipv4Address& i) = 0;
 
 	virtual bool AddDestination(Ipv4Address via, Ipv4Address dst, Time t) = 0;
 
@@ -131,9 +126,7 @@ public:
 	std::vector<Ipv4Address> GetUnavails() {
 		return m_unavail;
 	}
-	std::vector<QDecisionEntry*> GetEstims(Ipv4Address dst) {
-		return m_qtable[dst];
-	}
+//	virtual std::vector<QDecisionEntry*> GetEstims(Ipv4Address dst) = 0;
 protected:
 	QDecision(){};
 	QDecision(std::vector<Ipv4Address> _neighbours, Ipv4Address nodeip, float learning_rate, float convergence_threshold,
@@ -144,7 +137,6 @@ protected:
 
 	virtual void RemoveNeighbour(Ipv4Address)  = 0;
 // std::map<Ipv4Address, std::vector<std::pair<Ipv4Address, Time> > > m_qtable;
-	std::map<Ipv4Address, std::vector<QDecisionEntry*> > m_qtable;
 
 	Ipv4Address m_nodeip;
 	float m_learningrate;
@@ -158,7 +150,24 @@ protected:
 	Ptr<OutputStreamWrapper> m_out_stream;
 	bool m_in_test;
 	bool m_print_qtables;
+	std::string lengthen_string(std::string str, int new_len) {
+
+	  return "";
+	}
+	bool fileEmpty (std::string filename) {
+	  std::fstream filestr;
+	  filestr.open(filename, std::ios::in);
+
+	  for (std::string line; std::getline(filestr, line); )
+	  {
+	    filestr.close();
+	    return false;
+	  }
+	  filestr.close();
+	  return true;
+	}
 };
+
 
 } //namespace ns3
 

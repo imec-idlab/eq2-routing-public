@@ -135,11 +135,7 @@ QoSQLearner::Send(Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_t
   QDecisionEntry* qte_next_hop = GetQTable(t)->GetNextEstim(packet_dst);
   if (GetNode()->GetId() == 0) {
     // NS_LOG_UNCOND("before " << qte_next_hop.GetNextHop());
-  }
-  if (GetNode()->GetId() == 0) {
     RouteDiffBasedOnType(qte_next_hop,packet_dst,packet_src, t);
-  }
-  if (GetNode()->GetId() == 0) {
     // NS_LOG_UNCOND("after " << qte_next_hop.GetNextHop());
   }
 
@@ -223,7 +219,8 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
   uint64_t jitter_val = 0;
   // this one just calculates the jitter value : look at which value (previous delay or this) is biggest, return the biggest - smallest
   if (GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() != 0 && (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) != 0) {
-    jitter_val = ( GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() < (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) ?
+    // HANS - depending on which one is bigger, substract the smaller one from the bigger one
+	  jitter_val = ( GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() < (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) ?
                       (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) - GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() :
                       GetQTable(qlrnHeader.GetTrafficType())->GetNextEstim(qlrnHeader.GetPDst(), sourceIPAddress)->GetRealDelay() - (qlrnHeader.GetRealDelay()+ qlrnHeader.GetTime()) );
   }
@@ -240,6 +237,7 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
   NS_ASSERT_MSG(packet->PeekPacketTag(loss_time_sent), "We expect this now, so must have this tag present.");
   uint64_t time_value_at_src_of_QLrnHeader = loss_time_sent.GetSentTimeAsInt();
 
+  // HANS - If I have sent at least 1 packet through this neigbhour, check how much have reached their destination
   if (GetNumPktsSentViaNeighbToDst(time_value_at_src_of_QLrnHeader,sourceIPAddress, qlrnHeader.GetPDst()) != 0) {
     float new_loss_value = 1.0;
 
@@ -311,7 +309,7 @@ void QoSQLearner::Receive(Ptr<Socket> socket) {
               << " GetPacketQueueTime time was " << m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId())
               << ". Contained in pkt " << packet->GetUid() << " sent by " <<  sourceIPAddress);
 
-  GetQTable(t)->Update(sourceIPAddress, //get the neighbour that we chose as next hop
+    GetQTable(t)->Update(sourceIPAddress, //get the neighbour that we chose as next hop
                     sourceIPAddress,
     /*experimental*/m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()), //the time the packet spent in the queue for nexthop neighbours, this should be 0
                     Time::FromInteger(qlrnHeader.GetTime(), Time::NS) /*- m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()) old code (also in qlearner.cc)*/, // //the time the packet spent in the air (so time between sent and arrival)
@@ -430,6 +428,7 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
       }
     }
 
+    // HANS - nothing is done with this IF, just commented out output statements
     if (GetNode()->GetId() == 0 && i == TRAFFIC_A
           && (delay_coefficient *jitter_coefficient * packet_loss_coefficient )!= 1.0) {
       // NS_LOG_UNCOND(m_name << " receives info about " << dst << " via " << next_hop ) ;
@@ -463,6 +462,7 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
         //   std::cout << entry->GetCoefficientTally() << std::endl;
         // }
 
+    	  // HANS - take the smallest of these 2 values. Is there no easier way?
         uint64_t new_value = (old_value * (curr_tally + new_tally) / 2 < Seconds(100).GetInteger() ? old_value * (curr_tally + new_tally) / 2 :Seconds(100).GetInteger());
         GetQTable(i)->SetQValueWrapper(dst,next_hop,Time::FromInteger(new_value, Time::NS));
         entry->SetCoefficientTally((curr_tally + new_tally) / 2.0);
@@ -473,7 +473,7 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
         if (new_tally == 1.0) {
           entry->DeductStrike();
         }
-      } else {
+      } else { // if curr_tally < new_tally
         coefficient = new_tally / curr_tally;
         uint64_t new_value = (old_value * coefficient < Seconds(100).GetInteger() ? old_value * coefficient :Seconds(100).GetInteger());
         if (GetNode()->GetId() == 0 && old_value != 0) {
@@ -483,7 +483,8 @@ void QoSQLearner::ApplyMetricsToQValue(Ipv4Address dst, Ipv4Address next_hop, ui
         entry->SetCoefficientTally(delay_coefficient * jitter_coefficient * packet_loss_coefficient);
       }
     }
-    else {
+    else { // aka if entry->GetCoefficientTally() = 1.0
+
       // if ((delay_coefficient * jitter_coefficient * packet_loss_coefficient) != 1.0) {
       //   NS_LOG_UNCOND("Metric DELAY:" << delay_metric << "  and coeff is " << delay_coefficient);
       //   NS_LOG_UNCOND("Metric JITTER:" << jitter_metric << "  and coeff is " << jitter_coefficient);

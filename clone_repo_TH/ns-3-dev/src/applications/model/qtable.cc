@@ -277,25 +277,14 @@ void QTable::RemoveNeighbour(Ipv4Address neighb) {
   }
 }
 
-bool fileEmpty (std::string filename) {
-  std::fstream filestr;
-  filestr.open(filename, std::ios::in);
-
-  for (std::string line; std::getline(filestr, line); )
-  {
-    filestr.close();
-    return false;
-  }
-  filestr.close();
-  return true;
-}
-
 void
 QTable::SetQValueWrapper(Ipv4Address dst, Ipv4Address next_hop, Time new_value) {
+	// TODO HANS - what is the point of writing it to a file (twice). Was this just done for debugging?
   ToFile(m_output_file_name);
   GetEntryByRef(dst,next_hop)->SetQValue(new_value);
   ToFile(m_output_file_name);
 }
+
 
 void
 QTable::ToFile(std::string filename) {
@@ -379,11 +368,6 @@ QTable::AddDestination(Ipv4Address via, Ipv4Address dst, Time t) {
 }
 
 QTable::~QTable() { }
-
-std::string lengthen_string(std::string str, int new_len) {
-
-  return "";
-}
 
 std::string
 QTable::PrettyPrint(std::string extra_info) {
@@ -488,6 +472,8 @@ QTable::GetNextEstimToLearn(Ipv4Address dst) {
        ) {
       //do nothing
     } else {
+    	// HANS assumption - if elt has not converged we want to learn about it,
+    	// HANS assumption - if elt is unavailable we want to learn if this is still the case
       q = elt;
     }
   }
@@ -632,11 +618,13 @@ QTable::AllNeighboursBlacklisted(Ipv4Address dst) {
     if (dst == m_nodeip) {
       return false;
     } else{
-    	// if my neighbour is unavailable AND the entry for dst & j IS NOT blacklisted && the entry is available
+    	// if my neighbour is available AND the entry for dst & j IS NOT blacklisted && the entry is available
       if ( std::find(m_unavail.begin(), m_unavail.end(), j) == m_unavail.end() && !GetEntryByRef(dst,j)->IsBlackListed() && GetEntryByRef(dst,j)->IsAvailable() ) {
         all_neighb_blacklisted = false;
+        // TODO HANS - Why don't we just return false?
       } else {
     	  // the value of 'all neighbours blacklisted' stays the same
+    	  // TODO HANS - is this statement correct? What if the previous neighbour put all_neighb_blacklisted to false?
         all_neighb_blacklisted = true && all_neighb_blacklisted;
       }
     }
@@ -668,6 +656,10 @@ QTable::GetNextEstim(Ipv4Address dst) {
 
   // HANS - I removed the & sign here
   for (const auto elt : m_qtable[dst]) {
+	  // HANS - we want to minimize the Q value (because it's the total queue time + transmission time), SO
+	  //		if the q value of elt is bigger than the one we know, we are not interested in this decision entry AND
+	  //		if the q value of elt is smaller, but it's next hop is unavailble (dead end), than we are not interested either
+	  //		SO DO NOTHING, ELSE this entry is better than the one we already had.
     if (elt->GetQValue() > q->GetQValue() || (elt->GetQValue() <= q->GetQValue() && std::find(m_unavail.begin(),m_unavail.end(),elt->GetNextHop()) != m_unavail.end())) {
       //do nothing
     } else {
@@ -679,6 +671,7 @@ QTable::GetNextEstim(Ipv4Address dst) {
   // HANS - I removed the & sign here
   for (const auto j : m_neighbours) {
     if ( std::find(m_unavail.begin(), m_unavail.end(), j) != m_unavail.end() ) {
+    	// TODO HANS - We can just remove this statement, since it never changes the value of any_neighb_reachable
       any_neighb_reachable = false || any_neighb_reachable;
       // NS_ASSERT_MSG(false, "ALL NEIGHBOURS ARE UNREACHABLE");
     } else {

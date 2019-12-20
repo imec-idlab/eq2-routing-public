@@ -54,7 +54,7 @@
 #include "ns3/qos-qlrn-header.h"
 #include "ns3/thomas-packet-tags.h"
 #include "ns3/traffic-types.h"
-//#include "ns3/qdecision.h"
+#include "ns3/qdecision.h"
 #include "ns3/qtable.h"
 #include "ns3/packettable.h"
 #include "ns3/mobility-module.h" /* makes STA mobile but we dont want any of that <-- needed for placement in grid */

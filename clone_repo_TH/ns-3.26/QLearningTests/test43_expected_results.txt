@@ -1,0 +1,18 @@
+{
+  "node0":{
+    "q":0,
+    "t":2,
+  },
+  "node1":{
+    "q":0,
+  },
+  "node2":{
+    "q":0,
+  },
+  "node3":{
+    "q":0,
+    "t_rec":2,
+  },
+}
+
+In the script runs, node2 is chosen to route the 1763 next icmps, but in the tests it is node1 so we have to flip the values

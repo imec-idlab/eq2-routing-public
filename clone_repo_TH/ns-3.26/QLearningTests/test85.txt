@@ -1,0 +1,43 @@
+{
+  "NameDesc":testing learning phases in no-QoS environment - no maxpackets - showed error in verify traffic -high value of epsilon so expecting results is hard - not sure why 4 gets 0 learning ,
+  "Number of nodes":7,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":700,
+  "learning_phases":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "slower":l3,
+    "delay_value":2,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+    "slower":l3,
+    "delay_value":2,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}

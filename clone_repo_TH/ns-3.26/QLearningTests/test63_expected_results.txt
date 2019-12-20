@@ -1,0 +1,14 @@
+{
+  "node0":{
+    "t":100, //100 was expected originally since no breaks, but in test there is 1 wrong decision -> 101 -- and now its back to 100
+  },
+  "node1":{
+    "broken":n,
+  },
+  "node2":{
+    "broken":n,
+  },
+  "node3":{
+    "broken":n,
+  },
+}

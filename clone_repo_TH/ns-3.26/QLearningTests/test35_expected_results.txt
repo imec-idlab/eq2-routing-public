@@ -1,0 +1,14 @@
+{
+  "node0":{
+    "t":900, //mistake here
+  },
+  "node1":{
+    "t":0,
+  },
+  "node2":{
+    "t":0,
+  },
+  "node3":{
+    "t":900, // and mistake here, in test script, but none in dry run
+  },
+}

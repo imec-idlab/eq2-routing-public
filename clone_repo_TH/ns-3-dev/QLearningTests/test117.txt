@@ -1,0 +1,39 @@
+{
+  "NameDesc":copy of test104 with QConv set at 0 to see if it has any noticeable impact -- spoiler alert it does,
+  "Number of nodes":5,
+  "trafficType":trafficB/trafficA,
+  "totalTime":100,
+  "eps":0.8, --increase epsilon to notice breaks
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":100,
+  "learning_phases":true,
+  "vary_break_times":false,
+  "qconv":0,
+  "node0":{
+    "x":0,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":y,
+  },
+  "node2":{
+    "x":110, // had 0 here, but that means node2 is too far from node3 so it automatically becomes U (spotty connection)
+    "y":40,
+    "break":n,
+  },
+  "node3":{
+    "x":110, // had 0 here, but that means node2 is too far from node3 so it automatically becomes U (spotty connection)
+    "y":60,
+    "break":n,
+  },
+  "node4":{
+    "x":220, //./waf --run "thomasAODV --doTest=test60.txt --unit_test_situation --pcap" and a value of 150 weird error
+    "y":20,
+  },
+}
+
+--due to RNG, now this test also breaks in the wrong order!

@@ -1,0 +1,38 @@
+{
+  "NameDesc":Very short test - 5 nodes in a line - ICMP traffic - eps = 0,
+  "Number of nodes":5,
+  "trafficType":ping,
+  "totalTime":37,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+  "node4":{
+    "x":440,
+    "y":20,
+  },
+}
+
+I guess put anything here, cant matter too much as long as its after the 4 nodes
+so 120 distance on the X-axis seems to be too far, and makes for a spotty connection (only some packets arrive)
+good to know...
+
+-- strange, in this case, after the 2 pings (only 2 seconds of sending time for the dataGen) are done, the route learns a route with a loop in it
+-- but this happens after the 2 pings, first ping is looped a bit between 3 and 2, but then reaches 4 perfectly
+-- while the 2nd packet goes the correct route
+-- IF THERE WAS A 3rd packet, it would go wrong, but it doesnt so i guess leave as is ?

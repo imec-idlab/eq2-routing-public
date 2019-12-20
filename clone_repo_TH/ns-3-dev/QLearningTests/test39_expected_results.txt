@@ -1,0 +1,17 @@
+{
+  "qroute":0-1,
+  "node0":{
+    "t":5422 // first it was t:183, because no reason to stop txing but now suddenly all retransmissions do count ? or is it just this type of traffic? anyway, then its 14 pakcets as normal, 15th dropped due to crash, then 169*32 times retrans and we drop the ICMP time exceeded shit
+  },
+  "node1":{
+    "broken":n,
+  },
+  "node2":{
+    "broken":y,
+  },
+  "node3":{
+    "broken":n,
+  },
+}
+
+In the script runs, node2 is chosen to route the 1763 next icmps, but in the tests it is node1 so we have to flip the values

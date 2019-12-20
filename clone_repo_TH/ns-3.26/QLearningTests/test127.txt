@@ -1,0 +1,54 @@
+{
+  "NameDesc":copy of test109 with the real QoS Learning - set latency s.t. path 0 2 3 4 6 is optimal for trafficA ,
+  "Number of nodes":7,
+  "trafficType":voip/trafficA,
+  "totalTime":200,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":277,
+  "learning_phases":true,
+  "qos_qlearning":true,
+  "smaller_learning_traffic":true,
+  "qconv":0.0025,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "slower":l3,
+    "delay_value":70,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "slower":l3,
+    "delay_value":0, -- dont put delay here or loss will suffer
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+    "slower":l3,
+    "delay_value":15,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+    "slower":l3,
+    "delay_value":15,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+    "slower":l3,
+    "delay_value":70,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}
+
+Strange test situation honestly, 1 can just reach 4 directly over the diagonal somehow

@@ -1,0 +1,28 @@
+{
+  "NameDesc":testing learning phases with maxpackets set to 300 and breaking 2nd node. legacy test, so maxpakcets and only one traffic type causes some weird results to be expected, have updated them,
+  "Number of nodes":4,
+  "trafficType":trafficC,
+  "totalTime":1000,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":300,
+  "learning_phases":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":y,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}

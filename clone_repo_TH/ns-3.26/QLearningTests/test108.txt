@@ -1,0 +1,41 @@
+{
+  "NameDesc":copy of test107 now has delay on the shortest path but further downstream than in 107 that make longer path preferred,
+  "Number of nodes":7,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.2,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":500,
+  "learning_phases":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+    "slower":l3,
+    "delay_value":10,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}

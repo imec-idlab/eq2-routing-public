@@ -1,0 +1,200 @@
+# project pybindgen configured on Fri Oct 11 03:53:36 2019 by
+# waf 1.7.15 (abi 98, python 2070ff0 on linux2)
+# using ./waf configure
+#
+----------------------------------------
+Setting top to
+/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2
+----------------------------------------
+Setting out to
+/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2/build
+----------------------------------------
+Checking for program python
+/usr/bin/python
+find program=['python'] paths=['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin'] var='PYTHON' -> '/usr/bin/python'
+['/usr/bin/python', '-c', 'import sys\nfor x in sys.version_info: print(str(x))']
+out: 2
+7
+15
+final
+0
+
+['/usr/bin/python', '-c', "from distutils.sysconfig import get_config_var, get_python_lib\n\nprint(repr(get_python_lib(standard_lib=0, prefix='/usr/local') or ''))"]
+out: '/usr/local/lib/python2.7/dist-packages'
+
+'/usr/local/lib/python2.7/dist-packages'
+
+['/usr/bin/python', '-c', "from distutils.sysconfig import get_config_var, get_python_lib\n\nprint(repr(get_python_lib(plat_specific=1, standard_lib=0, prefix='/usr/local') or ''))"]
+out: '/usr/local/lib/python2.7/dist-packages'
+
+'/usr/local/lib/python2.7/dist-packages'
+
+----------------------------------------
+Checking for python version
+(2, 7, 15, 'final', 0)
+----------------------------------------
+Checking for 'gcc' (c compiler)
+find program=['gcc', 'cc'] paths=['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin'] var='CC' -> '/usr/bin/gcc'
+find program=['ar'] paths=['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin'] var='AR' -> '/usr/bin/ar'
+/usr/bin/gcc
+----------------------------------------
+Checking for 'g++' (c++ compiler)
+find program=['g++', 'c++'] paths=['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin'] var='CXX' -> '/usr/bin/g++'
+(tool ar is already loaded, skipping)
+/usr/bin/g++
+['/usr/bin/python', '-c', "from distutils.sysconfig import get_config_var, get_python_lib\n\nprint(repr(get_config_var('prefix') or ''))\nprint(repr(get_config_var('SO') or ''))\nprint(repr(get_config_var('LDFLAGS') or ''))\nprint(repr(get_config_var('LIBDIR') or ''))\nprint(repr(get_config_var('LIBPL') or ''))\nprint(repr(get_config_var('INCLUDEPY') or ''))\nprint(repr(get_config_var('Py_ENABLE_SHARED') or ''))\nprint(repr(get_config_var('MACOSX_DEPLOYMENT_TARGET') or ''))\nprint(repr(get_config_var('LDSHARED') or ''))\nprint(repr(get_config_var('CFLAGS') or ''))\nprint(repr(get_config_var('LDVERSION') or ''))"]
+out: '/usr'
+'.so'
+'-Wl,-Bsymbolic-functions -Wl,-z,relro'
+'/usr/lib'
+'/usr/lib/python2.7/config-x86_64-linux-gnu'
+'/usr/include/python2.7'
+1
+''
+'x86_64-linux-gnu-gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions -Wl,-z,relro -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=. -fstack-protector-strong -Wformat -Werror=format-security  '
+'-fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=. -fstack-protector-strong -Wformat -Werror=format-security  '
+''
+
+'/usr'
+'.so'
+'-Wl,-Bsymbolic-functions -Wl,-z,relro'
+'/usr/lib'
+'/usr/lib/python2.7/config-x86_64-linux-gnu'
+'/usr/include/python2.7'
+1
+''
+'x86_64-linux-gnu-gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions -Wl,-z,relro -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=. -fstack-protector-strong -Wformat -Werror=format-security  '
+'-fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=. -fstack-protector-strong -Wformat -Werror=format-security  '
+''
+
+Configuration returned from ['/usr/bin/python']:
+"prefix = '/usr'\nSO = '.so'\nLDFLAGS = '-Wl,-Bsymbolic-functions -Wl,-z,relro'\nLIBDIR = '/usr/lib'\nLIBPL = '/usr/lib/python2.7/config-x86_64-linux-gnu'\nINCLUDEPY = '/usr/include/python2.7'\nPy_ENABLE_SHARED = 1\nMACOSX_DEPLOYMENT_TARGET = ''\nLDSHARED = 'x86_64-linux-gnu-gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions -Wl,-z,relro -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=. -fstack-protector-strong -Wformat -Werror=format-security  '\nCFLAGS = '-fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=. -fstack-protector-strong -Wformat -Werror=format-security  '\nLDVERSION = ''"
+
+
+
+# try again with -L$python_LIBDIR: ['/usr/lib']
+
+----------------------------------------
+Checking for library python2.7 in LIBDIR
+==>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: build/.conf_check_3b2479b91ea1f8aedc2bbc867fa4858e/test.cpp -> build/.conf_check_3b2479b91ea1f8aedc2bbc867fa4858e/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O2', '-g', '-Wall', '-fno-strict-aliasing', '-fwrapv', '-fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=.', '-fstack-protector-strong', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DNDEBUG', '-D_FORTIFY_SOURCE=2', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_3b2479b91ea1f8aedc2bbc867fa4858e/testbuild/test.cpp.1.o -> build/.conf_check_3b2479b91ea1f8aedc2bbc867fa4858e/testbuild/testprog
+[0m
+['/usr/bin/g++', '-Wl,-Bsymbolic-functions', '-Wl,-z,relro', 'test.cpp.1.o', '-o', '/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2/build/.conf_check_3b2479b91ea1f8aedc2bbc867fa4858e/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/usr/lib', '-lpython2.7']
+yes
+------------------------------------------------------------------------------------------------
+Checking for program /usr/bin/python-config,python2.7-config,python-config-2.7,python2.7m-config
+/usr/bin/python-config
+find program=['/usr/bin/python-config', 'python2.7-config', 'python-config-2.7', 'python2.7m-config'] paths=['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin'] var='PYTHON_CONFIG' -> '/usr/bin/python-config'
+['/usr/bin/python-config', '--includes']
+out: -I/usr/include/python2.7 -I/usr/include/x86_64-linux-gnu/python2.7
+
+Include path for Python extensions (found via python-config --includes): ['/usr/include/python2.7', '/usr/include/x86_64-linux-gnu/python2.7']
+
+------------------------------------------------------------------------------------------------
+Checking for header Python.h
+==>
+
+#include <Python.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+	void Py_Initialize(void);
+	void Py_Finalize(void);
+#ifdef __cplusplus
+}
+#endif
+int main(int argc, char **argv)
+{
+   (void)argc; (void)argv;
+   Py_Initialize();
+   Py_Finalize();
+   return 0;
+}
+
+<==
+[1/2] [32mcxx: build/.conf_check_1f933b02106127ce3a9f4633a0e368e7/test.cpp -> build/.conf_check_1f933b02106127ce3a9f4633a0e368e7/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O2', '-g', '-Wall', '-fno-strict-aliasing', '-fwrapv', '-fdebug-prefix-map=/build/python2.7-PPrPZj/python2.7-2.7.15=.', '-fstack-protector-strong', '-fno-strict-aliasing', '-I/usr/include/python2.7', '-I/usr/include/x86_64-linux-gnu/python2.7', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DNDEBUG', '-D_FORTIFY_SOURCE=2', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_1f933b02106127ce3a9f4633a0e368e7/testbuild/test.cpp.1.o -> build/.conf_check_1f933b02106127ce3a9f4633a0e368e7/testbuild/testprog
+[0m
+['/usr/bin/g++', '-Wl,-Bsymbolic-functions', '-Wl,-z,relro', 'test.cpp.1.o', '-o', '/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2/build/.conf_check_1f933b02106127ce3a9f4633a0e368e7/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/usr/lib', '-lpython2.7']
+yes
+------------------------------------------------------------------------------------------------
+Checking for program gccxml
+not found
+find program=['gccxml'] paths=['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin'] var='GCCXML' -> ''
+from /home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2: Could not find the program gccxml
+------------------------------------------------------------------------------------------------
+Checking for compilation flag -fvisibility=hidden support
+==>
+#include <stdio.h>
+int main() { return 0; }
+
+<==
+[1/2] [32mcxx: build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/test.cc -> build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/test.cc.1.o
+[0m
+['/usr/bin/g++', '-O2', '-g', '-Wall', '-fvisibility=hidden', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DHAVE_PYTHON_H=1', '../test.cc', '-c', '-o', 'test.cc.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/test.cc.1.o -> build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cc.1.o', '-o', '/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2/build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+ok
+------------------------------------------------------------------------------------------------
+Checking for header stdint.h
+==>
+#include <stdint.h>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: build/.conf_check_fa0c4ec9c63ac505501cc0863d9bdc48/test.cpp -> build/.conf_check_fa0c4ec9c63ac505501cc0863d9bdc48/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O2', '-g', '-Wall', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_fa0c4ec9c63ac505501cc0863d9bdc48/testbuild/test.cpp.1.o -> build/.conf_check_fa0c4ec9c63ac505501cc0863d9bdc48/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2/build/.conf_check_fa0c4ec9c63ac505501cc0863d9bdc48/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+yes
+------------------------------------------------------------------------------------------------
+Checking for header boost/shared_ptr.hpp
+==>
+#include <boost/shared_ptr.hpp>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: build/.conf_check_f3cbea3d49a46bf16c8e1d8029b9164d/test.cpp -> build/.conf_check_f3cbea3d49a46bf16c8e1d8029b9164d/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O2', '-g', '-Wall', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DHAVE_PYTHON_H=1', '-DHAVE_STDINT_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_f3cbea3d49a46bf16c8e1d8029b9164d/testbuild/test.cpp.1.o -> build/.conf_check_f3cbea3d49a46bf16c8e1d8029b9164d/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2/build/.conf_check_f3cbea3d49a46bf16c8e1d8029b9164d/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+yes
+------------------------------------------------------------------------------------------------
+Checking for compilation flag -std=c++11 support
+==>
+#include <stdio.h>
+int main() { return 0; }
+
+<==
+[1/2] [32mcxx: build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/test.cc -> build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/test.cc.1.o
+[0m
+['/usr/bin/g++', '-O2', '-g', '-Wall', '-std=c++11', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DHAVE_PYTHON_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_BOOST_SHARED_PTR_HPP=1', '../test.cc', '-c', '-o', 'test.cc.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/test.cc.1.o -> build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cc.1.o', '-o', '/home/hans/Repos/Q2routing/eq2-routing/clone_repo_TH/pybindgen-0.17.0.post57+nga6376f2/build/.conf_check_fe0ca542f39064c5a14ee41a2e983996/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+ok

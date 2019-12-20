@@ -1,0 +1,776 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Bake - Tutorial &#8212; Bake</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="BAKE - Introduction" href="bake-over.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="bake-over.html" title="BAKE - Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Bake</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/inria.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Bake - Tutorial</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#conventions">Conventions:</a></li>
+<li><a class="reference internal" href="#third-party-software">Third party software</a></li>
+<li><a class="reference internal" href="#bake-installation">Bake installation</a><ul>
+<li><a class="reference internal" href="#downloading-bake">1. Downloading Bake</a></li>
+<li><a class="reference internal" href="#putting-bake-on-the-path">2. Putting bake on the path</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#basic-bake-usage">Basic Bake usage</a></li>
+<li><a class="reference internal" href="#system-dependencies">System dependencies</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#the-configuration-file">The configuration file</a></li>
+<li><a class="reference internal" href="#predefined-configurations">Predefined configurations</a></li>
+<li><a class="reference internal" href="#bakerc-configuration-file">~/.bakerc configuration file</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bake-over.html"
+                        title="previous chapter">BAKE - Introduction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/bake-tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bake-tutorial">
+<h1>Bake - Tutorial<a class="headerlink" href="#bake-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will present a walk through over all the steps to set, configure, download and build a new module using Bake.</p>
+<p>Bake is a tool for distributed software builds, developed for the ns-3 project, but it is general and could be used to help on the development of other open-source projects requiring integration of multiple projects.  First of all, Bake is developed in python, so you have to have python on your machine.  This walk-through will consider that the user is using a Linux, Fedora or Ubuntu distributions, with bash.</p>
+</div>
+<div class="section" id="conventions">
+<h2>Conventions:<a class="headerlink" href="#conventions" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">During the tutorial we will use the following conventions:</div>
+<div class="line-block">
+<div class="line"><strong>&gt; [command]</strong> - For now, bake is only Linux and Mac OS X compatible, the “&gt;” means the prompt of the terminal, and what comes next, [command] , is the command that should be executed on a bash shell screen. It also means that the operation is distribution independent.</div>
+<div class="line"><strong>Mac OS X &gt;</strong>  - Designates commands that are specific for Mac OS X distributions</div>
+<div class="line"><strong>Ubuntu &gt;</strong>  - Designates commands that are specific for Ubuntu distributions</div>
+<div class="line"><strong>Fedora &gt;</strong>  - Designates commands that are specific for Fedora distributions</div>
+<div class="line"><strong>$BAKE_HOME</strong> -  is the home directory for bake</div>
+<div class="line"><strong>$HOME</strong> - the user home directory, this tutorial considers that, by default, all the actions will be performed from this directory. Whenever one need a relative path, it will be given regarding the HOME directory.  For example, if  HOME=/home/username  $HOME/bake would be /home/username/bake.</div>
+</div>
+</div>
+</div>
+<div class="section" id="third-party-software">
+<h2>Third party software<a class="headerlink" href="#third-party-software" title="Permalink to this headline">¶</a></h2>
+<p>Bake uses a series of third party tools that, not necessarily, come with standard Linux machines distributions, however, they are usually required.   Each given module has a specific set of tools that are required to build it, and each module is different. If you never builds a module that is stored, for example, in a mercurial repository, you do not need to have mercurial in your machine. However, if the module requires it and you do not have it installed… you will not be able to install that specific module.  Apart from python, no other third party software is mandatory, however, it is highly recommended to have all these tools installed on your machine.  To check if you have all the third party software installed on your machine you can run “&gt; bake.py check”.  However, to do that you need to have Python installed.</p>
+<p>To check if you have python installed you can do the following:
+1. Open a shell window and type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">python</span> <span class="o">-</span><span class="n">V</span>
+</pre></div>
+</div>
+<p>If as answer you receive the version of the installed python, preferably above 2.7.3, you do have python installed on your machine.   If you received a “command not found”  kind of message, you do not have python on your machine, or it is not on your path.  Try to talk to your administrator, or, if you have root rights,  you should try to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Ubuntu</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span>
+<span class="ow">or</span>
+<span class="n">Fedora</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">python</span>
+</pre></div>
+</div>
+<p>After solving any python related issues, you can check the third party tools bake relies on by  calling:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">check</span>
+</pre></div>
+</div>
+<p>Again, just to remember, the tools you will really need are linked to the modules you will install.  For many users a small subset of those tools are more than enough.</p>
+</div>
+<div class="section" id="bake-installation">
+<h2>Bake installation<a class="headerlink" href="#bake-installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="downloading-bake">
+<h3>1. Downloading Bake<a class="headerlink" href="#downloading-bake" title="Permalink to this headline">¶</a></h3>
+<p>You can get the bake code from the ns-3 code repository. However, do do so you will
+need to have mercurial installed in your machine.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Mac</span> <span class="n">OS</span> <span class="n">X</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">port</span> <span class="n">install</span> <span class="n">mercurial</span>
+<span class="ow">or</span>
+<span class="n">Ubuntu</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mercurial</span>
+<span class="ow">or</span>
+<span class="n">Fedora</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">mercurial</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">hg</span> <span class="n">clone</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">code</span><span class="o">.</span><span class="n">nsnam</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">bake</span> <span class="n">bake</span>
+</pre></div>
+</div>
+<p>This should create a bake repository on the directory you are in now</p>
+</div>
+<div class="section" id="putting-bake-on-the-path">
+<h3>2. Putting bake on the path<a class="headerlink" href="#putting-bake-on-the-path" title="Permalink to this headline">¶</a></h3>
+<p>bake will, by default, use a <code class="docutils literal"><span class="pre">build</span></code> directory to install components
+locally (rather than trying to install them in system places).  This
+<code class="docutils literal"><span class="pre">build</span></code> directory will contain <code class="docutils literal"><span class="pre">bin</span></code> and <code class="docutils literal"><span class="pre">lib</span></code> directories.  These
+should be put into your environment variables for PATH and PYTHONPATH:</p>
+<p>Change directory into the <code class="docutils literal"><span class="pre">bake</span></code> directory (the directory including
+the file <code class="docutils literal"><span class="pre">bake.py</span></code>) and type these commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt; export BAKE_HOME=`pwd`
+&gt; export PATH=$PATH:$BAKE_HOME:$BAKE_HOME/build/bin
+&gt; export PYTHONPATH=$PYTHONPATH:$BAKE_HOME:$BAKE_HOME/build/lib
+</pre></div>
+</div>
+<p>For this whole documentation section, bake will be assumed to be found on
+the path.  These path extensions can also be adapted and added to a local
+shell file (e.g. ~/.bashrc).</p>
+<p>Now, from any place of your machine you can call bake.py.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span>
+<span class="n">Usage</span><span class="p">:</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="n">command</span> <span class="p">[</span><span class="n">command</span> <span class="n">options</span><span class="p">]</span>
+
+<span class="n">Where</span> <span class="n">command</span> <span class="ow">is</span> <span class="n">one</span> <span class="n">of</span><span class="p">:</span>
+  <span class="n">deploy</span>       <span class="p">:</span> <span class="n">Downloads</span> <span class="n">the</span> <span class="n">configured</span> <span class="n">modules</span> <span class="n">AND</span> <span class="n">makes</span> <span class="n">the</span> <span class="n">build</span> <span class="ow">in</span> <span class="n">one</span> <span class="n">step</span>
+  <span class="n">configure</span>    <span class="p">:</span> <span class="n">Setup</span> <span class="n">the</span> <span class="n">build</span> <span class="n">configuration</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">build</span><span class="p">,</span> <span class="n">install</span> <span class="n">directory</span><span class="p">,</span>
+                 <span class="ow">and</span> <span class="n">per</span><span class="o">-</span><span class="n">module</span> <span class="n">build</span> <span class="n">options</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">module</span> <span class="n">descriptions</span>
+  <span class="n">fix</span><span class="o">-</span><span class="n">config</span>   <span class="p">:</span> <span class="n">Update</span> <span class="n">the</span> <span class="n">build</span> <span class="n">configuration</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">newer</span> <span class="n">module</span> <span class="n">description</span>
+  <span class="n">download</span>     <span class="p">:</span> <span class="n">Download</span> <span class="nb">all</span> <span class="n">modules</span> <span class="n">enabled</span> <span class="n">during</span> <span class="n">configure</span>
+  <span class="n">update</span>       <span class="p">:</span> <span class="n">Update</span> <span class="n">the</span> <span class="n">source</span> <span class="n">tree</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">modules</span> <span class="n">enabled</span> <span class="n">during</span> <span class="n">configure</span>
+  <span class="n">build</span>        <span class="p">:</span> <span class="n">Build</span> <span class="nb">all</span> <span class="n">modules</span> <span class="n">enabled</span> <span class="n">during</span> <span class="n">configure</span>
+  <span class="n">clean</span>        <span class="p">:</span> <span class="n">Cleanup</span> <span class="n">the</span> <span class="n">source</span> <span class="n">tree</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">modules</span> <span class="n">built</span> <span class="n">previously</span>
+  <span class="n">shell</span>        <span class="p">:</span> <span class="n">Start</span> <span class="n">a</span> <span class="n">shell</span> <span class="ow">and</span> <span class="n">setup</span> <span class="n">relevant</span> <span class="n">environment</span> <span class="n">variables</span>
+  <span class="n">uninstall</span>    <span class="p">:</span> <span class="n">Remove</span> <span class="nb">all</span> <span class="n">files</span> <span class="n">that</span> <span class="n">were</span> <span class="n">installed</span> <span class="n">during</span> <span class="n">build</span>
+  <span class="n">distclean</span>    <span class="p">:</span> <span class="n">Call</span> <span class="n">the</span> <span class="n">modules</span> <span class="n">distclean</span> <span class="n">option</span><span class="p">,</span> <span class="k">if</span> <span class="n">available</span>
+  <span class="n">fullclean</span>    <span class="p">:</span> <span class="n">Remove</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">build</span> <span class="n">AND</span> <span class="n">source</span> <span class="n">files</span>
+  <span class="n">show</span>         <span class="p">:</span> <span class="n">Report</span> <span class="n">on</span> <span class="n">build</span> <span class="n">configuration</span>
+  <span class="n">show</span><span class="o">-</span><span class="n">builtin</span> <span class="p">:</span> <span class="n">Report</span> <span class="n">on</span> <span class="n">builtin</span> <span class="n">source</span> <span class="ow">and</span> <span class="n">build</span> <span class="n">commands</span>
+  <span class="n">check</span>        <span class="p">:</span> <span class="n">Checks</span> <span class="k">if</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">required</span> <span class="n">tools</span> <span class="n">are</span> <span class="n">available</span> <span class="n">on</span> <span class="n">the</span> <span class="n">system</span>
+
+<span class="n">To</span> <span class="n">get</span> <span class="n">more</span> <span class="n">help</span> <span class="n">about</span> <span class="n">each</span> <span class="n">command</span><span class="p">,</span> <span class="k">try</span><span class="p">:</span>
+  <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">command</span> <span class="o">--</span><span class="n">help</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">f</span> <span class="n">CONFIG_FILE</span><span class="p">,</span> <span class="o">--</span><span class="n">file</span><span class="o">=</span><span class="n">CONFIG_FILE</span>
+                        <span class="n">The</span> <span class="n">Bake</span> <span class="n">file</span> <span class="n">to</span> <span class="n">use</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">target</span>
+                        <span class="n">configuration</span><span class="o">/</span><span class="n">reconfiguration</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">bakefile</span><span class="o">.</span><span class="n">xml</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">debug</span>               <span class="n">Prints</span> <span class="n">out</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">error</span> <span class="n">messages</span> <span class="ow">and</span> <span class="n">problems</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">noColor</span>             <span class="n">Print</span> <span class="n">messages</span> <span class="k">with</span> <span class="n">no</span> <span class="n">color</span>
+  <span class="o">-</span><span class="n">V</span>                    <span class="n">Prints</span> <span class="n">the</span> <span class="n">version</span> <span class="n">of</span> <span class="n">Bake</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="basic-bake-usage">
+<h2>Basic Bake usage<a class="headerlink" href="#basic-bake-usage" title="Permalink to this headline">¶</a></h2>
+<p>To run bake, first of all,  you need the configuration file, that describes how the modules should be built. By default this file is called bakefile.xml. Bake includes a generic configuration file, called bakeconf.xml that is shipped with bake ($HOME/bake/bakeconf.xml) or with the standard ns-3 distribution.  This file contains the generic information for all the available modules that bakes can handle.  We will see later how to create a new input to this generic configuration file. But for now it is important to understand that the bakeconf.xml will work as a template for your personal and specific configuration. On the bakeconf.xml we have all the available modules for ns-3 and more, you should choose a subset of these to be installed on your system.</p>
+<p>To configure bake to build, for example, ns-3-dev, you can:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">configure</span> <span class="o">-</span><span class="n">e</span> <span class="n">ns</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>This command will create a specific configuration file on the local directory called bakefile.xml. This file has ns-3-dev and all the optional modules enabled to download and build. By default the file will be configured to download the required source files at the “source” directory and install them at the “build” directory. Optionally one can do something like this</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt; bake.py -f nonStandardName.xml configure -c $BAKE_HOME/bakefile.xml -e ns-3-allinone --installdir=/tmp/installBake --sourcedir=/tmp/sourceBake
+</pre></div>
+</div>
+<p>This will create the nonStandardName.xml configuration file on the local directory and will set the sources to be stored at “/tmp/sourceBake” and the installation directory to be “/tmp/installBake”.</p>
+<p>To create the executable instance of ns-3 you can either call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">deploy</span>
+</pre></div>
+</div>
+<p>this will make the download and build of the selected modules in one step. Alternatively you can use bake to download all the required files and install ns-3 afterwards even in off-line mode.  To do this you should call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">download</span>
+</pre></div>
+</div>
+<p>This will download the modules to the configured target, e.g. /tmp/sourceBake, or by default, will create a source directory inside the current one.  After that, to perform the build and installation of the compiled modules, the user should call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span>
+</pre></div>
+</div>
+<p>This will create a consistent version of ns-3 and its libraries in the configured target repository, e.g. /tmp/installBake or, by default, it creates a build directory inside the current one.   This, if you have no missing third party software, should be enough to have a full ns-3 version with all the configured modules working and waiting for your experiments.</p>
+<p>To receive more information about the ongoing process one can call bake in verbose mode.  The verbose varies from -v to -vvv that is the maximum verbose level. If one call bake with -vvv all the messages from the third part tools will be showed.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span> <span class="o">-</span><span class="n">vvv</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="system-dependencies">
+<h2>System dependencies<a class="headerlink" href="#system-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Some modules may be dependent on third party packages. Such dependencies are expressed
+as SystemDependencies, by default, such dependencies, if not installed in the machine
+will show up as failures during the download process.</p>
+<p>The typical way to express a system dependency is to check for the existence
+of a file such as an executable or a header file in a well-known system
+place.  If the paths searched for the dependency do not include the
+actual path, a false negative result may occur.  There exist other
+more platform-specific ways to check for system dependencies, such as
+pkg-config or using the system package manager, or performing a
+configuration check by trying to compile a small test program, but bake does
+not presently support such additional checking.</p>
+<p>The following snippet shows an example in which a <code class="docutils literal"><span class="pre">file_test</span></code> may be
+expressed, asking bake to check for the presence of a library at the
+path location <code class="docutils literal"><span class="pre">/usr/lib/debug/lib64/ld-linux-x86-64.so.2.debug</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">module</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;libc-debug&quot;</span><span class="o">&gt;</span>
+   <span class="o">&lt;</span><span class="n">source</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;system_dependency&quot;</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="n">attribute</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;file_test&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;/usr/lib/debug/lib64/ld-linux-x86-64.so.2.debug&quot;</span><span class="o">/&gt;</span>
+     <span class="o">&lt;</span><span class="n">attribute</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;name_apt-get&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;libc6-dbg&quot;</span><span class="o">/&gt;</span>
+     <span class="o">&lt;</span><span class="n">attribute</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;name_yum&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;glibc-debuginfo&quot;</span><span class="o">/&gt;</span>
+     <span class="o">&lt;</span><span class="n">attribute</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;more_information&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Didn&#39;t find:   libc debug package; please install it.&quot;</span><span class="o">/&gt;</span>
+   <span class="o">&lt;/</span><span class="n">source</span><span class="o">&gt;</span>
+   <span class="o">&lt;</span><span class="n">depends_on</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;libc&quot;</span> <span class="n">optional</span><span class="o">=</span><span class="s2">&quot;False&quot;</span><span class="o">/&gt;</span>
+   <span class="o">&lt;</span><span class="n">build</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;none&quot;</span> <span class="n">objdir</span><span class="o">=</span><span class="s2">&quot;no&quot;</span><span class="o">&gt;</span>
+   <span class="o">&lt;/</span><span class="n">build</span><span class="o">&gt;</span>
+ <span class="o">&lt;/</span><span class="n">module</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This states that libc-debug depends on a mandatory <code class="docutils literal"><span class="pre">libc</span></code> module, and has
+no <code class="docutils literal"><span class="pre">build</span> <span class="pre">type</span></code>; it must be installed on the system, usually by a package
+manager.  Two source attributes, <code class="docutils literal"><span class="pre">name_apt-get</span></code> and <code class="docutils literal"><span class="pre">name_yum</span></code>, provide
+hints as to the names of packages that could be installed if the dependency
+check fails.  The mandatory <code class="docutils literal"><span class="pre">more_information</span></code> attribute provides
+additional hints to the user should the check fail.</p>
+<p>The <code class="docutils literal"><span class="pre">file_test</span></code> and <code class="docutils literal"><span class="pre">executable_test</span></code> attributes may specify more than
+one possible paths to check, with possible values separated by the <code class="docutils literal"><span class="pre">or</span></code>
+keyword such as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">attribute</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;file_test&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;/usr/lib/debug/lib64/ld-linux-x86-64.so.2.debug or /usr/local/lib/debug/lib64/ld-linux-x86-64.so.2.debug&quot;</span><span class="o">/&gt;</span>
+</pre></div>
+</div>
+<p>Presently, <code class="docutils literal"><span class="pre">file_test</span></code> and <code class="docutils literal"><span class="pre">executable_test</span></code> do not support wildcard
+characters for path values.</p>
+<p>A deprecated source attribute called <code class="docutils literal"><span class="pre">dependency_test</span></code> exists, which is
+similar to <code class="docutils literal"><span class="pre">executable_test</span></code>, but doesn’t distinguish between header files,
+libraries, and executables.</p>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>Bake has a template file, where we store the configuration of all the modules bake is able to handle, and a personal configuration, created by the user, to inform bake about his/her personal requirements. The template file, that contains the configuration for all the modules Bake is able to handle, is called by default bakeconf.xml and  it is shipped with bake and ns-3 distributions.  By default Bake will use the one in the local directory, if there is none, it will use the one on $BAKE_HOME. The file can also be informed through the -c option.  One could use, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">f</span> <span class="n">myPersonalConfig</span><span class="o">.</span><span class="n">xml</span> <span class="n">configure</span> <span class="o">-</span><span class="n">c</span> <span class="n">nonStandardName</span><span class="o">.</span><span class="n">xml</span> <span class="o">-</span><span class="n">e</span> <span class="n">ns</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">allinone</span> <span class="o">-</span><span class="n">d</span> <span class="n">netanim</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>This command will use nonStandardName.xml as a template to create the user’s configuration file, myPersonalConfig.xml. To see the activated modules on myPersonalConfig.xml do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt; bake.py -f myPersonalConfig.xml show
+module: python-dev (enabled)
+  No dependencies!
+module: pygraphviz (enabled)
+  No dependencies!
+module: pygoocanvas (enabled)
+  No dependencies!
+module: gccxml-ns3 (enabled)
+  No dependencies!
+module: nsc-dev (enabled)
+  No dependencies!
+module: click-dev (enabled)
+  No dependencies!
+module: libxml2-dev (enabled)
+  No dependencies!
+module: pygccxml (enabled)
+  depends on:
+     gccxml-ns3 (optional:False)
+module: pyviz-prerequisites (enabled)
+  depends on:
+     python-dev (optional:True)
+     pygraphviz (optional:True)
+     pygoocanvas (optional:True)
+module: openflow-dev (enabled)
+  depends on:
+     libxml2-dev (optional:False)
+module: pybindgen-dev (enabled)
+  depends on:
+     pygccxml (optional:True)
+     python-dev (optional:True)
+module: ns-3-allinone (enabled)
+  depends on:
+     netanim-dev (optional:True)
+     nsc-dev (optional:True)
+     pybindgen-dev (optional:True)
+     pyviz-prerequisites (optional:True)
+     click-dev (optional:True)
+     openflow-dev (optional:True)
+
+-- System Dependencies --
+ &gt; libxml2-dev - OK
+ &gt; pygoocanvas - Missing
+   &gt;&gt; The pygoocanvas is not installed, try to install it.
+   &gt;&gt; Try: &quot;sudo yum -y install pygoocanvas&quot;, if you have sudo rights.
+ &gt; pygraphviz - Missing
+   &gt;&gt; The pygraphviz is not installed, try to install it.
+   &gt;&gt; Try: &quot;sudo yum -y install py27-pygraphviz&quot;, if you have sudo rights.
+ &gt; python-dev - OK
+</pre></div>
+</div>
+<p>Pay attention that the results bake show for myPersonalConfig.xml and
+nonStandardName.xml are different, since we disabled netanim-dev
+(-d netanim-dev).  Some dependencies are missing (pygoocanvas and pygraphviz).
+These are referred at pyviz-prerequisites, that is by its turn an optional module
+of ns-3-allinone. To have a more visual description of the enabled module you can also
+call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt; bake.py -f myPersonalConfig.xml show
+module: click-dev (enabled)
+  No dependencies!
+module: libxml2-dev (enabled)
+  No dependencies!
+module: gccxml-ns3 (enabled)
+  No dependencies!
+module: python-dev (enabled)
+  No dependencies!
+module: pygraphviz (enabled)
+  No dependencies!
+module: pygoocanvas (enabled)
+  No dependencies!
+module: nsc-dev (enabled)
+  No dependencies!
+module: openflow-dev (enabled)
+  depends on:
+     libxml2-dev (optional:False)
+module: pygccxml (enabled)
+  depends on:
+     gccxml-ns3 (optional:False)
+module: pyviz-prerequisites (enabled)
+  depends on:
+     python-dev (optional:True)
+     pygraphviz (optional:True)
+     pygoocanvas (optional:True)
+module: pybindgen-dev (enabled)
+  depends on:
+     pygccxml (optional:True)
+     python-dev (optional:True)
+module: ns-3-allinone (enabled)
+  depends on:
+     netanim-dev (optional:True)
+     nsc-dev (optional:True)
+     pybindgen-dev (optional:True)
+     pyviz-prerequisites (optional:True)
+     click-dev (optional:True)
+     openflow-dev (optional:True)
+
+-- Enabled modules dependency tree --
++-enabled/
+  |
+  +-click-dev
+  |
+  +-gccxml-ns3
+  |
+  +-libxml2-dev
+  |
+  +-ns-3-allinone/
+  | |
+  | +-click-dev (optional)
+  | |
+  | |
+  | +-nsc-dev (optional)
+  | |
+  | +-openflow-dev/ (optional)
+  | | |
+  | | +-libxml2-dev (mandatory)
+  | |
+  | +-pybindgen-dev/ (optional)
+  | | |
+  | | +-pygccxml/ (optional)
+  | | | |
+  | | | +-gccxml-ns3 (mandatory)
+  | | |
+  | | +-python-dev (optional)
+  | |
+  | +-pyviz-prerequisites/ (optional)
+  |   |
+  |   +-pygoocanvas (optional)
+  |   |
+  |   +-pygraphviz (optional)
+  |   |
+  |   +-python-dev (optional)
+  |
+  +-nsc-dev
+  |
+  +-openflow-dev/
+  | |
+  | +-libxml2-dev (mandatory)
+  |
+  +-pybindgen-dev/
+  | |
+  | +-pygccxml/ (optional)
+  | | |
+  | | +-gccxml-ns3 (mandatory)
+  | |
+  | +-python-dev (optional)
+  |
+  +-pygccxml/
+  | |
+  | +-gccxml-ns3 (mandatory)
+  |
+  +-pygoocanvas
+  |
+  +-pygraphviz
+  |
+  +-python-dev
+  |
+  +-pyviz-prerequisites/
+  |
+  +-pygoocanvas (optional)
+  |
+  +-pygraphviz (optional)
+  |
+  +-python-dev (optional)
+
+-- System Dependencies --
+ &gt; libxml2-dev - OK
+ &gt; pygoocanvas - Missing
+   &gt;&gt; The pygoocanvas is not installed, try to install it.
+   &gt;&gt; Try: &quot;sudo yum -y install pygoocanvas&quot;, if you have sudo rights.
+ &gt; pygraphviz - Missing
+   &gt;&gt; The pygraphviz is not installed, try to install it.
+   &gt;&gt; Try: &quot;sudo yum -y install py27-pygraphviz&quot;, if you have sudo rights.
+ &gt; python-dev - OK
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-configuration-file">
+<h2>The configuration file<a class="headerlink" href="#the-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>If you are a developer, and you want to add your module to bake how should you proceed to create the configuration input?</p>
+<p>First you need to create a new xml entry on the configuration file so that bake can understand the actions it should perform. Lets take DCE as an example of configuration for a new module:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="nt">&lt;module</span> <span class="na">name=</span><span class="s">&quot;dce-ns3&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;source</span> <span class="na">type=</span><span class="s">&quot;mercurial&quot;</span><span class="nt">&gt;</span>
+ <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;url&quot;</span> <span class="na">value=</span><span class="s">&quot;http://code.nsnam.org/furbani/ns-3-dce&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;module_directory&quot;</span> <span class="na">value=</span><span class="s">&quot;dce&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/source&gt;</span>
+    <span class="nt">&lt;depends_on</span> <span class="na">name=</span><span class="s">&quot;ns-3-dev-dce&quot;</span> <span class="na">optional=</span><span class="s">&quot;False&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;depends_on</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span> <span class="na">optional=</span><span class="s">&quot;True&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;depends_on</span> <span class="na">name=</span><span class="s">&quot;ccnx&quot;</span> <span class="na">optional=</span><span class="s">&quot;True&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;build</span> <span class="na">type=</span><span class="s">&quot;waf&quot;</span> <span class="na">objdir=</span><span class="s">&quot;build&quot;</span><span class="nt">&gt;</span>
+ <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;configure_arguments&quot;</span>
+                <span class="na">value=</span><span class="s">&quot;configure --prefix=$INSTALLDIR --verbose&quot;</span><span class="nt">/&gt;</span>
+ <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;post_installation&quot;</span>
+               <span class="na">value=</span><span class="s">&quot;export DCE_PATH=$INSTALLDIR/bin:$INSTALLDIR/bin_dce;</span>
+<span class="s">               export DCE_ROOT=$INSTALLDIR;</span>
+<span class="s">               export LD_LIBRARY_PATH=$INSTALLDIR/lib:$INSTALLDIR/bin:</span>
+<span class="s">                                      $SRCDIR/../ns-3-dev-dce/build;</span>
+<span class="s">                                      $INSTALLDIR/bin/ns3test-dce --verbose&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;v_PATH&quot;</span> <span class="na">value=</span><span class="s">&quot;$SRCDIR;$SRCDIR/../build/bin&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;v_LD_LIBRARY&quot;</span>
+                <span class="na">value=</span><span class="s">&quot;$OBJDIR/..;</span>
+<span class="s">                       $SRCDIR;$SRCDIR/../ns-3-dev-dce/build;$INSTALLDIR&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;v_PKG_CONFIG&quot;</span>
+                <span class="na">value=</span><span class="s">&quot;$SRCDIR/../ns-3-dev-dce/build/lib/pkgconfig;</span>
+<span class="s">                $OBJDIR/../../ns-3-dev-&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;new_variable&quot;</span>
+                <span class="na">value=</span><span class="s">&quot;DCE_PATH=$INSTALLDIR/bin:$INSTALLDIR/bin_dce;</span>
+<span class="s">                       DCE_ROOT=$INSTALLDIR;</span>
+<span class="s">                       LD_LIBRARY_PATH=$INSTALLDIR/lib:$INSTALLDIR/bin:$SRCDIR/../ns-3-dev-dce/build&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/build&gt;</span>
+<span class="nt">&lt;/module&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>This defines how bake should download and build the code of DCE and which are the dependencies of DCE code. Now lets take a look on the code step by step so that we can understand what is going on and how we can do the same for a new code:.</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">&lt;module</span> <span class="na">name=</span><span class="s">&quot;dce-ns3&quot;</span><span class="nt">&gt;</span>
+<span class="c">&lt;!-- This defines that a new module will be created and its name --&gt;</span>
+
+  <span class="nt">&lt;source</span> <span class="na">type=</span><span class="s">&quot;mercurial&quot;</span><span class="nt">&gt;</span>
+  <span class="c">&lt;!-- The type of the source code repository tool in use.</span>
+<span class="c">       Can be CVS, mercurial, SVN, Bazaar and archive. --&gt;</span>
+
+      <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;url&quot;</span> <span class="na">value=</span><span class="s">&quot;http://code.nsnam.org/furbani/ns-3-dce&quot;</span><span class="nt">/&gt;</span>
+      <span class="c">&lt;!-- The address of the target repository. --&gt;</span>
+
+      <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;module_directory&quot;</span> <span class="na">value=</span><span class="s">&quot;dce&quot;</span><span class="nt">/&gt;</span>
+      <span class="c">&lt;!-- The target directory the source should be downloaded to --&gt;</span>
+  <span class="nt">&lt;/source&gt;</span> <span class="c">&lt;!-- End of the source handling data --&gt;</span>
+
+  <span class="c">&lt;!-- Here we treat the dependencies of dce. The dependencies may be optional</span>
+<span class="c">       or not, the lack of an optional dependency decreases the functionality</span>
+<span class="c">       of the module, but do not prevent its successful installation, mandatory</span>
+<span class="c">       dependencies on the other hand, do.  The dependencies below are, in the</span>
+<span class="c">       order, ns-3, iperf and ccnx. The ns-3 code is mandatory since DCE can</span>
+<span class="c">       not work without it. Iperf and CCNx are applications that can be used</span>
+<span class="c">       together DCE and are used as examples of DCE power, but are not</span>
+<span class="c">       essential for DCE. --&gt;</span>
+   <span class="nt">&lt;depends_on</span> <span class="na">name=</span><span class="s">&quot;ns-3-dev-dce&quot;</span> <span class="na">optional=</span><span class="s">&quot;False&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;depends_on</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span> <span class="na">optional=</span><span class="s">&quot;True&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;depends_on</span> <span class="na">name=</span><span class="s">&quot;ccnx&quot;</span> <span class="na">optional=</span><span class="s">&quot;True&quot;</span><span class="nt">/&gt;</span>
+
+   <span class="c">&lt;!-- Here we set how bake should perform the build of the system. --&gt;</span>
+   <span class="nt">&lt;build</span> <span class="na">type=</span><span class="s">&quot;waf&quot;</span> <span class="na">objdir=</span><span class="s">&quot;build&quot;</span><span class="nt">&gt;</span>
+   <span class="c">&lt;!-- The build tool used for building DCE is waf, and it will be stored</span>
+<span class="c">        on the directory build. --&gt;</span>
+
+       <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;configure_arguments&quot;</span> <span class="na">value=</span><span class="s">&quot;configure --prefix=$INSTALLDIR --verbose&quot;</span><span class="nt">/&gt;</span>
+       <span class="c">&lt;!-- These are the set of parameters that should be passed as</span>
+<span class="c">            parameter to the waf configure --prefix=$INSTALLDIR --verbose. --&gt;</span>
+
+       <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;post_installation&quot;</span> <span class="na">value=</span><span class="s">&quot;export</span>
+<span class="s">       DCE_PATH=$INSTALLDIR/bin:$INSTALLDIR/bin_dce;export DCE_ROOT=$INSTALLDIR;</span>
+<span class="s">       export LD_LIBRARY_PATH=$INSTALLDIR/lib:$INSTALLDIR/bin:$SRCDIR/../ns-3-dev-dce/build;</span>
+<span class="s">       $INSTALLDIR/bin/ns3test-dce --verbose&quot;</span><span class="nt">/&gt;</span>
+     <span class="c">&lt;!-- These are the list of shell commands Bake should execute</span>
+<span class="c">            after performing the build. --&gt;</span>
+
+      <span class="c">&lt;!-- These are the overload of the standard PATH, LD_LIBRARYPATH,</span>
+<span class="c">           PKG_CONFIG_PATH and a list of new variables that are</span>
+<span class="c">           required by DCE. --&gt;</span>
+       <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;v_PATH&quot;</span> <span class="na">value=</span><span class="s">&quot;$SRCDIR;$SRCDIR/../build/bin&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;v_LD_LIBRARY&quot;</span> <span class="na">value=</span><span class="s">&quot;$OBJDIR/..;</span>
+<span class="s">                        $SRCDIR;$SRCDIR/../ns-3-dev-dce/build;$INSTALLDIR&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;v_PKG_CONFIG&quot;</span> <span class="na">value=</span><span class="s">&quot;$SRCDIR/../ns-3-dev-dce/build/lib/pkgconfig;</span>
+<span class="s">                        $OBJDIR/../../ns-3-dev-&quot;</span> <span class="nt">/&gt;</span>
+       <span class="nt">&lt;attribute</span> <span class="na">name=</span><span class="s">&quot;new_variable&quot;</span> <span class="na">value=</span><span class="s">&quot;DCE_PATH=$INSTALLDIR/bin:$INSTALLDIR/bin_dce;</span>
+<span class="s">                        DCE_ROOT=$INSTALLDIR;</span>
+<span class="s">                        LD_LIBRARY_PATH=$INSTALLDIR/lib:$INSTALLDIR/bin:$SRCDIR/../ns-3-dev-dce/build&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/build&gt;</span> <span class="c">&lt;!-- End of the build handling data --&gt;</span>
+ <span class="nt">&lt;/module&gt;</span> <span class="c">&lt;!-- End of the module --&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Considering that the standard configuration file has the inputs for the dependencies, this is enough to teach Bake how to build DCE.  After adding this to the standard configuration file, or to the <strong>~/.bakerc</strong> file, one can simply call bake configure passing the name of the new module ‘’dce-ns3’’ as parameter.  Each configuration entry has to have a name, a source section and a build section.</p>
+</div>
+<div class="section" id="predefined-configurations">
+<h2>Predefined configurations<a class="headerlink" href="#predefined-configurations" title="Permalink to this headline">¶</a></h2>
+<p>Tasks that are often made can be automatized with Bake by creating predefined entries.  After creating a predefined entry either on the configuration or in the ~.bakerc file, the predefined configuration tag may be called with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">configure</span> <span class="o">-</span><span class="n">p</span> <span class="o">&lt;</span><span class="n">name_of_the_predefined_tag</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>A predefined configuration entry may looks like:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="nt">&lt;predefined</span> <span class="na">name=</span><span class="s">&quot;dce-min-tmp&quot;</span><span class="nt">&gt;</span> <span class="c">&lt;!-- name of the predefined tag --&gt;</span>
+   <span class="nt">&lt;enable</span> <span class="na">name=</span><span class="s">&quot;dce-ns3&quot;</span><span class="nt">/&gt;</span>  <span class="c">&lt;!-- module to enable --&gt;</span>
+
+   <span class="c">&lt;!-- disables optional modules --&gt;</span>
+   <span class="nt">&lt;disable</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;disable</span> <span class="na">name=</span><span class="s">&quot;ccnx&quot;</span><span class="nt">/&gt;</span>
+
+   <span class="c">&lt;!-- Changes the bin and source directories to /tmp --&gt;</span>
+   <span class="nt">&lt;configuration</span> <span class="na">installdir=</span><span class="s">&quot;/tmp/tmpBin&quot;</span> <span class="na">sourcedir=</span><span class="s">&quot;/tmp/tmpSource&quot;</span><span class="nt">/&gt;</span>
+
+   <span class="c">&lt;!-- Configures ns-3 to enable the modules  core,network and WiFi,</span>
+<span class="c">        it appends so it does not change the default configuration --&gt;</span>
+  <span class="nt">&lt;append</span> <span class="na">module=</span><span class="s">&quot;ns-3-dev-dce&quot;</span> <span class="na">name=</span><span class="s">&quot;configure_arguments&quot;</span>
+          <span class="na">value=</span><span class="s">&quot; --enable-modules=core,network,WiFi&quot;</span><span class="nt">/&gt;</span>
+ <span class="nt">&lt;/predefined&gt;</span> <span class="c">&lt;!-- End of the predefined configuration --&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Thus, after adding this to the end of the bakeconf.xml file we can configure bake to download DCE without any optional module by calling:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt; bake.py configure -p dce-min-tmp
+&gt;bake.py show
+module: ns-3-dev-dce (enabled)
+  No dependencies!
+module: dce-ns3 (enabled)
+  depends on:
+     ns-3-dev-dce (optional:True)
+     iperf (optional:True)
+     ccnx (optional:True)
+</pre></div>
+</div>
+<p>We can observe that only the <strong>ns-3-dev-dce</strong> and <strong>dce-ns3</strong> modules are enabled.</p>
+</div>
+<div class="section" id="bakerc-configuration-file">
+<h2>~/.bakerc configuration file<a class="headerlink" href="#bakerc-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>The last configuration made is stored in a file called <strong>.bakerc</strong> that is automatically
+created in the user’s home directory. One can also use this file to extend the
+configuration file by creating personalized predefine actions. This way actions
+that are repeated often can be codified in the <strong>.bakerc</strong> for future use. The last</p>
+<blockquote>
+<div>configuration command issued by the user is stored as last in the <strong>.bakerc</strong>, i.e.</div></blockquote>
+<p>it is possible to call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">configure</span> <span class="o">-</span><span class="n">p</span> <span class="n">last</span>
+</pre></div>
+</div>
+<p>To have the last configuration action repeated. One example of .bashrc:</p>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+ <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;predefined</span> <span class="na">name=</span><span class="s">&quot;dce-min&quot;</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;enable</span> <span class="na">name=</span><span class="s">&quot;dce-meta-dev&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;disable</span> <span class="na">name=</span><span class="s">&quot;elf-loader&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;disable</span> <span class="na">name=</span><span class="s">&quot;iperf&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;disable</span> <span class="na">name=</span><span class="s">&quot;ccnx&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;disable</span> <span class="na">name=</span><span class="s">&quot;wget&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;disable</span> <span class="na">name=</span><span class="s">&quot;thttpd&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;configuration</span> <span class="na">installdir=</span><span class="s">&quot;/tmp/tmpBin&quot;</span> <span class="na">sourcedir=</span><span class="s">&quot;/tmp/tmpSource&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;append</span> <span class="na">module=</span><span class="s">&quot;ns-3-dev&quot;</span> <span class="na">name=</span><span class="s">&quot;configure_arguments&quot;</span> <span class="na">value=</span><span class="s">&quot; --enable-modules=core,network,wifi&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;/predefined&gt;</span>
+   <span class="nt">&lt;predefined</span> <span class="na">name=</span><span class="s">&quot;my-ns3&quot;</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;enable</span> <span class="na">name=</span><span class="s">&quot;ns-3-dev&quot;</span><span class="nt">/&gt;</span>
+     <span class="nt">&lt;append</span> <span class="na">name=</span><span class="s">&quot;configure_arguments&quot;</span> <span class="na">value=</span><span class="s">&quot; --enable-modules=core,network,wifi&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;/predefined&gt;</span>
+   <span class="nt">&lt;predefined</span> <span class="na">name=</span><span class="s">&quot;last&quot;</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;enable</span> <span class="na">name=</span><span class="s">&quot;thttpd&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;/predefined&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="bake-over.html" title="BAKE - Introduction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Bake</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2012, INRIA.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,127 @@
+{
+  "NameDesc": "Same as test13 but with extra packet loss, s.t. B will take path fastest and leave the 2nd fastest for A",
+  "Number of nodes":19,-- why error if there are only 4 nodes actually
+  "trafficType":voip/trafficC,
+  "totalTime":2000,
+  "eps":0.4,
+  "learning_rate":0.5,
+  "ideal":false,
+  "learning_phases":true,
+  "smaller_learning_traffic":true,
+  "rho":0.4,
+  "qconv":0.025,
+  "max_retry":0,
+  "learn_more_threshold":0.1,
+  "node0":{
+    "x":320,
+    "y":120,
+  },
+  "node1":{
+    "x":320,
+    "y":200,
+  },
+  "node2":{
+    "x":420,
+    "y":40,
+  },
+  "node3":{
+    "x":240,
+    "y":40,
+  },
+  "node4":{
+    "x":320,
+    "y":300,
+  },
+  "node5":{
+    "x":500,
+    "y":40,
+  },
+  "node6":{
+    "x":160,
+    "y":40,
+  },
+  "node7":{
+    "x":320,
+    "y":400,
+  },
+  "node8":{
+    "x":540,
+    "y":120,
+  },
+  "node9":{
+    "x":120,
+    "y":120,
+  },
+  "node10":{
+    "x":540,
+    "y":220,
+  },
+  "node11":{
+    "x":120,
+    "y":220,
+  },
+  "node12":{
+    "x":540,
+    "y":300,
+  },
+  "node13":{
+    "x":120,
+    "y":300,
+  },
+  "node14":{
+    "x":540,
+    "y":400,
+  },
+  "node15":{
+    "x":120,
+    "y":400,
+  },
+  "node16":{
+    "x":420,
+    "y":450,
+  },
+  "node17":{
+    "x":240,
+    "y":450,
+  },
+  "node18":{
+    "x":320,
+    "y":500,
+  },
+  "event":{0-2-DELAY-2},
+  "event":{0-5-DELAY-2},
+  "event":{0-8-DELAY-2},
+  "event":{0-10-DELAY-2},
+  "event":{0-12-DELAY-2},
+  "event":{0-14-DELAY-2},
+  "event":{0-16-DELAY-2},   14~
+  "event":{150-3-PACKET_LOSS-0.5},
+  "event":{0-1-DELAY-60},   180~
+  "event":{0-4-DELAY-60},
+  "event":{0-7-DELAY-60},
+  "event":{0-3-DELAY-10},   70~
+  "event":{0-6-DELAY-10},
+  "event":{0-9-DELAY-10},
+  "event":{0-11-DELAY-10},
+  "event":{0-13-DELAY-10},
+  "event":{0-15-DELAY-10},
+  "event":{0-17-DELAY-10},
+  "event":{1000-3-PACKET_LOSS-90}, -- hacky way to make sure path via 10.1.1.4 has more loss s.t. trafficA does not use it after t = 1000
+  "event":{1000-2-DELAY-30},    ~210 (180, one node skipped
+  "event":{1000-5-DELAY-30},
+  "event":{1000-8-DELAY-30},
+  "event":{1000-10-DELAY-30},
+  "event":{1000-12-DELAY-30},
+  "event":{1000-14-DELAY-30},
+  "event":{1000-16-DELAY-30},
+  "event":{1000-1-DELAY-15},    ~45
+  "event":{1000-4-DELAY-15},
+  "event":{1000-7-DELAY-15},
+  "event":{1000-3-DELAY-2},    ~12 a 14
+  "event":{1000-6-DELAY-2},
+  "event":{1000-9-DELAY-2},
+  "event":{1000-11-DELAY-2},
+  "event":{1000-13-DELAY-2},
+  "event":{1000-15-DELAY-2},
+  "event":{1000-17-DELAY-2},
+}

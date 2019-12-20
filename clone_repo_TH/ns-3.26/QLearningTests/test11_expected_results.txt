@@ -1,0 +1,30 @@
+{
+  "qroute":0-1-2-3-4,
+  "node0":{
+    "q":1767, //one for each icmp reply, one for the RREP received from node1
+    "a":3, // 2 RREQ, RREP-Hello
+    "t":1765,
+  },
+  "node1":{
+    "q":3535, //4 voor de icmp (2x2), een voor de RREP die van (node4 -> node3 -> ) node2 -> node1 -> node0 dus zou denken 5, maar er is een packet verkeerd gegaan dus 6 --> 2 packets verkeerd, 7
+    "a":3, // RREP-Hello, RREQ forward, RREP back ( geen rrep ack, problem ? )
+    "t":0,
+  },
+  "node2":{
+    "q":3535, //4 voor de icmp (2x2), een voor de RREP die van (node4 -> node3 -> ) node2 -> node1 -> node0, dus zou denken 5, maar 2 pkts verkeerd richting dst -> 7, also makes an error on 1 reply -> +1 = 534
+    "a":4, // RREP hello, RREQ FWD, RREP ACK back to 10.1.1.4 (for node 5 -> node 1), forward rrep
+    "t":0,
+  },
+  "node3":{
+    "q":3536, // 531 due to Q/AODV, 533 b/c 2x icmp reply wrong decision , 534 because two Q packets replying to AODV traffic instead of 1 as expected
+    "a":3, // RREP Hello, RREP for 10.1.1.1 -> 10.1.1.5, RREP for 10.1.1.5 -> 10.1.1.1
+    "t":0,
+  },
+  "node4":{
+    "q":1769, //2x reply received back incorrectly, so +2
+    "a":2, // RREP Hello, RREQ for 10.1.1.1
+    "t":1765,
+  },
+}
+
+TODO possibly issue with chosen initial values due to them being ccnfused at start ?

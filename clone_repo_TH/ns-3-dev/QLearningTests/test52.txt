@@ -1,0 +1,26 @@
+{
+  "NameDesc":Long test - 4 nodes in a line - VOIP traffic - eps = 0 - udp-echo testing 2way coms with t sent,
+  "Number of nodes":4,
+  "trafficType":udp-echo,
+  "totalTime":1800,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":1764, -- why did this work before?
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}

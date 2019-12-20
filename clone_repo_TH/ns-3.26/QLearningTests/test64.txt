@@ -1,0 +1,31 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0,
+  "Number of nodes":4,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":100,
+  "vary_break_times":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":10,
+    "break":y,
+  },
+  "node2":{
+    "x":110,
+    "y":30,
+    "break":y,
+  },
+  "node3":{
+    "x":220,
+    "y":20,
+  },
+}
+
+-- so this one does actually work, because the distance between 2 and 1 isnt that big, thus 2 doesnt lose connection to 1 ?

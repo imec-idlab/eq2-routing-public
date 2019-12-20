@@ -1,0 +1,84 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('applications', ['internet', 'config-store','stats','aodv','flow-monitor','wifi'])
+    module.source = [
+        'model/bulk-send-application.cc',
+        'model/onoff-application.cc',
+        'model/packet-sink.cc',
+        'model/udp-client.cc',
+        'model/udp-server.cc',
+        'model/seq-ts-header.cc',
+        'model/udp-trace-client.cc',
+        'model/packet-loss-counter.cc',
+        'model/udp-echo-client.cc',
+        'model/request-response-client.cc',
+        'model/udp-echo-server.cc',
+        'model/request-response-server.cc',
+        'model/application-packet-probe.cc',
+        'helper/bulk-send-helper.cc',
+        'helper/on-off-helper.cc',
+        'helper/packet-sink-helper.cc',
+        'helper/udp-client-server-helper.cc',
+        'helper/request-response-helper.cc',
+        'helper/udp-echo-helper.cc',
+        'helper/q-learner-helper.cc',
+        'model/q-learner.cc',
+        'model/qos-q-learner.cc',
+        'model/qlrn-header.cc',
+        'model/qos-qlrn-header.cc',
+        'model/packettable.cc',
+        'model/qtable.cc',
+        'model/qlrn-test.cc',
+        'model/ppbp-application.cc',
+        'helper/ppbp-helper.cc',
+        'model/qlrn-test-base.cc',
+        'model/traffic-types.cc',
+        ]
+
+    applications_test = bld.create_ns3_module_test_library('applications')
+    applications_test.source = [
+        'test/udp-client-server-test.cc',
+        'test/qlrn-tests.cc',
+        ]
+
+    headers = bld(features='ns3header')
+    headers.module = 'applications'
+    headers.source = [
+        'model/bulk-send-application.h',
+        'model/onoff-application.h',
+        'model/packet-sink.h',
+        'model/udp-client.h',
+        'model/udp-server.h',
+        'model/seq-ts-header.h',
+        'model/udp-trace-client.h',
+        'model/packet-loss-counter.h',
+        'model/udp-echo-client.h',
+        'model/request-response-client.h',
+        'model/udp-echo-server.h',
+        'model/request-response-server.h',
+        'model/application-packet-probe.h',
+        'helper/bulk-send-helper.h',
+        'helper/on-off-helper.h',
+        'helper/packet-sink-helper.h',
+        'helper/udp-client-server-helper.h',
+        'helper/request-response-helper.h',
+        'helper/udp-echo-helper.h',
+        'helper/q-learner-helper.h',
+        'model/q-learner.h',
+        'model/qlrn-header.h',
+        'model/qos-qlrn-header.h',
+        'model/qos-q-learner.h',
+        'model/thomas-packet-tags.h',
+        'model/qtable.h',
+        'model/packettable.h',
+        'model/qlrn-test.h',
+        'model/ppbp-application.h',
+        'helper/ppbp-helper.h',
+        'model/qlrn-test-base.h',
+        'model/make-functional-event.h',
+        'model/thomas-configuration.h',
+        'model/traffic-types.h',
+        ]
+
+    bld.ns3_python_bindings()

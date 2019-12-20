@@ -1,0 +1,32 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0,
+  "Number of nodes":4,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":100,
+  "vary_break_times":false,
+  "node0":{
+    "x":0,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":y,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":y,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+Because node1 breaks, node2 being marked unavailable cant be checked, testing this more thoroughly in test60.txt

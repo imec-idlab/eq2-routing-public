@@ -1,0 +1,27 @@
+{
+  "NameDesc":copy of test 59 with l3 delay added in node1 meaning 0-2-3 should be the QRoute that is converged to (in test59 it varied),
+  "Number of nodes":4,
+  "trafficType":ping,
+  "totalTime":1800,
+  "eps":0.3,
+  "learning_rate":0.5,
+  "ideal":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":30,
+    "slower":l3,
+    "delay_value":5,
+  },
+  "node2":{
+    "x":110,
+    "y":10,
+  },
+  "node3":{
+    "x":220,
+    "y":20,
+  },
+}

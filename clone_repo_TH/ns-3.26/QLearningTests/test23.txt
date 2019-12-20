@@ -1,0 +1,29 @@
+{
+  "NameDesc":Long test - 5 nodes in a line - ICMP traffic - eps = 0 - ideal,
+  "Number of nodes":5,
+  "trafficType":ping,
+  "totalTime":1800,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+  "node4":{
+    "x":440,
+    "y":20,
+  },
+}

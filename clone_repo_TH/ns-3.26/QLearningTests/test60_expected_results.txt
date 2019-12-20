@@ -1,0 +1,15 @@
+{
+  "node0":{
+    "t":29, 13 correctly via node2, 1 wrongly, tried again via node1, then 14 same way via node2 = 29 sent
+  },
+  "node1":{
+    "broken":y,
+  },
+  "node2":{
+    "broken":y,
+  },
+  "node3":{
+    "broken":n,
+    "t_rec":27, 13 via node2, then 14th breaks and is sent via node1, then 13 via node1 = 27
+  },
+}

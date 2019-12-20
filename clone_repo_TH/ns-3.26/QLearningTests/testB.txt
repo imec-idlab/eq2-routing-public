@@ -1,0 +1,23 @@
+{
+  "Number of nodes":4,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":30,
+  },
+  "node2":{
+    "x":110,
+    "y":10,
+  },
+  "node3":{
+    "x":220,
+    "y":20,
+  },
+}
+
+Artificially make node 2 slow, experiments seemed to show thats the one AODV picks
+MAYBE: code it s.t. whichever AODV chooses to prefer becomes slower automatically, whatever
+then have QLearner suggest the other one

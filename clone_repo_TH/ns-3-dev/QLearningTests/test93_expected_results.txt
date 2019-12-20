@@ -1,0 +1,29 @@
+{
+  "qroute":0-1-2-3,
+  "node0":{
+    "q":1,
+    "a":3,
+    "t":2800,
+    "t_lrn":5,
+    "t_lrn_rec":0,
+  },
+  "node1":{
+    "q":8,
+    "a":4,
+    "t_rec":2800,
+    "t_lrn_rec":3,
+  },
+  "node2":{
+    "q":7, /
+    "a":2,
+    "t_rec":2800,
+    "t_lrn_rec":3, --TODO why isnt "q" == "t_lrn_rec" ??? -- aodv is +1 (for all RREP, RREPACK)
+  },
+  "node3":{
+    "q":5,
+    "a":1,
+    "t":0,
+    "t_rec":2800,
+    "t_lrn_rec":3,
+  },
+}

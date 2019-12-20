@@ -1,0 +1,14 @@
+{
+  "node0":{
+    "t":14, //TODO actually expected this to be 13, packets are counted that are never actually sent. Apparently #14 is the one then where down is noticed, but it is counted as traffic all the same. Perhaps a rework of the traffic counting system is in order.
+  },
+  "node1":{
+    "broken":y,
+  },
+  "node2":{
+    "broken":y,
+  },
+  "node3":{
+    "broken":n,
+  },
+}

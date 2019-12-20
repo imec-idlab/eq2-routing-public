@@ -1,0 +1,29 @@
+{
+  "NameDesc":copy of test95 with less nodes - trying to debug the issue im seeing where it doesnt learn the correct route if delay is nonzero - LATEST ISSUE : EPS 0 meant no learning traffic after end of lrn / start of traffic,
+  "Number of nodes":3,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.25, -empirically shown that this is high enough to match our expected lrn packets
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":677,
+  "learning_phases":true,
+  "smaller_learning_traffic":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "slower":l3,
+    "delay_value":0,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+}
+
+-- a lot of learning traffic because smaller learning traffic is true, and voip traffic is from itself a very large stream of data
+-- so thats why the big difference. test results were fine all along

@@ -1,0 +1,31 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0 - changing order of parameters in node results 2,
+  "Number of nodes":4,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":100,
+  "node0":{
+    "x":0,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":n,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":n,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+Strange test situation honestly, 1 can just reach 4 directly over the diagonal somehow

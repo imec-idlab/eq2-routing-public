@@ -1,0 +1,63 @@
+{
+  "qroute":0,
+  "node0":{
+    "t":47, --see below (real 49)
+    "t_lrn":0,
+    "t_lrn_rec":0,
+    "learning":n, --no , because m_use_learning_phases && m_learning_phase is what decides the value of this
+  },
+  "node1":{
+    "broken":y,
+    "t_lrn_rec":0,
+    "t_rec":1,
+  },
+  "node2":{
+    "broken":y,
+    "t_lrn_rec":0,
+    "t_rec":1, --the final qroute (before all break) is having one step too many thats not too good ey
+  },
+  "node3":{
+    "broken":y,
+    "t_lrn_rec":0,
+    "t_rec":1, --the final qroute (before all break) is having one step too many thats not too good ey, so there is more traffic than we expect on the intermediate nodes
+  },
+  "node4":{
+    "t_rec":42, //42 because packet seq 13 is dropped, otherwise 43 would be correct
+    "t_lrn_rec":0,
+  },
+}
+
+
+node 0 result : "t":44, //real is 46 : 5 seconds to 90 seconds means 85 seconds of sending at 1 every 2 seconds -> 43 or so, then 1 to check node1 down, one for node2, one for node 3 = 46 -- suddently its 50 ?
+
+I think some traffic goes via node2 and node3 but im not sure
+
+
+12/05 - issue found, there are 43 packets being sent
+  -> two wrong decisions for pkt 1 causing 2 extra transmissions -> +45
+  -> nr 13 is being ignored for some reason -> -1
+  -> finding three nodes not available -> +3
+  = 47
+  but we want to see 50 ? or 48
+
+  its udp-no-echo so thats one packet then 2 seconds of nothing
+  start  at t = 7; continue until t = 30 / 60 / 90
+  t = 90 i guess
+  so 5,7, 9,
+  11, 13, 15, 17, 19
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  thus 43 pkt can possibly be sent in the time
+
+  add 2 mistakes on pkt seq 1 -> we get 45 pkts
+  add that we will always have 3 packets that are dropped, but we count them anyway -> 48 pkts
+  BUT these packets may fall in the first 45 pkts, and they are not retransmitted (TODO this is also in thomasAODV, try retransmitting it via another neighbour immediately instead of dropping it? or add that as future )
+  SO there will be between 45 and 48 transmissions ?
+
+
+-- suddenly extra errors after fixing the pkt queue time -> 47 (it was 49 so its in margin)

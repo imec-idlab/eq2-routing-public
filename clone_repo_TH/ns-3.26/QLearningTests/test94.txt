@@ -1,0 +1,36 @@
+{
+  "NameDesc":multiple nodes break at different times - breakage only noticed when the first next best hop is found broken - copy of test62 now with learning phases where node0 is learning at the end & changed traffic type & more maxpackets otherwise it ran out too quickly...,
+  "Number of nodes":5,
+  "trafficType":trafficB, --need something with onoff appl
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":300,
+  "learning_phases":true,
+  "vary_break_times":true,
+  "node0":{
+    "x":0,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":y,
+  },
+  "node2":{
+    "x":110,
+    "y":40,
+    "break":y,
+  },
+  "node3":{
+    "x":110,
+    "y":60,
+    "break":y,
+  },
+  "node4":{
+    "x":220,
+    "y":20,
+  },
+}

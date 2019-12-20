@@ -1,0 +1,18 @@
+{
+  "qroute":0-*-4,
+  "node0":{
+  },
+  "node1":{
+  },
+  "node2":{
+  },
+  "node3":{
+  },
+  "node4":{
+  },
+}
+
+
+node 0 result : "t":44, //real is 46 : 5 seconds to 90 seconds means 85 seconds of sending at 1 every 2 seconds -> 43 or so, then 1 to check node1 down, one for node2, one for node 3 = 46 -- suddently its 50 ?
+
+I think some traffic goes via node2 and node3 but im not sure

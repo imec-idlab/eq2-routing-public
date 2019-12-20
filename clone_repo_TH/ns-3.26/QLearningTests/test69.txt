@@ -1,0 +1,57 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0,
+  "Number of nodes":5,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":110,
+  "vary_break_times":true,
+  "node0":{
+    "x":0,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":90,
+    "y":55,
+    "break":y,
+    "slower":l3,
+    "delay_value":5,
+  },
+  "node2":{
+    "x":105,
+    "y":60,
+    "break":y, --this test will no longer fail because of this (n -> y), thats intentional...! need to implement the QInfo timeout stuff I guess to mark neighb unavail ? TODO is that timeout necessary
+    "slower":l3,
+    "delay_value":5, --setting this to 5 instead of 0 means that the down happens 4s later? strange?
+  },
+  "node3":{
+    "x":105, // had 0 here, but that means node2 is too far from node3 so it automatically becomes U (spotty connection)
+    "y":50,
+    "break":y,
+    "slower":l3,
+    "delay_value":0,
+  },
+  "node4":{
+    "x":180,
+    "y":60,
+  },
+}
+
+Because node1 breaks, node2 being marked unavailable cant be checked, testing this more thoroughly in test60.txt
+-- found issue at the ADD_DST_CASE_7 <--
+-- and also at GetNExtEstim,  I want to replace 10.1.1.2 by  255.255.255.255 on packet id 473 destined for 10.1.1.4 because +9999000000.0ns <-- fixed, incorrectly checking if all neighbs are down
+-- issue where ICMPv4TimeExceeded is deferred even though its directed to node0 (and even sent by node0 ??) <-- still issue
+--
+--
+-- so add case 7 gives node2 a really bad estimate to dst, which causes it to always choose 1 to send to 4 && 4 is not a neighbour of 2 so that kills it entirely
+--
+-- "temporary" fix in aodv-rtable.cc
+--
+-- created test63 to test rhombus situation
+--
+-- seems to be fixed, now that I've switched the order in which nodes break (first 2, then 1)
+-- also putting 2 closer to 3 is important to make it work, if they're too far apart and the connection is spotty it will become U
+-- trying to find other problems now..

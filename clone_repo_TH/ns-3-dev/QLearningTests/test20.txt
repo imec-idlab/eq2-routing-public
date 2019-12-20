@@ -1,0 +1,25 @@
+{
+  "NameDesc":At first Q varied a little bit 3529 - 4 but now its split nicely between node2 (replies) and node1 (echos requests) - NO LONGER SPLIT NICELY ,
+  "Number of nodes":4,
+  "trafficType":ping,
+  "totalTime":1800,
+  "eps":0.001,
+  "learning_rate":0.5,
+  "ideal":false,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":30,
+  },
+  "node2":{
+    "x":110,
+    "y":10,
+  },
+  "node3":{
+    "x":220,
+    "y":20,
+  },
+}

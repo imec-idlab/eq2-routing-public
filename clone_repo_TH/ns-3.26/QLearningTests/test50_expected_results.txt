@@ -1,0 +1,32 @@
+{
+  "qroute":0,
+  "node0":{
+    "t":40,39, --39 after learning 11, total 50 and 39th packet dissapears in the void
+    "t_lrn_rec":1,0,
+    "t_rec":0,
+    "t_lrn":4,
+    "learning":y, -- goes into learning phase because 1 breaks and that was its N_H
+  },
+  "node1":{
+    "t":0,
+    "broken":y,
+    "t_lrn_rec":4, --lowerbounds
+    "t_rec":41,38,
+    "learning":n, -- stream learning now
+  },
+  "node2":{
+    "t":0,
+    "t_lrn_rec":4,
+    "t_rec":41,38,
+    "learning":n,
+  },
+  "node3":{
+    "t":0,
+    "t_rec":41,38,
+    "t_lrn_rec":2,
+    "learning":y, --default
+  },
+}
+
+
+-- 8 + 41 = 49, 8 came from 10 at first, so nu 41 from 39

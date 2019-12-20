@@ -1,0 +1,30 @@
+{
+  "node0":{
+    "t":1991, -- changed it back to 2000 from 12, now traffic keeps going! -- changed expected result from 2000 (maxpackets) to 12, as that is when it converges.
+    "t_lrn":9,
+    "t_rec":0,
+    "t_lrn_rec":0,
+    "learning":n,
+  },
+  "node1":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":1991,
+    "t_lrn_rec":9,
+    "learning":n, -- see below
+  },
+  "node2":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":1991,
+    "t_lrn_rec":4,
+    "learning":n, -- changes made, upstream now converges so they switch learning off --- before : default was y
+  },
+  "node3":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":1991,
+    "t_lrn_rec":2,
+    "learning":y, // default learning is y
+  },
+}

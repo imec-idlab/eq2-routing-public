@@ -1,0 +1,30 @@
+{
+  "node0":{
+    "t":300,
+    "t_lrn":100,
+    "t_rec":8000,
+    "t_lrn_rec":2000,
+    "learning":n,
+  },
+  "node1":{
+    "t":0,
+    "t_lrn_rec":2000,
+    "learning":y, --default is y, but it converges after 42 pkts (faster than node2 breaks) -- should go back to learning when 2 breaks TODO
+  },
+  "node2":{
+    "t":0,
+    "t_lrn_rec":2,
+    "broken":y, --its Y, enough packets now... --becomes n from y because there are not enough packets to notice this!
+    "learning":n, --default is y, but it converges after 42 pkts (faster than node2 breaks)
+  },
+  "node3":{
+    "t":0,
+    "t_lrn_rec":2,
+    "t_rec":39,
+    "learning":y,
+  },
+}
+
+-- expect this test to break in future when the retrans issue gets done
+
+-- one less learning, one more traffic

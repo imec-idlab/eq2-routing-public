@@ -1,0 +1,44 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+# def options(opt):
+#     pass
+
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+    module = bld.create_ns3_module('tqlrn', ['internet','wifi'])
+    module.includes='.'
+    module.source = [
+        'model/tqlrn-routing-protocol.cc',
+        'model/todo-dpd.cc',
+        'model/todo-id-cache.cc',
+        'model/todo-neighbor.cc',
+        'model/todo-rqueue.cc',
+        'model/todo-rtable.cc',
+        'model/tqlrn-packet.cc',
+        'helper/tqlrn-helper.cc',
+        ]
+
+    module_test = bld.create_ns3_module_test_library('tqlrn')
+    module_test.source = [
+        'test/tqlrn-test-suite.cc',
+        ]
+
+    headers = bld(features='ns3header')
+    headers.module = 'tqlrn'
+    headers.source = [
+        'model/tqlrn-routing-protocol.h',
+        'model/todo-dpd.h',
+        'model/todo-id-cache.h',
+        'model/todo-neighbor.h',
+        'model/todo-rqueue.h',
+        'model/todo-rtable.h',
+        'model/tqlrn-packet.h',
+        'helper/tqlrn-helper.h',
+        ]
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()

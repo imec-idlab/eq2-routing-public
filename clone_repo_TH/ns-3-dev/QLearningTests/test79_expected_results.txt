@@ -1,0 +1,61 @@
+{
+  "qroute":0, --RESOLVED : --also stays 0-1-2-3, because there is no way to notice that it is broken, SHOULD BE ONLY 0
+  "node0":{
+    "t":34,
+    "t_rec":0,
+    "t_lrn":4, // so there is our 50 again = 39 + 11
+    "learning":y, --in this case it is y, because 1 (its next_hop that was converged) has broken && use learning phases is true
+  },
+  "node1":{
+    "t":0,
+    "t_rec":34,
+    "t_lrn":0,
+    "t_lrn_rec":3,
+    "broken":y, --RESOLVED --becomes n from y because there are not enough packets to notice this!
+    "learning":n, --default
+  },
+  "node2":{
+    "t":0,
+    "t_rec":34,
+    "t_lrn":0,
+    "t_lrn_rec":2,
+    "learning":n, --has converged, default
+  },
+  "node3":{
+    "t":0,
+    "t_rec":34,
+    "t_lrn_rec":1,
+    "t_lrn":0,
+    "learning":y, --default
+  },
+}
+
+
+{
+  "node0":{
+    "t":288,
+    "t_lrn":12,
+    "t_rec":8000,
+    "learning":n,
+  },
+  "node1":{
+    "t":0,
+    "t_lrn_rec":12,
+    "learning":y, --default is y, but it converges after 42 pkts (faster than node2 breaks) -- should go back to learning when 2 breaks TODO
+  },
+  "node2":{
+    "t":0,
+    "t_lrn_rec":10,
+    "broken":y, --its Y, enough packets now... --becomes n from y because there are not enough packets to notice this!
+    "learning":n, --default is y, but it converges after 42 pkts (faster than node2 breaks)
+  },
+  "node3":{
+    "t":0,
+    "t_lrn_rec":8,
+    "t_rec":37,
+    "learning":y,
+  },
+}
+
+-- expect this test to break in future when the retrans issue gets done
+--TODO FINISH THIS TEST S;T; TRAFFIC TAKES OVER AND GETS BETTER RESULTS WHEN IT TAKES OVER AFTER LEARNING

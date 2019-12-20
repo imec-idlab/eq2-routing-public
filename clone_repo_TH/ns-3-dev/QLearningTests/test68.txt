@@ -1,0 +1,33 @@
+{
+  "NameDesc":Long test - 4 nodes in a rhombus - ICMP traffic - eps = 0.0,
+  "Number of nodes":4,
+  "trafficType":udp-but-no-echo-just-for-maxPkt,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":100,
+  "vary_break_times":true,
+  "node0":{
+    "x":0,
+    "y":20,
+    "break":n,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "break":y,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+    "break":y,
+  },
+  "node3":{
+    "x":330,
+    "y":20,
+  },
+}
+
+copy from test41 with vary break times set to yes, so there are some more retransmissions -- expect this to break at some point when we fix the retrans thing,
+doing retrans 32 times is pointless if there is no more path upstream but its an edge case , should just not crash is most important

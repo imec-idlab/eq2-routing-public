@@ -1,0 +1,33 @@
+{
+  "qroute":0-1-5-6,
+  "node0":{
+    "t":700, --via maxpackets,  was 722,
+    "t_lrn":9,
+  },
+  "node1":{
+  "t_lrn_rec":7,8,12, -- differs between running aaaaa 85 vs aaaa only , lol!
+  "t_rec":700,
+  },
+  "node2":{
+  "t_rec":0,
+  "t_lrn_rec":1,
+  },
+  "node3":{
+  "t_lrn_rec":1,
+  "t_rec":0,
+  },
+  "node4":{
+  "t_lrn_rec":1,
+  "t_rec":0,
+  },
+  "node5":{
+  "t_lrn_rec":2,
+  "t_rec":700,
+  },
+  "node6":{
+    "t_rec":700, 728, --725, , -- 738
+    "t_lrn_rec":3, --was 22, now 10 with convergence
+  },
+}
+
+-- TODO figure out why this test changed after the switch AWAY from queue impact

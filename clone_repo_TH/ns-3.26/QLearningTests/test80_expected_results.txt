@@ -1,0 +1,26 @@
+{
+  "node0":{
+    "t":1991, --test = TODO -- changed expected result from 2000 (maxpackets) to 12, as that is when it converges.
+    "t_lrn":5,
+    "learning":n,
+  },
+  "node1":{
+    "t_lrn_rec":5,
+    "t":0,
+    "learning":n, //Default learning is y, converges to n
+  },
+  "node2":{
+    "t_lrn_rec":5,
+    "t":0,
+    "learning":n, //default learning is y, converges to n
+  },
+  "node3":{
+    "t":0,
+    "t_lrn_rec":5,
+    "t_rec":1991,
+    "learning":y, // default learning is y and this one isnt learning anything
+  },
+}
+
+
+--TODO FINISH THIS TEST S;T; TRAFFIC TAKES OVER AND GETS BETTER RESULTS WHEN IT TAKES OVER AFTER LEARNING

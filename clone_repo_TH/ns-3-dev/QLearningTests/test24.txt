@@ -1,0 +1,29 @@
+{
+  "NameDesc":Short test - 4 nodes in a line - ICMP traffic - eps = 0 - ideal,
+  "Number of nodes":4,
+  "trafficType":ping,
+  "totalTime":1800,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":90,
+    "y":20,
+  },
+  "node2":{
+    "x":180,
+    "y":20,
+  },
+  "node3":{
+    "x":270,
+    "y":20,
+  },
+}
+
+Somehow! if we swap the positions of test23 and test24, test23 won't work because node3 does not see any RREP Hello messages or anything
+this is quite a big issue, but I feel like it's not something we can account for? I mean clearly its the RNG affecting the RREPs?
+I dont know! --> TODO possibly been fixed along with the issue in test54

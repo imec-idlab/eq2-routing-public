@@ -1,0 +1,21 @@
+{
+  "qroute":0-1-5-6,-- unit_test_situation only 0-2-3-4-6,
+  "node0":{
+    "learning":n,
+  },
+  "node1":{
+    "learning":n, --conv, changed y to n but this isnt used, so stays y
+  },
+  "node2":{-- maybe not learning but its a coin toss usually
+  },
+  "node3":{-- maybe not learning but its a coin toss usually
+  },
+  "node4":{-- not learning but its a coin toss usually
+  },
+  "node5":{
+    "learning":n, --conv, changed y to n but this isnt used, so stays y
+  },
+  "node6":{
+    "learning":y,
+  },
+}

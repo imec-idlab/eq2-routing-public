@@ -1,0 +1,46 @@
+{
+  "NameDesc":testing learning phases going on / off / on without QoS - cant control learning path taken between unit_test_situation vs QLrnTests so in QLrnTest result is 0-1-5-6 while in thomasAODV its 0-2-3-4-6,
+  "Number of nodes":7,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.0,
+  "learning_rate":0.5,
+  "ideal":false,
+  "learning_phases":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "slower":l3,
+    "delay_value":0,
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+    "slower":l3,
+    "delay_value":7,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+    "slower":l3,
+    "delay_value":7,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}
+
+-- implementing learning phases here

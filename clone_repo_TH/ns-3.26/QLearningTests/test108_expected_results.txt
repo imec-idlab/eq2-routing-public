@@ -1,0 +1,33 @@
+{
+  "qroute":0-2-3-4-6,
+  "node0":{
+    "t":500, was 722,
+    "t_lrn":9,
+  },
+  "node1":{
+  "t_lrn_rec":2,
+  "t_rec":0,
+  },
+  "node2":{
+  "t_rec":500,
+  "t_lrn_rec":7,
+  },
+  "node3":{
+  "t_lrn_rec":5,
+  "t_rec":500,
+  },
+  "node4":{
+  "t_lrn_rec":3,
+  "t_rec":500,
+  },
+  "node5":{
+  "t_lrn_rec":1,
+  "t_rec":0,
+  },
+  "node6":{
+    "t_rec":500, 728, --725, , -- 738
+    "t_lrn_rec":2, --was 22, now 10 with convergence
+  },
+}
+
+-- TODO figure out why this test changed after the switch AWAY from queue impact

@@ -1,0 +1,57 @@
+{
+  "node0":{
+    "t":66,
+    "t_lrn":50, ) bc consatntly going back to lrn phase, but now with lower QTABLE_CONVERGENCE_THRESHOLD its fixed
+    "t_rec":0, --no bad decisions on traffic
+    "t_lrn_rec":10, --1 bad decision learning tx (or is it deferred? ) --- pkt 79 is learning going from 2 -> 1, alright!
+    "broken":n,
+  },
+  "node1":{
+    "t_rec":66,
+    "t_lrn_rec":100, -- then this one gets all the traffic & drops it
+  },
+  "node2":{
+  "t_lrn_rec":100,
+  },
+  "node3":{
+  "t_lrn_rec":100,
+  },
+  "node4":{
+  "t_lrn_rec":100,
+  },
+  "node5":{
+  "t_lrn_rec":100,
+  },
+  "node6":{
+    "t_rec":66,
+    "t_lrn_rec":50,
+  },
+  "node7":{
+    "t_rec":66,
+    "t_lrn_rec":50,
+  },
+  "node8":{
+    "t_lrn_rec":50,
+  },
+  "node9":{
+    "t_lrn_rec":50,
+  },
+  "node10":{
+    "t_lrn_rec":50,
+  },
+  "node11":{
+    "t_lrn_rec":50,
+  },
+  "node12":{
+    "t_lrn_rec":50,
+  },
+  "node13":{
+    "t_lrn_rec":50,
+  },
+  "node14":{
+    "t":0,
+    "t_lrn":0,
+    "t_rec":66,
+    "t_lrn_rec":30,
+  },
+}

@@ -1,0 +1,26 @@
+{
+  "NameDesc":delay(1) set in L3 - voip/trafficB traffic - no QoS, eps 0 - copy of test95 with less nodes, trying to debug the issue im seeing where it doesnt learn the correct route if delay is nonzero (Q Varies a bit),
+  "Number of nodes":3,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.1,
+  "learning_rate":0.5,
+  "ideal":false,
+  "maxpackets":700,
+  "learning_phases":true,
+  "smaller_learning_traffic":true,
+  "node0":{
+    "x":0,
+    "y":20,
+  },
+  "node1":{
+    "x":110,
+    "y":20,
+    "slower":l3,
+    "delay_value":10,
+  },
+  "node2":{
+    "x":220,
+    "y":20,
+  },
+}

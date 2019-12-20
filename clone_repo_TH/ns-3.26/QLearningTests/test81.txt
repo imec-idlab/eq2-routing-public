@@ -1,0 +1,42 @@
+{
+  "NameDesc":voip/trafficB traffic in some sort of star shape testing learning phases in no-QoS environment - copy of test82 and somehow different results,
+  "Number of nodes":7,
+  "trafficType":voip/trafficB,
+  "totalTime":400,
+  "eps":0.1,
+  "learning_rate":0.5,
+  "ideal":false,
+  "learning_phases":true,
+  "node0":{
+    "x":120,
+    "y":120,
+  },
+  "node1":{
+    "x":210,
+    "y":50,
+    "slower":l3,
+    "delay_value":10, -- added this to make the other route better
+  },
+  "node2":{
+    "x":50,
+    "y":210,
+  },
+  "node3":{
+    "x":120,
+    "y":300,
+  },
+  "node4":{
+    "x":220,
+    "y":300,
+  },
+  "node5":{
+    "x":300,
+    "y":120,
+  },
+  "node6":{
+    "x":300,
+    "y":210,
+  },
+}
+
+-- todo this test, its for learning/data traffic

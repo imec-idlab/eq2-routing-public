@@ -1,0 +1,21 @@
+{
+  "node0":{
+    "t":529, --see below
+    "t_rec":15328,
+  },
+  "node1":{
+  },
+  "node2":{
+    "broken":y,
+  },
+  "node3":{
+    "t_rec":49,
+  },
+}
+
+//also wrong due to drop error unreachable neighb, actually 13 + 1 + 32 * (2 / second) * time of sending after break (= 240)
+-- 0-48 are sent correctly, id nr 49 notice the issue so thats 49 tx already
+-- then the remainder of the time, there are 240 seconds remaining, so 480 tx more -> 49 + 480 = 529
+--
+-- and then there is the case of the t_rec thing, which is 479 * 32 + 479 (for the icmp) = 15840 -- why is it 479 --> because there are 479 tx tries after the fail
+-- and ICMP is deferredoutputtag so its not counted anymore!

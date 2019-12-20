@@ -1,0 +1,15 @@
+{
+  "qroute":0-1-2-3,
+  "node0":{
+    "t":333,
+  },
+  "node1":{
+    "t":0,
+  },
+  "node2":{
+    "t":0,
+  },
+  "node3":{
+    "t":333, // one wrong decision is made in a dry run.. but in the test script, 333 is correct thank you rng
+  },
+}

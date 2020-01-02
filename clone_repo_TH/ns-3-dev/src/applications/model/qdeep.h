@@ -74,7 +74,7 @@ private:
 //  TODO HANS - P1 - Comment out the q table and see what breaks!
 //  std::map<Ipv4Address, std::vector<QDecisionEntry*> > m_qtable;
 //  TinyNN qtnn;
-  	genann gnn;
+  	genann* gnn;
 };
 
 } //namespace ns3

@@ -69,6 +69,7 @@ def build(bld):
         'helper/request-response-helper.h',
         'helper/udp-echo-helper.h',
         'helper/q-learner-helper.h',
+        'model/baselearner.h',
         'model/q-learner.h',
         'model/qlrn-header.h',
         'model/qos-qlrn-header.h',

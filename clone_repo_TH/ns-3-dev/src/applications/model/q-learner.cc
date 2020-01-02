@@ -89,8 +89,91 @@ std::string traffic_type_to_traffic_string(TrafficType t) {
   return ret;
 }
 
-/// Port for QLRN control traffic
-const uint32_t QLearner::QLRN_PORT = 404;
+QLearner::QLearner (float eps_param = DEFAULT_EPSILON_VALUE, float learning_rate = DEFAULT_LRN_RATE_VALUE, float gamma = DEFAULT_GAMMA_VALUE)
+{
+  NS_LOG_FUNCTION (this);
+  m_sent = 0;
+  m_socket = 0;
+  m_qlrn_socket = 0;
+  m_verbose = false;
+  m_packet_info = PacketTable();
+
+  m_eps_thresh = eps_param;
+  m_gamma = gamma;
+  m_epsilon = CreateObject<UniformRandomVariable> ();
+  m_epsilon->SetAttribute ("Min", DoubleValue (0.0));
+  m_epsilon->SetAttribute ("Max", DoubleValue (1.0));
+
+  m_learningrate = learning_rate;
+  m_name = "NOT INITIALIZED";
+
+  m_in_test = false;
+
+  m_ideal = false;
+
+  m_control_packets_sent = 0;
+  // TODO HANS - change the Q learner in a BaseLearner
+  m_other_qlearners = std::map<Ipv4Address,Ptr<BaseLearner> >();
+
+  m_learning_phase = std::map<Ipv4Address,bool>() ; //initially, learning!
+  m_learning_threshold = LEARNING_PHASE_START_THRESHOLD;
+  m_apply_jitter = false;
+  m_jittery_qlearner = false;
+  m_slow_qlearner = false;
+  m_output_data_to_file = false;
+  m_print_qtables = false;
+
+  m_report_dst_to_src = false;
+
+  m_num_applications = 0;
+
+  m_output_filestream = 0;
+  m_use_learning_phases = false;
+  m_traffic_sources = std::vector<Ipv4Address>();
+  m_traffic_destinations = std::vector<Ipv4Address>();
+  m_my_sent_traffic_destination = Ipv4Address("99.99.99.99");
+
+  tmp = std::set<unsigned int>();
+
+  m_qtable = QFactory::makeQDecision(); //new QTable();
+  m_qtable_voip = QFactory::makeQDecision();
+  m_qtable_video = QFactory::makeQDecision();
+
+  neighbours = std::vector<Ipv4Address>();
+  aodvProto = 0;
+  learning_traffic_applications = 0;
+  real_traffic = 0;
+
+  m_small_learning_stream = false;
+
+  m_running_avg_latency = std::make_pair<int,float>(0,0);
+
+  m_delay = 0;
+  m_qconvergence_threshold = 0.025;
+  m_rho = 0.99;
+  m_max_retry = 4;
+  m_prev_delay = 0;
+
+  m_packet_sent_stats_per_neighb_per_time = std::map<std::pair<Ipv4Address,Ipv4Address> ,std::vector<std::tuple<uint64_t,uint64_t,float> > >();
+  m_packet_recv_stats_per_neighb          = std::map<std::pair<Ipv4Address,Ipv4Address> ,std::pair<uint64_t,float> >();
+
+  m_backup_per_prev_hop_for_unusable_delay = std::map<Ipv4Address,Time>();
+  m_prev_delay_per_prev_hop = std::map<Ipv4Address,uint64_t>();
+}
+
+QLearner::~QLearner()
+{
+  NS_LOG_FUNCTION (this);
+  m_socket = 0;
+  aodvProto = 0;
+  learning_traffic_applications = 0;
+  real_traffic = 0;
+  m_qlrn_socket = 0;
+  m_epsilon = 0;
+  m_other_qlearners = std::map<Ipv4Address, Ptr<BaseLearner> >();
+  m_output_filestream = 0;
+}
+
 
 TypeId
 QLearner::GetTypeId (void)
@@ -184,90 +267,6 @@ QLearner::GetTypeId (void)
                    "ns3::Packet::TracedCallback")
                    ;
   return tid;
-}
-
-QLearner::QLearner (float eps_param = DEFAULT_EPSILON_VALUE, float learning_rate = DEFAULT_LRN_RATE_VALUE, float gamma = DEFAULT_GAMMA_VALUE)
-{
-  NS_LOG_FUNCTION (this);
-  m_sent = 0;
-  m_socket = 0;
-  m_qlrn_socket = 0;
-  m_verbose = false;
-  m_packet_info = PacketTable();
-
-  m_eps_thresh = eps_param;
-  m_gamma = gamma;
-  m_epsilon = CreateObject<UniformRandomVariable> ();
-  m_epsilon->SetAttribute ("Min", DoubleValue (0.0));
-  m_epsilon->SetAttribute ("Max", DoubleValue (1.0));
-
-  m_learningrate = learning_rate;
-  m_name = "NOT INITIALIZED";
-
-  m_in_test = false;
-
-  m_ideal = false;
-
-  m_control_packets_sent = 0;
-  m_other_qlearners = std::map<Ipv4Address,Ptr<QLearner> >();
-
-  m_learning_phase = std::map<Ipv4Address,bool>() ; //initially, learning!
-  m_learning_threshold = LEARNING_PHASE_START_THRESHOLD;
-  m_apply_jitter = false;
-  m_jittery_qlearner = false;
-  m_slow_qlearner = false;
-  m_output_data_to_file = false;
-  m_print_qtables = false;
-
-  m_report_dst_to_src = false;
-
-  m_num_applications = 0;
-
-  m_output_filestream = 0;
-  m_use_learning_phases = false;
-  m_traffic_sources = std::vector<Ipv4Address>();
-  m_traffic_destinations = std::vector<Ipv4Address>();
-  m_my_sent_traffic_destination = Ipv4Address("99.99.99.99");
-
-  tmp = std::set<unsigned int>();
-
-  m_qtable = QFactory::makeQDecision(); //new QTable();
-  m_qtable_voip = QFactory::makeQDecision();
-  m_qtable_video = QFactory::makeQDecision();
-
-  neighbours = std::vector<Ipv4Address>();
-  aodvProto = 0;
-  learning_traffic_applications = 0;
-  real_traffic = 0;
-
-  m_small_learning_stream = false;
-
-  m_running_avg_latency = std::make_pair<int,float>(0,0);
-
-  m_delay = 0;
-  m_qconvergence_threshold = 0.025;
-  m_rho = 0.99;
-  m_max_retry = 4;
-  m_prev_delay = 0;
-
-  m_packet_sent_stats_per_neighb_per_time = std::map<std::pair<Ipv4Address,Ipv4Address> ,std::vector<std::tuple<uint64_t,uint64_t,float> > >();
-  m_packet_recv_stats_per_neighb          = std::map<std::pair<Ipv4Address,Ipv4Address> ,std::pair<uint64_t,float> >();
-
-  m_backup_per_prev_hop_for_unusable_delay = std::map<Ipv4Address,Time>();
-  m_prev_delay_per_prev_hop = std::map<Ipv4Address,uint64_t>();
-}
-
-QLearner::~QLearner()
-{
-  NS_LOG_FUNCTION (this);
-  m_socket = 0;
-  aodvProto = 0;
-  learning_traffic_applications = 0;
-  real_traffic = 0;
-  m_qlrn_socket = 0;
-  m_epsilon = 0;
-  m_other_qlearners = std::map<Ipv4Address, Ptr<QLearner> >();
-  m_output_filestream = 0;
 }
 
 std::vector<Ipv4Address>

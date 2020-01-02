@@ -112,9 +112,8 @@ QLearner::QLearner (float eps_param = DEFAULT_EPSILON_VALUE, float learning_rate
   m_ideal = false;
 
   m_control_packets_sent = 0;
-  // HANS GO BACK - change 5
-  //m_other_qlearners = std::map<Ipv4Address,Ptr<BaseLearner> >();
-  m_other_qlearners = std::map<Ipv4Address,Ptr<QLearner> >();
+  // TODO HANS - change the Q learner in a BaseLearner
+  m_other_qlearners = std::map<Ipv4Address,Ptr<BaseLearner> >();
 
   m_learning_phase = std::map<Ipv4Address,bool>() ; //initially, learning!
   m_learning_threshold = LEARNING_PHASE_START_THRESHOLD;
@@ -171,9 +170,7 @@ QLearner::~QLearner()
   real_traffic = 0;
   m_qlrn_socket = 0;
   m_epsilon = 0;
-  // HANS GO BACK - change 4
-  //m_other_qlearners = std::map<Ipv4Address, Ptr<BaseLearner> >();
-  m_other_qlearners = std::map<Ipv4Address, Ptr<QLearner> >();
+  m_other_qlearners = std::map<Ipv4Address, Ptr<BaseLearner> >();
   m_output_filestream = 0;
 }
 

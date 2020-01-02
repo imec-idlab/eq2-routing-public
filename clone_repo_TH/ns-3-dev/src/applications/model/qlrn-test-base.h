@@ -23,6 +23,7 @@
 #include "ns3/ppbp-helper.h"
 #include "ns3/make-functional-event.h"
 #include "ns3/packet-sink.h"
+#include "ns3/baselearner.h"
 #include <iostream>
 #include <cmath>
 #include <algorithm>

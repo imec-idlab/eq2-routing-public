@@ -19,11 +19,6 @@
 #ifndef Q_LEARNER_H
 #define Q_LEARNER_H
 
-#include "ns3/baselearner.h"
-#include "ns3/traffic-types.h"
-#include "ns3/qdecision.h"
-#include "ns3/qtable.h"
-#include "ns3/packettable.h"
 #include "ns3/wifi-mac-queue.h"
 #include "ns3/adhoc-wifi-mac.h"
 #include "ns3/wifi-mac.h"
@@ -58,6 +53,10 @@
 #include "ns3/qlrn-header.h"
 #include "ns3/qos-qlrn-header.h"
 #include "ns3/thomas-packet-tags.h"
+#include "ns3/traffic-types.h"
+#include "ns3/qdecision.h"
+#include "ns3/qtable.h"
+#include "ns3/packettable.h"
 #include "ns3/mobility-module.h" /* makes STA mobile but we dont want any of that <-- needed for placement in grid */
 #include "ns3/thomas-configuration.h"
 #include <iomanip>
@@ -82,13 +81,21 @@ class Packet;
  *
  * Every packet sent should be returned by the server and received here.
  */
-class QLearner : public BaseLearner {
+class QLearner : public Application
+{
 public:
-  QLearner (float,float,float);
-  virtual ~QLearner ();
-
+  static const uint32_t QLRN_PORT = 404;
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId (void);
 
+  QLearner (float,float,float);
+
+  virtual ~QLearner ();
+
+  PacketTable* GetPacketTable() {return &m_packet_info;}
 
   virtual void Send(Ipv4Address node_to_notify, uint64_t packet_Uid, Time timestamp_of_arrival, Ipv4Address packet_dst, Ipv4Address packet_src, TrafficType t, bool sender_converged);
 
@@ -97,15 +104,36 @@ public:
   virtual bool CheckQLrnHeader(Ptr<const Packet> p, QoSQLrnHeader& qlrnHeader);
   virtual bool CheckQLrnHeader_withoutUDP(Ptr<const Packet> p, QoSQLrnHeader& qlrnHeader);
 
+  /**
+  * TODO
+  */
   bool AddDestination (Ipv4Address via, Ipv4Address dst, Time t);
-  virtual bool Route ( Ptr<Ipv4Route>, Ptr<Packet>, const Ipv4Header&);
-  virtual bool Route ( Ptr<Ipv4Route>, Ptr<Packet>, const Ipv4Address&, const Ipv4Address&);
+  /**
+  * TODO
+  */
+  bool Route ( Ptr<Ipv4Route>, Ptr<Packet>, const Ipv4Header&) ;
+  bool Route ( Ptr<Ipv4Route>, Ptr<Packet>, const Ipv4Address&, const Ipv4Address&) ;
   void RouteDiffBasedOnType (QDecisionEntry*, Ipv4Address, Ipv4Address, TrafficType);
+  /**
+   * TODO
+   */
   bool CheckDestinationKnown(const Ipv4Address& i);
+
+  /**
+   * TODO
+   */
   void HandleRouteOutput(Ptr<Packet>, const Ipv4Header&, TrafficType);
   void HandleRouteInput (Ptr<Packet>, const Ipv4Header&, bool, bool&, TrafficType);
+
+  /**
+   *
+   */
   Ipv4Address GetNextHop(Ipv4Address dst, TrafficType t);
-  void ChangeQValuesFromZero(Ipv4Address dst, Ipv4Address aodv_next_hop);
+
+  /**
+   *
+   */
+   void ChangeQValuesFromZero(Ipv4Address dst, Ipv4Address aodv_next_hop);
 
   /// if true, print qtables to files, if false, dont
   bool m_print_qtables;
@@ -119,15 +147,27 @@ public:
   void NotifyLinkDown(Ipv4Address);
   void AddNeighbour(Ipv4Address n);
 
+
+  int QStatistics() { return m_control_packets_sent; }
   std::string GetStatistics();
 
+  Ptr<aodv::RoutingProtocol> GetAODV() { return aodvProto; }
   bool SetOtherQLearners(NodeContainer);
 
   void RestartAfterMoving();
 
+  /**
+   * TODO
+   */
   QDecision* GetQTable(TrafficType t);
 
   void InitializeLearningPhases(std::vector<Ipv4Address>);
+  void SetLearningPhase(bool b, Ipv4Address i) { m_learning_phase[i] = b; }
+  bool IsInLearningPhase(Ipv4Address i) { return m_learning_phase[i] && m_use_learning_phases; }
+  void SetDelay(int new_delay) { m_delay = new_delay; }
+  void SetJittering(bool b) { m_jittery_qlearner = b; }
+  void SetSlow(bool b) { m_slow_qlearner = b; }
+  void SetSmallLrnTraffic (bool b) { m_small_learning_stream = b;}
 
   // ApplicationContainer* learning_traffic_applications;
   // ApplicationContainer* real_traffic;
@@ -137,8 +177,15 @@ public:
   void SetTrafficGen( Ptr<Application> a );
 
   virtual void UpdateAvgDelay(PacketTimeSentTag,PortNrTag);
+  float AvgDelayAsFloat() { return m_running_avg_latency.second; }
+
+  bool IamAmongTheDestinations() { return std::find(m_traffic_destinations.begin(), m_traffic_destinations.end(), m_this_node_ip ) != m_traffic_destinations.end(); }
+  void SetTrafficSources(std::vector<Ipv4Address> i) { m_traffic_sources = i;}
+  void SetTrafficDestinations(std::vector<Ipv4Address> i) { m_traffic_destinations = i;}
+  void SetMyTrafficDst(Ipv4Address i) { m_my_sent_traffic_destination = i;}
   std::vector<std::pair< std::pair<Ipv4Address,Ipv4Address>, float > > GetPacketLossPerNeighb() ;
 
+  bool AllNeighboursBlacklisted(Ipv4Address i, TrafficType t) { return GetQTable(t)->AllNeighboursBlacklisted(i); }
 protected:
   void StopLearningStartTraffic(Ipv4Address);
   void StopTrafficStartLearning(Ipv4Address);
@@ -149,13 +196,34 @@ private:
 
   void RouteHelper(Ptr<Ipv4Route>, Ipv4Address, TrafficType, uint64_t&, int, Ptr<Packet>);
 
+  /**
+   * TODO
+   */
   std::vector<Ipv4Address> FindNeighboursManual (void);
-  std::vector<Ipv4Address> FindNeighboursAODV (void);
-  bool CheckAODVHeader(Ptr<const Packet> p);
-  // HANS - deleted this, because there was no implementation
-  //void CreateQRoutingTable ();
 
+  /**
+   * TODO
+   */
+  std::vector<Ipv4Address> FindNeighboursAODV (void);
+
+  /**
+   * TODO
+   */
+   bool CheckAODVHeader(Ptr<const Packet> p);
+
+   /**
+    * TODO
+    */
+   void CreateQRoutingTable ();
+
+  /**
+   *  TODO
+   */
   virtual void Receive (Ptr<Socket> socket);
+
+  /**
+  *  TODO
+  */
   void ReceiveAodv (Ptr<Socket> socket);
 
 protected:
@@ -215,8 +283,7 @@ protected:
   unsigned int m_control_packets_sent;
   int m_num_applications;
   std::set<unsigned int> tmp;
-  // HANS - already defined in baselearner
-  //std::map<Ipv4Address, Ptr<QLearner> > m_other_qlearners;
+  std::map<Ipv4Address, Ptr<QLearner> > m_other_qlearners;
 
   std::vector<Ipv4Address> m_traffic_sources;
   std::vector<Ipv4Address> m_traffic_destinations;

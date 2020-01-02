@@ -749,7 +749,9 @@ QLearningBase::VerifyBrokenResults(std::string& err) {
   for (int j = 0; j < int(QLearners.GetN()); j++) {
     if (std::find(expected_broken_nodes.begin(), expected_broken_nodes.end(), j) == expected_broken_nodes.end()) {
       for (const auto& k : {VOIP, WEB, VIDEO} ) {
-        auto qq = dynamic_cast<BaseLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
+    	  // HANS GO BACK - change 6?
+	    //auto qq = dynamic_cast<BaseLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
+        auto qq = dynamic_cast<QLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
         auto q_neighbours = qq->GetNeighbours();
         auto q_unavails = qq->GetUnavails();
         for (const auto& v : q_unavails) {
@@ -773,7 +775,7 @@ QLearningBase::VerifyBrokenResults(std::string& err) {
     for (int j = 0; j < int(QLearners.GetN()); j++) {
       if (std::find(expected_broken_nodes.begin(), expected_broken_nodes.end(), j) == expected_broken_nodes.end()) {
         for (const auto& k : {VOIP, WEB, VIDEO} ) {
-          auto qq = dynamic_cast<BaseLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
+          auto qq = (dynamic_cast<BaseLearner*> (   PeekPointer( QLearners.Get(j) ) ))->GetQTable(k);
           auto q_neighbours = qq->GetNeighbours();
           auto q_unavails = qq->GetUnavails();
           if (std::find(q_neighbours.begin(), q_neighbours.end(), interfaces.GetAddress(i)) != q_neighbours.end() && j < i ) { // if it is a neighbour // & j < i -- do UPSTREAM ONLY!

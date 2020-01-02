@@ -39,8 +39,9 @@
 #include "ns3/ipv4-routing-protocol.h"
 #include "ns3/ipv4-interface.h"
 #include "ns3/ipv4-l3-protocol.h"
-//#include "ns3/q-learner.h"
-#include "ns3/baselearner.h"
+#include "ns3/q-learner.h"
+// HANS GO BACK - change 4
+//#include "ns3/baselearner.h"
 #include "ns3/qlrn-header.h"
 #include "ns3/qos-qlrn-header.h"
 #include "ns3/thomas-packet-tags.h"
@@ -50,7 +51,9 @@
 namespace ns3
 {
 
-class BaseLearner;
+// HANS GO BACK - change 3
+//class BaseLearner;
+class QLearner;
 
 namespace aodv
 {
@@ -155,8 +158,13 @@ public:
   float AvgDelayAsFloat() { return m_running_avg_latency.second; }
 
   // Cant use Ptr because its forward declaration, so we must use a normal pointer
-  void SetQLearner(BaseLearner* qlrn) { m_qlearner = qlrn; m_routingTable.QLearningTakesOver(); m_nb.QLearningTakesOver(); }
-  BaseLearner* m_qlearner;
+
+  // HANS GO BACK - change 1
+  //void SetQLearner(BaseLearner* qlrn) { m_qlearner = qlrn; m_routingTable.QLearningTakesOver(); m_nb.QLearningTakesOver(); }
+  void SetQLearner(QLearner* qlrn) { m_qlearner = qlrn; m_routingTable.QLearningTakesOver(); m_nb.QLearningTakesOver(); }
+  // HANS GO BACK - change 2
+  // BaseLearner* m_qlearner;
+  QLearner* m_qlearner;
   /// Send RREQ
   void SendRequest (Ipv4Address dst);
   void PacketTrackingOutput(Ptr<const Packet> p, Ipv4Header = Ipv4Header());

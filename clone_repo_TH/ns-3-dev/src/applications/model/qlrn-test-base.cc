@@ -750,8 +750,8 @@ QLearningBase::VerifyBrokenResults(std::string& err) {
     if (std::find(expected_broken_nodes.begin(), expected_broken_nodes.end(), j) == expected_broken_nodes.end()) {
       for (const auto& k : {VOIP, WEB, VIDEO} ) {
     	  // HANS GO BACK - change 6?
-	    //auto qq = dynamic_cast<BaseLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
-        auto qq = dynamic_cast<QLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
+	    auto qq = (dynamic_cast<BaseLearner*> (   PeekPointer( QLearners.Get(j) ) ))->GetQTable(k);
+        //auto qq = dynamic_cast<QLearner*> (   PeekPointer( QLearners.Get(j) ) )->GetQTable(k);
         auto q_neighbours = qq->GetNeighbours();
         auto q_unavails = qq->GetUnavails();
         for (const auto& v : q_unavails) {

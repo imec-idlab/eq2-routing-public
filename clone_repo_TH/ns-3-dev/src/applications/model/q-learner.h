@@ -19,6 +19,8 @@
 #ifndef Q_LEARNER_H
 #define Q_LEARNER_H
 
+// HANS TRY AGAIN - change 2
+#include "ns3/baselearner.h"
 #include "ns3/wifi-mac-queue.h"
 #include "ns3/adhoc-wifi-mac.h"
 #include "ns3/wifi-mac.h"
@@ -81,7 +83,8 @@ class Packet;
  *
  * Every packet sent should be returned by the server and received here.
  */
-class QLearner : public Application
+// HANS TRY AGAIN - change 1
+class QLearner : public BaseLearner
 {
 public:
   static const uint32_t QLRN_PORT = 404;

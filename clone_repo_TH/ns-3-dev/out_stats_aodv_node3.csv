@@ -1,0 +1,2 @@
+pktID,currTime,delay,initial_estim,learning,metric_delay,metric_jitter,metric_loss,second_to_last_hop,trafficType
+81,+5.25125829399999999997s,+0.96956199999999999995ms,-1.0ns,learning,OK,OK,OK,10.1.1.3,Unknown traffic type. (or aodv or icmp)

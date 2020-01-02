@@ -1,7 +1,14 @@
 # eq2-routing
-Repository for the ns3 implementation of enhanced Q-routing with QoS
+
+Repository for the ns3 implementation of enhanced Q-routing with QoS https://ieeexplore.ieee.org/abstract/document/8589161
+
+If you use(part of) this code, please cite:
+
+T. Hendriks, M. Camelo and S. Latré, "Q2-Routing : A Qos-aware Q-Routing algorithm for Wireless Ad Hoc Networks," 2018 14th International Conference on Wireless and Mobile Computing, Networking and Communications (WiMob), Limassol, 2018, pp. 108-115.
+doi: 10.1109/WiMOB.2018.8589161
 
 #How to run the codebase in the clone_repo_TH folder
+
 	1.	./waf configure 
 	wait for it to finish succesfully.
 

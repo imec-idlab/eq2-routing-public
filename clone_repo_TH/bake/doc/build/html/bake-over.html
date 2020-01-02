@@ -1,0 +1,259 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>BAKE - Introduction &#8212; Bake</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bake - Tutorial" href="bake-tutorial.html" />
+    <link rel="prev" title="BAKE Documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="bake-tutorial.html" title="Bake - Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="BAKE Documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Bake</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/inria.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BAKE - Introduction</a><ul>
+<li><a class="reference internal" href="#about-bake">About Bake</a></li>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">BAKE Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bake-tutorial.html"
+                        title="next chapter">Bake - Tutorial</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/bake-over.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bake-introduction">
+<h1>BAKE - Introduction<a class="headerlink" href="#bake-introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="about-bake">
+<h2>About Bake<a class="headerlink" href="#about-bake" title="Permalink to this headline">¶</a></h2>
+<p>Bake is not a make, autoconf, or automake replacement. Bake is not a replacement for the package management tool that can be found on your home system. In short, Bake is not quite like what you are used to see around. Instead, Bake is an integration tool which is used by software developers to automate the reproducible build of a number of projects which depend on each other and which might be developed, and hosted by unrelated parties.</p>
+<p>Bake was developed to automate the reproducible build of ns-3 taking into account that this build may be composed of a number of interdependent projects. Bake was developed to simplify the assembly of these pieces of software in a coherent and useful way.  This tutorial will show how to use bake and how to perform small configurations. Bake is an open source tool implemented in python, a deeper documentation of it can be found at <a class="reference external" href="http://planete.inria.fr/software/bake/index.html">Bake’s main page</a>.</p>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Automatic handling of dependencies</li>
+<li>Automatic download of the required sources</li>
+<li>Automatic correct build of the required modules</li>
+<li>Off-line installation and build capabilities</li>
+<li>Transparency, from the user’s point of view, of the methods/tools used to store and build the used modules</li>
+<li>Fully configurable: Possible to add new modules, create complex build tasks, create predefined builds, among others</li>
+</ul>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Currently it works under Linux like systems</li>
+<li>The required missing system tools have to be installed by the user
+- Even though a –sudo option exists, to try to install dependencies, but should be used carefully and at the user’s own risk</li>
+</ul>
+</div>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>First of all Bake is implemented in Python, so Python is required. Bake wraps a series of commands to make the life of the user easier.  However, it is required to have installed in the machine the third party tools used to download and build the modules. The user can verify the missing tools by calling ‘bake.py check’.</div></blockquote>
+<div class="line-block">
+<div class="line">&gt; bake.py check</div>
+</div>
+<p>&nbsp;First of all, Bake is developed in python, so to run Bake you have to have python on your machine.</p>
+<p>To check if you have python installed you can open a shell window and call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">python</span> <span class="o">-</span><span class="n">V</span>
+</pre></div>
+</div>
+<p>If as answer you receive the version of the installed python, preferably above 2.6.0, you do have python installed on your machine.   If you received a “command not found”  kind of message, you do not have python on your machine, or it is not on your path.  Try to talk to your administrator, or, if you have root rights,  you should try to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ubuntu</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span>
+<span class="ow">or</span>
+<span class="n">fedora</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">python</span>
+</pre></div>
+</div>
+<p>To check if you have mercurial installed you can open a shell window and call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">hg</span> <span class="n">version</span>
+</pre></div>
+</div>
+<p>If as answer you receive the version of the installed mercurial, preferably above 1.9.3, you do have mercurial installed on your machine.   If you received a “command not found” try to talk to your administrator, or, if you have root rights try:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ubuntu</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mercurial</span>
+<span class="ow">or</span>
+<span class="n">fedora</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">mercurial</span>
+</pre></div>
+</div>
+<p>After solving any mercurial related issues, you can download and install Bake by:</p>
+<div class="line-block">
+<div class="line"><strong>1. Downloading Bake</strong></div>
+<div class="line-block">
+<div class="line">You can get the bake code from the <a href="#id1"><span class="problematic" id="id2">|ns3|</span></a> code repository.</div>
+</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">hg</span> <span class="n">clone</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">code</span><span class="o">.</span><span class="n">nsnam</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">bake</span> <span class="n">bake</span>
+</pre></div>
+</div>
+<p>This should create a bake repository on the directory you are in now</p>
+<div class="line-block">
+<div class="line"><strong>2. Put bake on the path</strong></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt; export BAKE_HOME=`pwd`/bake
+&gt; export PATH=$PATH:$BAKE_HOME:$BAKE_HOME/build/bin
+&gt; export PYTHONPATH=$PYTHONPATH:$BAKE_HOME:$BAKE_HOME/build/lib
+</pre></div>
+</div>
+<p>Bake utilizes a series of third party tools,  you can check if they exist in your system by calling:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">check</span>
+</pre></div>
+</div>
+<p>After configuring one specific building scenario, you can check the modules selected and if the system dependencies are present by calling:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">show</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">&gt; Python - OK</div>
+<div class="line">&gt; GNU C++ compiler - OK</div>
+<div class="line">&gt; Mercurial - OK</div>
+<div class="line">&gt; CVS - OK</div>
+<div class="line">&gt; GIT - OK</div>
+<div class="line">&gt; Bazaar - OK</div>
+<div class="line">&gt; Tar tool - OK</div>
+<div class="line">&gt; Unzip tool - OK</div>
+<div class="line">&gt; Unrar tool - OK</div>
+<div class="line">&gt; 7z  data compression utility - OK</div>
+<div class="line">&gt; XZ data compression utility - OK</div>
+<div class="line">&gt; Make - OK</div>
+<div class="line">&gt; cMake - OK</div>
+<div class="line">&gt; patch tool - OK</div>
+<div class="line">&gt; autoreconf tool - OK</div>
+<div class="line"><br /></div>
+<div class="line">&gt; Path searched for tools: /usr/lib64/qt-3.3/bin /usr/lib64/ccache /usr/local/bin /usr/bin /bin /usr/local/sbin /usr/sbin /sbin</div>
+</div>
+<p>You may use bake to check and install the requirements if you call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">configure</span> <span class="o">-</span><span class="n">p</span> <span class="nb">set</span><span class="o">-</span><span class="n">bake</span><span class="o">-</span><span class="n">env</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">show</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">download</span> <span class="o">&lt;--</span><span class="n">sudo</span><span class="o">&gt;</span> <span class="c1"># if you are in the sudoers group and you want bake to try, in a best effort way, to install it own dependencies.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>A typical user session should be::</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">code</span><span class="o">.</span><span class="n">nsnam</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">bake</span><span class="o">/</span><span class="n">raw</span><span class="o">-</span><span class="n">file</span><span class="o">/</span><span class="n">tip</span><span class="o">/</span><span class="n">bakeconf</span><span class="o">.</span><span class="n">xml</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">show</span> <span class="o">--</span><span class="n">available</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">configure</span> <span class="o">-</span><span class="n">e</span> <span class="o">&lt;</span><span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">available</span> <span class="n">modules</span><span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">deploy</span>
+</pre></div>
+</div>
+<p>The result:</p>
+<ul class="simple">
+<li>The wget command will download the last version of the bake configuration file</li>
+<li><strong>bake.py show available</strong> will show all the available modules</li>
+<li>After configuring bake with <strong>bake.py configure</strong> a bakefile.xml, containing the output of configuration step should be created on the same directory the user called bake configure</li>
+<li>After calling <strong>bake.py deploy</strong> two directories, build and source should have been created. Source will have one directory for each module downloaded and the build will contains the installed object files for all the built modules.</li>
+</ul>
+<p>The installation process may be broken into download and build, in this way the user just need to be online to perform the download and the build may be done later, even offline.</p>
+<p>In this case the steps should be::</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">code</span><span class="o">.</span><span class="n">nsnam</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">bake</span><span class="o">/</span><span class="n">raw</span><span class="o">-</span><span class="n">file</span><span class="o">/</span><span class="n">tip</span><span class="o">/</span><span class="n">bakeconf</span><span class="o">.</span><span class="n">xml</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">show</span> <span class="o">--</span><span class="n">available</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">configure</span> <span class="o">-</span><span class="n">e</span> <span class="o">&lt;</span><span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">available</span> <span class="n">modules</span><span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">download</span>
+  <span class="o">&lt;--</span> <span class="n">Later</span><span class="p">,</span> <span class="n">even</span> <span class="k">if</span> <span class="n">the</span> <span class="n">user</span> <span class="ow">is</span> <span class="n">offline</span> <span class="o">--&gt;</span>
+<span class="o">&gt;</span> <span class="n">bake</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span>
+</pre></div>
+</div>
+<p>If something goes wrong:</p>
+<ul class="simple">
+<li>Sometimes the download, build or installation of some of the modules may fail in that case there are a –stop-on-error parameter may be passed so that the process stops on the first error it founds so that the user can analyze it and find a solution. The stop on error feature is best used  with -v or -vvv so that more information about the error.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="bake-tutorial.html" title="Bake - Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="BAKE Documentation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Bake</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2012, INRIA.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

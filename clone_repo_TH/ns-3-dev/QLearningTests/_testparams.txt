@@ -12,7 +12,7 @@
   "qconv":0.09,
   "max_retry":1,
   "learn_more_threshold":0.1,
-  "gamma":0,
+  "gamma":0.9,
   "node0":{
     "x":320,
     "y":120,
@@ -145,6 +145,7 @@
   "event":{0-13-DELAY-5},
   "event":{0-15-DELAY-5},
   "event":{0-17-DELAY-5},
+  "event":{1000-0-DELAY-5},
   "event":{1000-1-DELAY-20}, -- at time t = 1000, path A becomes best with a delay of +- 18
   "event":{1000-4-DELAY-20},
   "event":{1000-7-DELAY-20},

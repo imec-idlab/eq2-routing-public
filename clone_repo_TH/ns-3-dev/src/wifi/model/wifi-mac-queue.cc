@@ -142,9 +142,9 @@ WifiMacQueue::Enqueue (Ptr<WifiMacQueueItem> item)
         }
     }
   // TODO HANS --> FIGURE OUT IF THIS IS NECESSARY FOR QLEARNING
-  // Time now = Simulator::Now ();
-  // m_queue.push_back (Item (packet, hdr, now));
-  // m_size++;
+//   Time now = Simulator::Now ();
+//   m_queue.push_back (Item (packet, hdr, now));
+//   m_size++;
 
   if (QueueBase::GetNPackets () == GetMaxSize ().GetValue () && m_dropPolicy == DROP_OLDEST)
     {
@@ -152,6 +152,11 @@ WifiMacQueue::Enqueue (Ptr<WifiMacQueueItem> item)
       DoRemove (Head ());
     }
 
+	PortNrTag pnt;
+	item->GetPacket()->PeekPacketTag(pnt);
+	uint64_t pID = item->GetPacket()->GetUid();
+	bool learning_traffic = pnt.GetLearningPkt();
+  m_enqueueTrace(pID,learning_traffic);
   return DoEnqueue (Tail (), item);
 }
 
@@ -192,6 +197,11 @@ WifiMacQueue::Dequeue (void)
     {
       if (!TtlExceeded (it))
         {
+    		PortNrTag pnt;
+    		it->operator ->()->GetPacket()->PeekPacketTag(pnt);
+    		uint64_t pID = it->operator ->()->GetPacket()->GetUid();
+    		bool learning_traffic = pnt.GetLearningPkt();
+    	  m_dequeueTrace(pID,learning_traffic);
           return DoDequeue (it);
         }
     }

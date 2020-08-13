@@ -3,7 +3,7 @@
   "Number of nodes":19,-- why error if there are only 4 nodes actually
   "trafficType":voip/trafficA,
   "totalTime":3000,
-  "eps":0.4,
+  "eps":0.0,
   "learning_rate":0.5,
   "ideal":false,
   "learning_phases":true,
@@ -12,7 +12,7 @@
   "qconv":0.09,
   "max_retry":1,
   "learn_more_threshold":0.1,
-  "gamma":0,
+  "gamma":0.9,
   "node0":{
     "x":320,
     "y":120,

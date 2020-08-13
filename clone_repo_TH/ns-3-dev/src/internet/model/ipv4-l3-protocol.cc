@@ -53,6 +53,7 @@ const uint16_t Ipv4L3Protocol::PROT_NUMBER = 0x0800;
 
 NS_OBJECT_ENSURE_REGISTERED (Ipv4L3Protocol);
 void Ipv4L3Protocol::SetDelay(int new_delay) {
+	NS_LOG_UNCOND("set delay in Ipv4L3Protocol::SetDelay");
   if (!uv) {
     uv = CreateObject<UniformRandomVariable> ();
     uv->SetAttribute ("Min", DoubleValue(0));

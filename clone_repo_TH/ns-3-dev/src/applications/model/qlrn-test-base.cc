@@ -80,7 +80,7 @@ bool QLearningBase::ConfigureTest(
     learning_rate = test_case.GetLearningRate();
     ideal = test_case.GetIdeal();
     m_qos_qlearning = test_case.GetQoSQLearning();
-    m_output_stats = false;
+    m_output_stats = true;
     enable_flow_monitor = false;
     max_packets = test_case.GetMaxPackets();
     metrics_back_to_src = test_case.GetMetricsBackToSrcEnabled();

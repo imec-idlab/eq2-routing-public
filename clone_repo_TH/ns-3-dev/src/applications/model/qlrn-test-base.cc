@@ -80,7 +80,7 @@ bool QLearningBase::ConfigureTest(
     learning_rate = test_case.GetLearningRate();
     ideal = test_case.GetIdeal();
     m_qos_qlearning = test_case.GetQoSQLearning();
-    m_output_stats = false;
+    m_output_stats = true;
     enable_flow_monitor = false;
     max_packets = test_case.GetMaxPackets();
     metrics_back_to_src = test_case.GetMetricsBackToSrcEnabled();
@@ -314,7 +314,7 @@ QLearningBase::DetermineNodeToBreak () {
 void
 QLearningBase::ReportProgress() {
   std::cout << "Currently at time T = " << Simulator::Now().As(Time::S) << ".\n";
-  Simulator::Schedule (Seconds (99), &QLearningBase::ReportProgress, this);
+  Simulator::Schedule (Seconds (1), &QLearningBase::ReportProgress, this);
 }
 void QLearningBase::HandleTrafficEvent(TestEvent i) {
   NS_ASSERT_MSG(i.et == TRAFFIC, "obviously it should be a traffic event for this fct");
@@ -429,7 +429,7 @@ QLearningBase::Run ()
   }
 
   Simulator::Stop (Seconds (totalTime));
-  Simulator::Schedule (Seconds (99), &QLearningBase::ReportProgress, this);
+  Simulator::Schedule (Seconds (1), &QLearningBase::ReportProgress, this);
 
   InterconnectQLearners();
   if (enable_flow_monitor) { flowmon = flowmonHelper.InstallAll(); }

@@ -58,6 +58,7 @@ std::string GetValue(std::string delim, std::string info_from_test, int& nr_of_v
 bool QLrnTest::ParseEvent(uint32_t ii, const std::vector<std::string>& file) {
   uint curr_index = ii;
 
+
   uint begin, end;
   size_t i, j;
   std::string delim = "\"event\":{";

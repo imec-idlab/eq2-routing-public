@@ -509,6 +509,8 @@ QLearner::Route(Ptr<Ipv4Route> route, Ptr<Packet> p, const Ipv4Address& dst, con
       ptab.SetEstimTypeA(GetQTable(TRAFFIC_A).GetNextEstim(dst).GetQValue().GetInteger());
       ptab.SetEstimTypeB(GetQTable(TRAFFIC_B).GetNextEstim(dst).GetQValue().GetInteger());
       ptct.SetEstimTypeC(GetQTable(TRAFFIC_C).GetNextEstim(dst).GetQValue().GetInteger());
+
+//      NS_LOG_UNCOND("set the time in the PTCT: the precursor for the eventual tag");
       ptct.SetSentTime(Simulator::Now().GetInteger());
 
       p->AddPacketTag(ptab);
@@ -721,6 +723,7 @@ void QLearner::HandleRouteInput(Ptr<Packet> p, const Ipv4Header &header, bool de
     else if (t == VIDEO || t == TRAFFIC_B) { ptst.SetInitialEstim(ptab.GetEstimTypeBAsInt()); }
     else                                   { ptst.SetInitialEstim(ptct.GetEstimTypeCAsInt()); }
 
+//    NS_LOG_UNCOND("set the time in the PTST: Packet Time Sent Tag");
     ptst.SetSentTime(ptct.GetSentTimeAsInt());
     ptst.SetPrevHop(m_this_node_ip);
     p->RemovePacketTag(ptab);
@@ -1462,6 +1465,8 @@ QLearner::Send (Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_tim
 
   m_txTrace(packet);
   if (m_ideal) { // No real packet sending, only the learning part happens
+	  NS_LOG_UNCOND("this is ideal");
+	  std::cin.ignore();
     // Get a QTAgged packet -> go to the QLearner that is expecting some reply about this
     // He wants an update about the estimate for DST via ME and also an update about ME via ME
 

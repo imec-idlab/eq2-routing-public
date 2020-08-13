@@ -1,0 +1,12 @@
+node0(src)/node1/node2(dst)/
+266(266)/532(532)/266(266)/
+QLRN TRAFFIC:   266/532/266/
+AODV TRAFFIC:   4/4/3/
+DATA TRAFFIC:   265/0/265/
+LRN TRAFFIC:    0/0/0/
+DATA REC TRAFFIC:   265/530/265/
+LRN REC TRAFFIC:    0/0/0/
+Observed average delay at 10.1.1.3 was +0.0ms.
+    Observed (final) QRoute from 10.1.1.1 = 0-1-2-
+    Observed (final) QRoute from 10.1.1.2 = 1-2-
+    Observed (final) QRoute from 10.1.1.3 = 2-

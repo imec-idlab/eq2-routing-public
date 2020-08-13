@@ -1254,9 +1254,8 @@ void QLearner::InitializeLearningPhases(std::vector<Ipv4Address> destinations) {
 
 void QLearner::MACEnqueuePacket( uint64_t pID, bool learning_traffic /*  ignore the packet if its learning tx */ ) {
   GetPacketTable()->EnqueuePacket(pID);
-  // NS_LOG_UNCOND(m_name << "MAC LAYER IS ENQUEUEING PID " << pID << ".  Now check if AODV enqueued it.  "
-  // << Simulator::Now().GetSeconds() << " " << GetPacketTable()->GetPacketQueueTime(pID,true)<< "mind, param true so its debugging");
-
+//   NS_LOG_UNCOND(m_name << "MAC LAYER IS ENQUEUEING PID " << pID << ".  Now check if AODV enqueued it.  "
+//   << Simulator::Now().GetSeconds() << " " << GetPacketTable()->GetPacketQueueTime(pID)<< "mind, param true so its debugging");
 }
 
 void QLearner::MACDequeuePacket( uint64_t pID, bool learning_traffic /* ignore the packet if its learning tx */) {
@@ -1293,6 +1292,7 @@ QLearner::Receive(Ptr<Socket> socket) {
   NS_LOG_DEBUG( m_name << "learning info about " << qlrnHeader.GetPDst() <<" from packet ID " << qlrnHeader.GetPktId()
             << " : travel time was " << Time::FromInteger(qlrnHeader.GetTime(), Time::NS).As(Time::MS) << " and next estim : " << Time::FromInteger(qlrnHeader.GetNextEstim(), Time::NS)
             << ". This info was contained in pkt " << packet->GetUid() << " sent by " <<  sourceIPAddress);
+
   GetQTable(t).Update(sourceIPAddress, //get the neighbour that we chose as next hop
                 qlrnHeader.GetPDst(),   //the actual destination of the packet ( to know which entry in the QTable to update)
                 m_packet_info.GetPacketQueueTime(qlrnHeader.GetPktId()) /*- Time::FromInteger(qlrnHeader.GetTime(), Time::NS)*/, //the time the packet spent in the queue
@@ -1462,6 +1462,9 @@ QLearner::Send (Ipv4Address node_to_notify, uint64_t packet_Uid, Time travel_tim
   //   qLrnHeader = QLrnHeader( packet_Uid, travel_time.GetInteger(), GetQTable(t).GetNextEstim(packet_dst).second.GetInteger() * 100, packet_dst, t );
   // }
   packet->AddHeader (qLrnHeader);
+
+
+
 
   m_txTrace(packet);
   if (m_ideal) { // No real packet sending, only the learning part happens
@@ -1648,6 +1651,7 @@ void QLearner::UpdateAvgDelay(PacketTimeSentTag ptst_tag, PortNrTag pnt) {
       )
       / m_running_avg_latency.first;
   }
+//  std::cout << "UpdateAvgDelay --> current packet: " << (Simulator::Now() - ptst_tag.GetSentTime()).GetInteger() << std::endl;
 }
 
 std::vector<std::pair< std::pair<Ipv4Address,Ipv4Address>, float > > QLearner::GetPacketLossPerNeighb() {
@@ -1669,9 +1673,9 @@ Time QLearner::TravelTimeHelper(QLrnInfoTag tag) {
   } else {
     ret = m_backup_per_prev_hop_for_unusable_delay[tag.GetPrevHop()];
   }
-  if (GetNode()->GetId() == 6 || GetNode()->GetId() == 13) {
-    // std::cout << " At node " << m_name << " obs delay has a value of " << ret.GetSeconds() << std::endl;
-  }
+//  if (GetNode()->GetId() == 6 || GetNode()->GetId() == 13) {
+//     std::cout << " At node " << m_name << " obs delay has a value of " << ret.GetSeconds() << std::endl;
+//  }
 
 
   return ret;
@@ -1681,6 +1685,7 @@ void QLearner::OutputDataToFile(PacketTimeSentTag ptst_tag, Ptr<const Packet> p,
   PortNrTag pnt;
   NS_ASSERT(p->PeekPacketTag(pnt));
   uint64_t currDelay = (Simulator::Now() - ptst_tag.GetSentTime()).GetInteger();
+//  std::cout << "OutputDataToFile --> current delay: " << currDelay << std::endl;
 
   m_prev_delay = (m_prev_delay_per_prev_hop[ptst_tag.GetPrevHop()] == 0? currDelay:m_prev_delay_per_prev_hop[ptst_tag.GetPrevHop()]);
   m_prev_delay_per_prev_hop[ptst_tag.GetPrevHop()] = currDelay;
@@ -1714,7 +1719,7 @@ void QLearner::OutputDataToFile(PacketTimeSentTag ptst_tag, Ptr<const Packet> p,
 
   NS_ASSERT(packet_loss >= 0);
   // if (packet_loss < 0) { packet_loss = 0; }
-
+//  std::cout << "what is actually written to a file: " << (Simulator::Now() - ptst_tag.GetSentTime()).As(Time::MS) << std::endl;
   *(m_output_filestream->GetStream()) << p->GetUid() << "," << Simulator::Now().As(Time::S) << ","
           << (Simulator::Now() - ptst_tag.GetSentTime()).As(Time::MS) << "," << ptst_tag.GetInitialEstim();
   if (learning_packet)  { *(m_output_filestream->GetStream()) << ",learning,OK,OK,OK"; }

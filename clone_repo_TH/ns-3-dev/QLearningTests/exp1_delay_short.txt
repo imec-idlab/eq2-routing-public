@@ -12,7 +12,7 @@
   "qconv":0.025,
   "max_retry":1,
   "learn_more_threshold":0.1,
-  "gamma":0.9,
+  "gamma":0.99,
   "node0":{
     "x":320,
     "y":120,

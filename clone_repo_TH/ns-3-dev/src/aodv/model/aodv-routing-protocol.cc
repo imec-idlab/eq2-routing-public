@@ -349,7 +349,7 @@ void RoutingProtocol::UpdateAvgDelay(PacketTimeSentTag ptst_tag, PortNrTag pnt) 
         + (Simulator::Now() - ptst_tag.GetSentTime()).GetInteger()
       )
       / m_running_avg_latency.first;
-      // std::cout << (Simulator::Now() - ptst_tag.GetSentTime()).GetSeconds() << std::endl;
+       std::cout << "updateavgdelay --> delay of this packet: "<<(Simulator::Now() - ptst_tag.GetSentTime()).GetSeconds() << std::endl;
       // std::cout << m_running_avg_latency.second << std::endl;
   }
 }
@@ -375,6 +375,9 @@ void RoutingProtocol::OutputDataToFile(PacketTimeSentTag ptst_tag, Ptr<const Pac
   bool packet_loss_ok = packet_loss< TrafficTypeReqsMap[t].GetRandomLossMax();
 
   NS_ASSERT_MSG(IamAmongTheDestinations(), "Not an intended destination, so why is it outputting as if it is ? " << m_ipv4->GetAddress(1,0).GetLocal());
+  std::cout << "output to file --> delay of this packet: "<<(Simulator::Now() - ptst_tag.GetSentTime()).GetSeconds() << std::endl;
+  std::cout << "output to file --> delay of this packet: "<<(Simulator::Now() - ptst_tag.GetSentTime()).As(Time::MS) << std::endl;
+
 
   *(m_output_filestream->GetStream()) << p->GetUid() << "," << Simulator::Now().As(Time::S) << ","
           << (Simulator::Now() - ptst_tag.GetSentTime()).As(Time::MS) << "," << ptst_tag.GetInitialEstim();
@@ -478,7 +481,7 @@ bool RoutingProtocol::CheckIcmpTTLExceeded(Ptr<const Packet> p, Icmpv4TimeExceed
       ret_st2 = false;
     }
   }
-  else if (p->GetSize() == 32) {
+  else if (p->GetSize() == 32 || p->GetSize() == 64) {
     p_copy->RemoveHeader(ii);
     ipv4header = ii.GetHeader();
     ret_st2 = (ipv4header.GetTtl() == 0) && !(ipv4header.GetDestination() == ipv4header.GetSource() && ipv4header.GetSource() == Ipv4Address("102.102.102.102"));

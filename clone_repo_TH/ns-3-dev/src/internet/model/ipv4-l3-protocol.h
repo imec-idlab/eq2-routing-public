@@ -164,6 +164,7 @@ public:
    * Higher-level layers call this method to send a packet
    * down the stack to the MAC and PHY layers.
    */
+
   void Send (Ptr<Packet> packet, Ipv4Address source, 
              Ipv4Address destination, uint8_t protocol, Ptr<Ipv4Route> route);
   //Helper fct to go with above, to simulate delay
@@ -346,7 +347,12 @@ private:
   void
   SendRealOut (Ptr<Ipv4Route> route,
                Ptr<Packet> packet,
-               Ipv4Header const &ipHeader);
+               Ipv4Header const &ipHeader,
+               bool delay_already_applied = false);
+  void
+  SendRealOutInternal (Ptr<Ipv4Route> route,
+                       Ptr<Packet> packet,
+                       Ipv4Header const &ipHeader);
 
   /**
    * \brief Forward a packet.

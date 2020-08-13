@@ -749,7 +749,7 @@ Ipv4L3Protocol::CallTxTrace (const Ipv4Header & ipHeader, Ptr<Packet> packet,
 }
 
 void 
-Ipv4L3Protocol::Send (Ptr<Packet> packet, 
+Ipv4L3Protocol::SendInternal (Ptr<Packet> packet,
                       Ipv4Address source,
                       Ipv4Address destination,
                       uint8_t protocol,
@@ -890,6 +890,31 @@ Ipv4L3Protocol::Send (Ptr<Packet> packet,
 
 }
 
+
+void
+Ipv4L3Protocol::Send (Ptr<Packet> packet,
+                      Ipv4Address source,
+                      Ipv4Address destination,
+                      uint8_t protocol,
+                      Ptr<Ipv4Route> route)
+{
+  NS_LOG_FUNCTION (this << packet << source << destination << uint32_t (protocol) << route);
+  if (m_jitter || m_delay_ms) { NS_ASSERT(uv); }
+  float randomValue = ( uv ? uv->GetValue() : 0.0);
+  float randomValue_2 = ( uv ? uv->GetValue() : 0.0);
+
+  if (randomValue_2 < m_packet_loss_param *100000 ) {
+    //drop the pkt..
+  }
+  else if (m_delay_ms == 0 || (m_jitter && randomValue > 50000) ) {
+	  //NS_LOG_UNCOND("Ipv4L3Protocol::Send: destination here is: " <<destination);
+    SendInternal(packet,source,destination,protocol,route);
+  } else {
+    Simulator::Schedule (NanoSeconds(JitterDelayMs(m_delay_ms)), &Ipv4L3Protocol::SendInternal,
+      this,packet,source,destination,protocol,route);
+  }
+}
+
 // \todo when should we set ip_id?   check whether we are incrementing
 // m_identification on packets that may later be dropped in this stack
 // and whether that deviates from Linux
@@ -941,7 +966,7 @@ Ipv4L3Protocol::BuildHeader (
 }
 
 void
-Ipv4L3Protocol::SendRealOut (Ptr<Ipv4Route> route,
+Ipv4L3Protocol::SendRealOutInternal (Ptr<Ipv4Route> route,
                              Ptr<Packet> packet,
                              Ipv4Header const &ipHeader)
 {
@@ -1014,6 +1039,32 @@ Ipv4L3Protocol::SendRealOut (Ptr<Ipv4Route> route,
         }
     }
 
+}
+
+
+
+void
+Ipv4L3Protocol::SendRealOut (Ptr<Ipv4Route> route,
+                             Ptr<Packet> packet,
+                             Ipv4Header const &ipHeader,
+                             bool delay_already_applied)
+{
+  if (m_jitter || m_delay_ms) { NS_ASSERT(uv); }
+  float randomValue = ( uv ? uv->GetValue() : 0.0);
+  float randomValue_2 = ( uv ? uv->GetValue() : 0.0);
+
+  // was some error here, replaced it by a simpler / cleaner approach using random value instead..
+  if (randomValue_2 < m_packet_loss_param *100000 ) {
+    //drop the pkt..
+  }
+  else if (m_delay_ms == 0 || delay_already_applied || (m_jitter && randomValue > 50000) ) {
+    SendRealOutInternal(route,packet,ipHeader);
+  } else {
+    Simulator::Schedule (NanoSeconds(JitterDelayMs(m_delay_ms)), &Ipv4L3Protocol::SendRealOutInternal,
+      this,route,packet,ipHeader);
+  }
+
+  NS_LOG_FUNCTION (this << route << packet << &ipHeader << packet->GetUid());
 }
 
 

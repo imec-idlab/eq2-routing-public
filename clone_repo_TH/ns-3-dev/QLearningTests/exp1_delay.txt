@@ -27,13 +27,13 @@
   },
   "node2":{
     "x":420,
-    "y":40,
+    "y":70,
     "slower":l3,
     "delay_value":1,
   },
   "node3":{
     "x":240,
-    "y":40,
+    "y":70,
     "slower":l3,
     "delay_value":1,
   },

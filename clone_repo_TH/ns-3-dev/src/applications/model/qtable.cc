@@ -808,7 +808,8 @@ QTable::Update(Ipv4Address via, Ipv4Address dst, Time _queue_time_, Time travel_
        *         10.1.1.3   |          +2.416ms   |           +54.0ms   |
        *         10.1.1.4   |          +1.489ms   |        +99999.0ms   |
        */
-       Time perceived_reward = travel_time + queue_time + Time::FromInteger(m_gamma * next_hop_estimate.GetInteger(), Time::NS);// so fix this to use the int i guess maybe ? ;
+//      Time perceived_reward = travel_time + queue_time + Time::FromInteger(m_gamma * next_hop_estimate.GetInteger(), Time::NS);// so fix this to use the int i guess maybe ? ;
+      Time perceived_reward = travel_time + queue_time + next_hop_estimate;
 
 
        // Time temp_q_for_discount_factor = Time( (1 - m_learningrate) * q.GetQValue().GetInteger()) + Time( ( m_learningrate * perceived_reward.GetInteger() ) ) ;
@@ -826,7 +827,7 @@ QTable::Update(Ipv4Address via, Ipv4Address dst, Time _queue_time_, Time travel_
        // std::cout << " and after the gamma change thing it is = " << temp_q_for_discount_factor.GetSeconds() << "\n(nexthop = "<<via<<", and dst="<<dst<<")\n" << PrettyPrint();
 
        q.SetQValue(   Time( (1 - m_learningrate) * q.GetQValue().GetInteger() ) +
-                      Time( ( m_learningrate * ( perceived_reward.GetInteger() + 0 * m_gamma * next_hop_estimate.GetInteger() ) ) ) );
+                      Time( ( m_learningrate * ( perceived_reward.GetInteger() + 0 *  m_gamma * next_hop_estimate.GetInteger() ) ) ) );
 
        q.SetCoefficientTally((1-m_learningrate) * q.GetCoefficientTally());
 
@@ -888,7 +889,7 @@ QTable::CalculateNewQValue(Ipv4Address via, Ipv4Address dst, Time _queue_time_, 
       //   temp_q_for_discount_factor = next_state_best.GetQValue();
       // }
       new_value =    Time( (1 - m_learningrate) * q.GetQValue().GetInteger()) +
-                     Time( ( m_learningrate * ( perceived_reward.GetInteger() + m_gamma * next_hop_estimate.GetInteger() ) ) );
+                     Time( ( m_learningrate * ( perceived_reward.GetInteger() + 0 * m_gamma * next_hop_estimate.GetInteger() ) ) );
 
       fix_rest  = q.GetQValue();
       if (m_nodeip == showme) {
